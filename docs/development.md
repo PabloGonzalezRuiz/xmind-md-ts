@@ -2,60 +2,58 @@
 
 ## 1. Entorno local
 
-Requisitos previstos:
+Requisitos:
 - Windows 10/11, Linux o macOS.
-- Node.js LTS compatible con el proyecto.
+- Node.js 22 o superior.
 - npm incluido con Node.js.
 - Git.
 - Visual Studio Code recomendado.
 
-La versión exacta de Node se fijará en `.nvmrc` o `.node-version` y en la configuración de CI. No instalar dependencias globales salvo que exista una razón documentada.
+La versión de referencia está fijada en `.nvmrc` (22). No instalar dependencias globales.
 
 ## 2. Instalación y comandos
 
-Una vez creado el proyecto ejecutable, el flujo previsto será:
+En la raíz del repositorio:
 
 ```powershell
-npm ci
-npm run typecheck
-npm run lint
-npm test
-npm run build
+npm install
+npm run verify
 ```
 
-Los nombres y scripts se consideran planificados hasta que existan en package.json. No ejecutar ni documentar comandos como disponibles antes de implementarlos.
+Scripts disponibles:
+- `npm run dev`: ejecución de desarrollo con recarga.
+- `npm run build`: compila TypeScript en `dist/`.
+- `npm start`: ejecuta la salida compilada.
+- `npm run typecheck`: comprueba tipos sin emitir archivos.
+- `npm run lint`: ejecuta ESLint.
+- `npm run format` / `npm run format:check`: formatea o comprueba formato.
+- `npm test` / `npm run test:watch`: ejecuta Vitest.
+- `npm run verify`: ejecuta todas las comprobaciones anteriores.
+
+El lockfile npm se incorporará tras generarlo con el resolvedor de npm; no se debe fabricar manualmente ni sustituir por rangos flotantes. Hasta que esté versionado, CI usa `npm install`, no `npm ci`.
 
 ## 3. Ejecución de la CLI
 
-La CLI se diseñará para poder invocarse localmente desde PowerShell y terminales compatibles. Debe ofrecer ayuda, validación sin exportar, selección de adaptador, rutas de entrada/salida, modo estricto/compatible y diagnóstico detallado.
+La CLI se diseñará para invocarse desde PowerShell y terminales compatibles. Debe ofrecer ayuda, validación sin exportar, selección de adaptador, rutas de entrada/salida, modo estricto/compatible y diagnóstico detallado. La CLI aún no está implementada.
 
 ## 4. Depuración
 
-Se recomienda VS Code con depurador Node.js, source maps y scripts de desarrollo. Los errores deben conservar stack trace en modo debug y ofrecer mensajes concisos en modo normal.
+VS Code puede depurar Node.js/TypeScript mediante source maps. Los errores deben conservar stack trace en modo debug y ofrecer mensajes concisos en modo normal.
 
 ## 5. GitHub Actions
 
-El workflow principal deberá:
-- Activarse en push y pull_request.
-- Permitir ejecución manual con workflow_dispatch.
-- Configurar Node.js desde la versión fijada.
-- Instalar dependencias con npm ci.
-- Ejecutar typecheck, lint, pruebas y build.
-- Publicar artefactos de diagnóstico cuando proceda.
-- No depender de secretos para las pruebas normales.
-- Ejecutar en Linux y añadir Windows si hay pruebas de compatibilidad de rutas/ZIP.
+El workflow `.github/workflows/ci.yml` se activa en push, pull_request y workflow_dispatch. Configura Node.js 22 e instala dependencias para ejecutar formato, lint, typecheck, pruebas y build.
 
-El entorno de GitHub es efímero: no sustituye al desarrollo local ni a la validación con una aplicación de escritorio.
+Cuando `package-lock.json` esté versionado, el paso de instalación deberá cambiar de `npm install` a `npm ci`.
 
 ## 6. Contribución asistida por IA
 
-Antes de pedir a la IA un cambio, indicar objetivo y criterio de aceptación. Mantener tareas pequeñas, exigir pruebas, revisar diff y comprobar que la documentación coincide con el comportamiento. No aceptar cambios únicamente porque la IA diga que están terminados.
+Antes de pedir a la IA un cambio, indicar objetivo y criterio de aceptación. Mantener tareas pequeñas, exigir pruebas, revisar diff y comprobar que la documentación coincide con el comportamiento.
 
 ## 7. Reproducibilidad y seguridad
 
-- Mantener package-lock.json versionado.
-- Usar npm ci en CI.
+- Versiones directas de desarrollo fijadas en `package.json`.
+- Versionar `package-lock.json` en cuanto pueda generarse mediante npm.
 - Revisar licencias de dependencias directas y transitivas.
 - Evitar scripts de instalación innecesarios.
-- Fijar versiones de acciones y dependencias según la política del proyecto.
 - No almacenar tokens ni secretos en el repositorio.
