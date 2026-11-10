@@ -160,7 +160,7 @@ describe('Markdown parser', () => {
 
   it('rejects missing roots, multiple roots, skipped levels and duplicate explicit IDs', () => {
     expect(() => parseMarkdown('No heading')).toThrowError(MarkdownParseError);
-    expect(() => parseMarkdown('# One\n\n# Two')).toThrowError(/un único encabezado H1/);
+    expect(() => parseMarkdown('# One\n\n# Two')).toThrowError(/exactamente un encabezado H1/);
     expect(() => parseMarkdown('# Root\n\n#### Gap')).toThrowError(/no tiene un padre/);
     expect(() => parseMarkdown('# Root\n\n## Same {#same}\n\n## Same {#same}')).toThrowError(
       /duplicado/,
