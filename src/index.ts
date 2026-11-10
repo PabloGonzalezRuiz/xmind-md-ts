@@ -5,3 +5,14 @@
  */
 export const applicationName = 'xmind-md-ts';
 export const applicationVersion = '0.1.0';
+
+export {
+  MarkdownParseError,
+  parseMarkdown,
+  parseMarkdownWithDiagnostics,
+} from './markdown/parser.js';
+export type {
+  MarkdownParserOptions,
+  MarkdownParseResult,
+  ParserDiagnostic,
+} from './markdown/parser.js';
