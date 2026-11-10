@@ -58,7 +58,7 @@ Este registro contiene decisiones normativas del diseño del IR v1.0.0 y asuntos
 | VAL-002 | Validación estructural fail-fast antes de la semántica mediante `validateIr` | Evita recorrer objetos que no cumplen la forma del IR; mantiene separadas las dos clases de invariantes |
 | VAL-003 | La validación runtime no muta, no aplica defaults y no coacciona datos | La validación informa de incumplimientos sin modificar el documento de autoría |
 
-La equivalencia completa entre `spec/ir-v1.schema.json` y `spec/ir-v1.types.ts` sigue requiriendo una comprobación específica; no se debe afirmar que está garantizada por Ajv.
+La equivalencia completa entre `spec/ir-v1.schema.json` y `spec/ir-v1.types.ts` sigue requiriendo una comprobación específica (AUD-012); Ajv valida datos runtime, no demuestra equivalencia entre tipos estáticos y schema.
 
 ## Pendiente para fases posteriores
 
