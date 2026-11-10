@@ -152,7 +152,8 @@ Debe producir SVG válido y determinista, con geometría, tipografía, estilos y
 La configuración actual del proyecto utiliza:
 - Node.js 24 y npm con `package-lock.json`.
 - TypeScript 6 con configuración estricta.
-- Vitest 5.\n- Ajv 8 con Draft 2020-12 y `ajv-formats` para validación estructural runtime.
+- Vitest 5.
+- Ajv 8 con Draft 2020-12 y `ajv-formats` para validación estructural runtime.
 - ESLint 10 y typescript-eslint.
 - Prettier 3.
 - GitHub Actions.
