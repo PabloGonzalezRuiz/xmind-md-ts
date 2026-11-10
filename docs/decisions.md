@@ -50,6 +50,16 @@ Este registro contiene decisiones normativas del diseño del IR v1.0.0 y asuntos
 | ST-006 | Los valores `null` reinician la propiedad al default del sistema; objetos se fusionan y listas se reemplazan | Semántica uniforme para todos los adaptadores |
 | ST-007 | Cada propiedad resuelta conserva capa y origen | Permite explicar decisiones y registrar pérdidas en adaptadores |
 
+## Decisiones de fase 7 — validación JSON Schema runtime
+
+| ID | Decisión | Motivo / consecuencia |
+|---|---|---|
+| VAL-001 | Ajv 8 con el constructor Draft 2020-12 y `ajv-formats` | El contrato publicado usa JSON Schema Draft 2020-12 e incluye formatos URI; Ajv 6 no soporta ese dialecto |
+| VAL-002 | Validación estructural fail-fast antes de la semántica mediante `validateIr` | Evita recorrer objetos que no cumplen la forma del IR; mantiene separadas las dos clases de invariantes |
+| VAL-003 | La validación runtime no muta, no aplica defaults y no coacciona datos | La validación informa de incumplimientos sin modificar el documento de autoría |
+
+La equivalencia completa entre `spec/ir-v1.schema.json` y `spec/ir-v1.types.ts` sigue requiriendo una comprobación específica; no se debe afirmar que está garantizada por Ajv.
+
 ## Pendiente para fases posteriores
 
 - Ampliar el catálogo de propiedades visuales y unidades según necesidades verificadas de XMind/SVG.
