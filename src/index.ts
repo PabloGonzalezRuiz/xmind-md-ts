@@ -44,3 +44,12 @@ export type {
   StylePropertyKind,
   StylePropertyName,
 } from './styles/catalog.js';
+
+export { validateIrSchema } from './validation/schema-validator.js';
+export type {
+  IrSchemaDiagnostic,
+  IrSchemaValidationResult,
+} from './validation/schema-validator.js';
+
+export { validateIrDocumentComplete } from './validation/complete-validator.js';
+export type { IrCompleteValidationResult } from './validation/complete-validator.js';
