@@ -5,7 +5,7 @@
 > **Última auditoría:** 2026-11-10  
 > **Repositorio:** https://github.com/PabloGonzalezRuiz/xmind-md-ts  
 > **Rama de trabajo auditada:** `feature/aud-003-runtime-schema`  
-> **HEAD verificado:** `cc6e0b9222264d93797a9cda74f7f7b1d5c32791` (AUD-004 completada y verificada)  
+> **HEAD verificado:** `d1165d63a3b83283d71a5dff4d6d5b3af44e48dc` (AUD-004 completada y verificada)  
 > **Rama principal:** `main` — `6aca81b59dbfcfc13034e7e1115c70f7691c5035`
 
 ## 1. Resumen ejecutivo
@@ -176,4 +176,4 @@ Al iniciar una sesión de trabajo:
 
 | 2026-11-10 | AUD-004: corpus inicial de conformidad Markdown | Añadidos fixtures positivos, negativos y de diagnóstico; batería `test/markdown-conformance.test.ts` con comprobación de bloques Markdown, directivas, códigos de error, posiciones y validación IR. Se corrigieron expectativas detectadas por CI (filas GFM, etiquetas HTML separadas e import de fixtures). CI pendiente de verificación final tras actualizar la documentación | Completar matriz de casos, confirmar CI verde y actualizar el estado de auditoría |
 
-| 2026-11-10 | AUD-004: cierre y verificación final del corpus parser/IR | Fixtures versionados para bloques Markdown, front matter y directivas XMind; casos positivos, negativos y diagnósticos; códigos de error estables, líneas/columnas, posiciones de temas/bloques y validación estructural/semántica. Matriz registrada en `spec/conformance/README.md`. CI verde: [42849586241](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42849586241), SHA `cc6e0b9222264d93797a9cda74f7f7b1d5c32791`; 96 tests, format, lint, typecheck y build correctos | Solicitar autorización para AUD-005 |
+| 2026-11-10 | AUD-004: cierre y verificación final del corpus parser/IR | Fixtures versionados para bloques Markdown, front matter y directivas XMind; casos positivos, negativos y diagnósticos; códigos de error estables, líneas/columnas, posiciones de temas/bloques y validación estructural/semántica. Matriz registrada en `spec/conformance/README.md`. CI verde: [42849783681](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42849783681), SHA `d1165d63a3b83283d71a5dff4d6d5b3af44e48dc`; 96 tests, format, lint, typecheck y build correctos | Solicitar autorización para AUD-005 |
