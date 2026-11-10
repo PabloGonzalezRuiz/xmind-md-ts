@@ -237,7 +237,7 @@ export function resolveIrStyles(ir: IrDocument): StyleResolutionResult {
       layers.push({
         layer: 'styleSet',
         sourceId: inherited.id,
-        properties: inherited.defaults,
+        properties: inherited.defaults ? filterApplicable(inherited.defaults, elementType) : undefined,
         path: `$.styleSets[${inherited.id}].defaults`,
       });
     }
