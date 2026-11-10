@@ -197,8 +197,16 @@ export function resolveIrStyles(ir: IrDocument): StyleResolutionResult {
             );
             continue;
           }
+          for (const existingPath of Object.keys(provenance)) {
+            if (existingPath === key || existingPath.startsWith(`${key}.`)) {
+              delete provenance[existingPath];
+            }
+          }
           values[key] = cloneValue(definition.defaultValue);
-          provenance[key] = { layer: 'system', sourceId: `reset-by:${input.sourceId}` };
+          mergeProvenance(provenance, definition.defaultValue, key, {
+            layer: 'system',
+            sourceId: `reset-by:${input.sourceId}`,
+          });
           continue;
         }
         const error = validateStyleProperty(elementType, key, value);
@@ -257,6 +265,8 @@ export function resolveIrStyles(ir: IrDocument): StyleResolutionResult {
     const chain: Array<(typeof ir.styleSets)[number]> = [];
     const visited = new Set<string>();
     let current: string | undefined = setId;
+    let hasCycle = false;
+    let hasMissingParent = false;
     while (current) {
       if (visited.has(current)) {
         addDiagnostic(
@@ -265,25 +275,50 @@ export function resolveIrStyles(ir: IrDocument): StyleResolutionResult {
           path,
           elementId,
         );
+        hasCycle = true;
         break;
       }
       visited.add(current);
       const currentSet = styleSets.get(current);
       if (!currentSet) {
         addDiagnostic(
-          'STYLE_SET_PARENT_NOT_FOUND',
-          `No existe el conjunto heredado "${current}".`,
+          current === setId ? 'STYLE_SET_NOT_FOUND' : 'STYLE_SET_PARENT_NOT_FOUND',
+          current === setId
+            ? `No existe el conjunto "${current}".`
+            : `No existe el conjunto heredado "${current}".`,
           path,
           elementId,
         );
+        hasMissingParent = true;
         break;
       }
       chain.unshift(currentSet);
       current = currentSet.extends;
     }
-    if (chain.length === 0 || chain[chain.length - 1]?.id !== setId) {
-      addDiagnostic('STYLE_SET_NOT_FOUND', `No existe el conjunto "${setId}".`, path, elementId);
-      return layers;
+    // An incomplete inheritance chain is never partially applied.
+    if (hasCycle || hasMissingParent) return layers;
+
+    const hasRole = reference?.role
+      ? chain.some((styleSet) => Object.hasOwn(styleSet.roles ?? {}, reference.role!))
+      : true;
+    const hasNamedStyle = reference?.styleId
+      ? chain.some((styleSet) => Object.hasOwn(styleSet.styles ?? {}, reference.styleId!))
+      : true;
+    if (reference?.role && !hasRole) {
+      addDiagnostic(
+        'STYLE_ROLE_NOT_FOUND',
+        `No existe el rol "${reference.role}" en el conjunto efectivo ni en sus ancestros.`,
+        path,
+        elementId,
+      );
+    }
+    if (reference?.styleId && !hasNamedStyle) {
+      addDiagnostic(
+        'STYLE_NAMED_STYLE_NOT_FOUND',
+        `No existe el estilo con nombre "${reference.styleId}" en el conjunto efectivo ni en sus ancestros.`,
+        path,
+        elementId,
+      );
     }
 
     for (const inherited of chain) {
