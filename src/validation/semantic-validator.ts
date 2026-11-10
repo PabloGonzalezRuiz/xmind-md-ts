@@ -424,6 +424,20 @@ export function validateIrDocument(
     report('IR_STYLE_SETS_ARRAY', 'styleSets debe ser una lista.', '$.styleSets');
   }
 
+  const hasStyleEntry = (setId: string, section: 'roles' | 'styles', name: string): boolean => {
+    const visited = new Set<string>();
+    let current: string | undefined = setId;
+    while (current && !visited.has(current)) {
+      visited.add(current);
+      const styleSet = styleSets.get(current);
+      const entries = styleSet && isRecord(styleSet[section]) ? styleSet[section] : {};
+      if (Object.hasOwn(entries, name)) return true;
+      const parentId: unknown = styleSet?.extends;
+      current = isString(parentId) ? parentId : undefined;
+    }
+    return false;
+  };
+
   const validateStyleReference = (
     style: StyleReference | undefined,
     inheritedSetId: string | undefined,
@@ -448,30 +462,22 @@ export function validateIrDocument(
           `${path}.styleId`,
           source,
         );
-      } else {
-        const set = styleSets.get(setId);
-        const styles = set && isRecord(set.styles) ? set.styles : {};
-        if (!Object.hasOwn(styles, style.styleId)) {
-          report(
-            'IR_STYLE_REFERENCE',
-            `No existe el estilo "${style.styleId}" en "${setId}".`,
-            `${path}.styleId`,
-            source,
-          );
-        }
-      }
-    }
-    if (style.role && setId) {
-      const set = styleSets.get(setId);
-      const roles = set && isRecord(set.roles) ? set.roles : {};
-      if (!Object.hasOwn(roles, style.role)) {
+      } else if (styleSets.has(setId) && !hasStyleEntry(setId, 'styles', style.styleId)) {
         report(
-          'IR_STYLE_ROLE_REFERENCE',
-          `No existe el rol "${style.role}" en "${setId}".`,
-          `${path}.role`,
+          'IR_STYLE_REFERENCE',
+          `No existe el estilo "${style.styleId}" en "${setId}" ni en sus conjuntos heredados.`,
+          `${path}.styleId`,
           source,
         );
       }
+    }
+    if (style.role && setId && styleSets.has(setId) && !hasStyleEntry(setId, 'roles', style.role)) {
+      report(
+        'IR_STYLE_ROLE_REFERENCE',
+        `No existe el rol "${style.role}" en "${setId}" ni en sus conjuntos heredados.`,
+        `${path}.role`,
+        source,
+      );
     }
   };
 
