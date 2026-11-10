@@ -122,7 +122,7 @@ describe('style resolution engine', () => {
 
   it('reports role references without an effective style set', () => {
     const ir = createIr();
-    ir.sheet.defaultStyleSetId = undefined;
+    delete ir.sheet.defaultStyleSetId;
     ir.sheet.rootTopic.style = { role: 'primary' };
 
     const result = resolveIrStyles(ir);
