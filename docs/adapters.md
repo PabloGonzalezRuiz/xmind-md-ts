@@ -32,7 +32,7 @@ La exportación no descartará datos sin advertencia. El modo estricto rechazar�
 
 ## 4. Adaptador JSON
 
-Serializa el IR canónico para inspección, pruebas, intercambio y consumo por herramientas externas. Debe ser determinista, versionado y validado con JSON Schema.
+Implementado en `src/adapters/json/json-adapter.ts`: `serializeIrJson(ir)` serializa el IR validado para inspección, pruebas, intercambio y consumo por herramientas externas. La serialización es determinista, versionada por `irVersion` y no modifica el documento. La validación JSON Schema y semántica se ejecuta antes, en el pipeline.
 
 ## 5. Adaptador SVG
 
