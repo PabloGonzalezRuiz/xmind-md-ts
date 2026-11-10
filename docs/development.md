@@ -9,14 +9,14 @@ Requisitos:
 - Git.
 - Visual Studio Code recomendado.
 
-La versión de referencia está fijada en `.nvmrc` (22). No instalar dependencias globales.
+La versión de referencia está fijada en `.nvmrc` (24). No instalar dependencias globales.
 
 ## 2. Instalación y comandos
 
 En la raíz del repositorio:
 
 ```powershell
-npm install
+npm ci
 npm run verify
 ```
 
@@ -30,7 +30,7 @@ Scripts disponibles:
 - `npm test` / `npm run test:watch`: ejecuta Vitest.
 - `npm run verify`: ejecuta todas las comprobaciones anteriores.
 
-En el primer push, GitHub Actions genera `package-lock.json` mediante npm y lo versiona en la rama. A partir de ese commit, las ejecuciones usan `npm ci`. En local, utiliza siempre `npm ci` cuando el lockfile esté presente; no lo edites manualmente.
+`package-lock.json` está versionado. Utiliza `npm ci` tanto en local como en CI; no edites el lockfile manualmente.
 
 ## 3. Ejecución de la CLI
 
@@ -44,7 +44,7 @@ VS Code puede depurar Node.js/TypeScript mediante source maps. Los errores deben
 
 El workflow `.github/workflows/ci.yml` se activa en push, pull_request y workflow_dispatch. Configura Node.js 24 e instala dependencias para ejecutar formato, lint, typecheck, pruebas y build.
 
-El workflow utiliza `npm install` únicamente para generar el lockfile inicial; después utiliza `npm ci`.
+El workflow instala con `npm ci` y ejecuta formato, lint, typecheck, pruebas y build.
 
 ## 6. Contribución asistida por IA
 
