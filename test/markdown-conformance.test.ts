@@ -65,7 +65,7 @@ describe('Markdown parser conformance corpus', () => {
       alignments: ['left', 'right'],
       rows: [{ cells: [{ blocks: [{ type: 'paragraph' }] }, { blocks: [{ type: 'paragraph' }] }] }],
     });
-    expect(root.content[4]).toMatchObject({ type: 'quote', blocks: [{ type: 'paragraph' }] });
+    expect(root.content[4]).toMatchObject({ type: 'quote', blocks: [{ type: 'paragraph' }, { type: 'paragraph' }] });
     expect(root.content[5]).toMatchObject({
       type: 'code',
       language: 'typescript',
@@ -167,17 +167,17 @@ describe('Markdown parser conformance corpus', () => {
     ]);
     expect(result.diagnostics[1]).toMatchObject({
       severity: 'warning',
-      line: 7,
-      column: 6,
+      line: 6,
+      column: 7,
     });
     expect(result.diagnostics[2]).toMatchObject({
       severity: 'warning',
-      line: 9,
+      line: 8,
       column: 1,
     });
     expect(result.ir.sheet.rootTopic.sourcePosition).toMatchObject({
       file: 'corpus/unsupported.md',
-      startLine: 5,
+      startLine: 4,
       startColumn: 1,
     });
   });
@@ -217,7 +217,7 @@ describe('Markdown parser conformance corpus', () => {
   });
 
   it('rejects directives in content-block context with a stable code', () => {
-    expect(() => parseMarkdown('# Raíz\n\nTexto :xmind[inválido].')).toThrowError(
+    expect(() => parseMarkdown('# Raíz\n\n> :::xmind\n> role: main\n> :::')).toThrowError(
       expect.objectContaining({ code: 'MD_DIRECTIVE_CONTEXT' }),
     );
   });
