@@ -36,6 +36,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Generate IR types (diagnostic)
+        run: npm run generate:types && cat spec/ir-v1.types.ts
+
       - name: Typecheck
         run: npm run typecheck
 
