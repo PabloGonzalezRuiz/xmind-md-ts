@@ -279,4 +279,152 @@ describe('style resolution engine', () => {
 
     expect(result.diagnostics).toEqual([]);
   });
+
+  it('rejects unknown CSS color names and out-of-range RGB channels', () => {
+    const ir = createIr();
+    ir.sheet.rootTopic.style = {
+      overrides: {
+        color: 'not-a-real-css-color',
+        fill: 'rgb(300, 0, 0)',
+      },
+    };
+
+    const result = resolveIrStyles(ir);
+
+    expect(result.diagnostics.filter((item) => item.code === 'STYLE_PROPERTY_INVALID')).toHaveLength(2);
+    expect(styleFor(result, 'topic:root').values.color).toBe('#777777');
+  });
+
+  it('accepts standard CSS named colors and valid RGB/HSL colors', () => {
+    const ir = createIr();
+    ir.sheet.rootTopic.style = {
+      overrides: {
+        color: 'rebeccapurple',
+        fill: 'rgba(20, 30, 40, 0.5)',
+        stroke: 'hsl(210, 50%, 40%)',
+      },
+    };
+
+    const result = resolveIrStyles(ir);
+
+    expect(result.diagnostics).toEqual([]);
+    expect(styleFor(result, 'topic:root').values.color).toBe('rebeccapurple');
+  });
+
+  it('validates nested shadow keys and value types', () => {
+    const ir = createIr();
+    ir.sheet.rootTopic.style = {
+      overrides: {
+        shadow: {
+          enabled: 'yes',
+          offset: { x: 2, z: 3 },
+          blur: -1,
+          unexpected: true,
+        },
+      },
+    };
+
+    const result = resolveIrStyles(ir);
+
+    expect(result.diagnostics).toContainEqual(
+      expect.objectContaining({
+        code: 'STYLE_PROPERTY_INVALID',
+        property: 'shadow',
+      }),
+    );
+    expect(styleFor(result, 'topic:root').values.shadow).toEqual({
+      enabled: false,
+      color: '#00000033',
+      offset: { x: 0, y: 2 },
+      blur: 4,
+    });
+  });
+
+  it('clears stale nested provenance when resetting an object property', () => {
+    const ir = createIr();
+    ir.sheet.rootTopic.style = {
+      overrides: {
+        shadow: { enabled: true, offset: { x: 9 } },
+      },
+    };
+    ir.sheet.rootTopic.children[0]!.style = {
+      overrides: { shadow: null },
+    };
+
+    const result = resolveIrStyles(ir);
+    const child = styleFor(result, 'topic:child');
+
+    expect(child.values.shadow).toEqual({
+      enabled: false,
+      color: '#00000033',
+      offset: { x: 0, y: 2 },
+      blur: 4,
+    });
+    expect(Object.keys(child.provenance).filter((key) => key.startsWith('shadow.'))).toEqual([
+      'shadow.enabled',
+      'shadow.color',
+      'shadow.offset.x',
+      'shadow.offset.y',
+      'shadow.blur',
+    ]);
+    expect(child.provenance['shadow.offset.x']).toEqual({
+      layer: 'system',
+      sourceId: 'reset-by:topic:child',
+    });
+  });
+
+  it('reports missing roles and named styles when called independently', () => {
+    const ir = createIr();
+    ir.sheet.rootTopic.style = {
+      role: 'missing-role',
+      styleId: 'missing-style',
+    };
+
+    const result = resolveIrStyles(ir);
+
+    expect(result.diagnostics.map((item) => item.code)).toContain('STYLE_ROLE_NOT_FOUND');
+    expect(result.diagnostics.map((item) => item.code)).toContain(
+      'STYLE_NAMED_STYLE_NOT_FOUND',
+    );
+  });
+
+  it('does not apply a partial style-set chain after detecting a cycle', () => {
+    const ir = createIr();
+    ir.styleSets[0]!.extends = 'theme:child';
+    ir.styleSets[0]!.defaults = { color: '#FF0000' };
+    ir.styleSets[1]!.defaults = { color: '#00FF00' };
+
+    const result = resolveIrStyles(ir);
+    const root = styleFor(result, 'topic:root');
+
+    expect(result.diagnostics.map((item) => item.code)).toContain('STYLE_SET_CYCLE');
+    expect(root.values.color).toBe('#111111');
+    expect(root.provenance.color).toEqual({
+      layer: 'map',
+      sourceId: 'sheet.settings.styleDefaults',
+    });
+  });
+
+  it('does not apply a partial style-set chain when an ancestor is missing', () => {
+    const ir = createIr();
+    ir.styleSets[1]!.extends = 'theme:missing';
+
+    const result = resolveIrStyles(ir);
+    const root = styleFor(result, 'topic:root');
+
+    expect(result.diagnostics.map((item) => item.code)).toContain(
+      'STYLE_SET_PARENT_NOT_FOUND',
+    );
+    expect(root.values.color).toBe('#111111');
+  });
+
+  it('uses deterministic structural paths as text-run identity', () => {
+    const first = resolveIrStyles(createIr());
+    const second = resolveIrStyles(createIr());
+    const firstIds = first.styles.filter((style) => style.elementType === 'textRun').map((style) => style.elementId);
+    const secondIds = second.styles.filter((style) => style.elementType === 'textRun').map((style) => style.elementId);
+
+    expect(firstIds).toEqual(secondIds);
+    expect(new Set(firstIds).size).toBe(firstIds.length);
+  });
 });
