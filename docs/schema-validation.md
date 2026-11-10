@@ -1,12 +1,24 @@
 # Validación estructural del IR
 
-## Decisión de implementación
+## Fuente de verdad
 
-El contrato normativo es `spec/ir-v1.schema.json`, definido con JSON Schema Draft 2020-12. La validación runtime se implementa con Ajv 8 en modo 2020 (`ajv2020/dist/2020.js`) y `ajv-formats` para activar la comprobación de formatos URI declarados en el schema.
+El contrato normativo y única fuente de verdad estructural es `spec/ir-v1.schema.json`, definido con JSON Schema Draft 2020-12. Los tipos publicados en `spec/ir-v1.types.ts` son un artefacto generado; no deben editarse manualmente.
+
+El generador propio `scripts/generate-ir-types.js` se mantiene deliberadamente limitado a las construcciones que utiliza el contrato actual: referencias locales a `$defs`, objetos, propiedades obligatorias/opcionales, arrays, uniones `oneOf`/`anyOf`, enumeraciones, constantes y mapas `additionalProperties`. Si aparece una keyword estructural no soportada o una referencia externa, el generador falla en lugar de producir tipos aproximados en silencio.
+
+Comandos:
+
+- `npm run generate:types`: regenera `spec/ir-v1.types.ts`.
+- `npm run check:generated-types`: comprueba que el archivo versionado coincide con la salida del generador.
+- `npm run verify` y CI incluyen la comprobación de sincronización.
+
+Las restricciones que TypeScript no puede expresar fielmente —por ejemplo, `minLength`, `pattern`, `format`, límites numéricos, `uniqueItems` y `additionalProperties: false`— siguen siendo exigibles en runtime mediante JSON Schema/Ajv. La unión TypeScript generada desde `oneOf` refleja las alternativas estructurales; la exclusividad de JSON Schema se garantiza en runtime. Los tipos no sustituyen la validación Ajv.
+
+## Validación runtime
+
+La validación se implementa con Ajv 8 en modo 2020 (`ajv2020/dist/2020.js`) y `ajv-formats` para activar la comprobación de formatos URI declarados en el schema.
 
 La dependencia se registra como alias `ajv2020` porque el árbol de dependencias existente utiliza Ajv 6 para ESLint. El alias permite mantener ambas versiones sin alterar la dependencia transitiva del linter.
-
-## Contrato de ejecución
 
 - `validateIrSchema(input)` valida exclusivamente la estructura JSON Schema.
 - La validación acumula todos los errores estructurales (`allErrors: true`).
@@ -21,6 +33,6 @@ La matriz actual de `spec/conformance/README.md` define quince casos: SC-001…S
 
 Los tests ejecutan los casos definidos, incluyendo variantes adicionales para los límites de ID y las colecciones vacías. También se comprueba la salida tipada del parser, los formatos URI, las rutas con índices de arrays y la ausencia de mutaciones. La matriz semántica SEM-001…SEM-018 continúa en `test/semantic-validator.test.ts`.
 
-## Límites y trabajo pendiente
+## Límites
 
-Los tipos de `spec/ir-v1.types.ts` continúan siendo manuales. Las pruebas actuales verifican que la salida tipada del parser cumple el schema, pero **no prueban la equivalencia completa** entre el JSON Schema y todas las interfaces TypeScript. AUD-003 no se declarará verificada hasta resolver esta brecha mediante generación de tipos desde el schema o una comprobación de equivalencia robusta. Esta implementación tampoco sustituye las invariantes semánticas: JSON Schema no comprueba unicidad global de IDs ni referencias cruzadas.
+JSON Schema no comprueba unicidad global de IDs ni referencias cruzadas; esas invariantes siguen correspondiendo al validador semántico. Los tipos generados describen la estructura estática y no deben interpretarse como sustituto de Ajv ni de las comprobaciones semánticas.
