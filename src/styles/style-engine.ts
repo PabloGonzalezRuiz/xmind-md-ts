@@ -168,7 +168,7 @@ export function resolveIrStyles(ir: IrDocument): StyleResolutionResult {
             addDiagnostic('STYLE_PROPERTY_UNKNOWN', 'La propiedad no pertenece al catálogo v1.', propertyPath, elementId, key);
             continue;
           }
-          if (!definition.elements.includes(elementType)) {
+          if (!isStylePropertyApplicable(key, elementType)) {
             addDiagnostic('STYLE_PROPERTY_NOT_APPLICABLE', `La propiedad no es aplicable a "${elementType}".`, propertyPath, elementId, key);
             continue;
           }
