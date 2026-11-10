@@ -17,9 +17,9 @@ El proyecto no es una traducción mecánica del código Python de `xmind-md`. Re
 
 ## Estado
 
-**Fase 2 — Contrato IR v1.0.0 en revisión**
+**Fase 3 — Esqueleto TypeScript creado; lockfile y ejecución CI pendientes de verificación.**
 
-La documentación inicial está completada. Se ha definido el contrato IR v1.0.0, su JSON Schema y un fixture mínimo. Todavía no existe una aplicación ejecutable ni se han ejecutado pruebas automatizadas; el contrato está pendiente de revisión antes de iniciar la fase 3.
+Se ha creado la estructura de proyecto, configuración estricta de TypeScript, scripts npm, ESLint, Prettier, Vitest y workflow de GitHub Actions. No se ha implementado todavía el parser, la validación IR, el motor de estilos ni los adaptadores.
 
 ## Documentación
 
@@ -38,18 +38,16 @@ La documentación inicial está completada. Se ha definido el contrato IR v1.0.0
 - [Hoja de ruta](docs/roadmap.md)
 - [Registro de decisiones](docs/decisions.md)
 
-## Tecnologías previstas
+## Tecnologías configuradas
 
-- TypeScript con configuración estricta.
-- Node.js como entorno de ejecución local y de CI.
-- npm con archivo de bloqueo reproducible.
-- Vitest para pruebas unitarias y de integración.
-- JSON Schema para el contrato serializado del IR.
-- ESLint y Prettier para calidad y formato.
-- GitHub Actions para comprobaciones automáticas.
-- SDK oficial de XMind como candidato para el adaptador, sujeto a evaluación técnica y de licencia.
+- TypeScript 5.9.3 y Node.js 22.
+- npm como gestor de dependencias.
+- Vitest 3.2.4.
+- ESLint 9.39.1 y typescript-eslint 8.46.2.
+- Prettier 3.6.2.
+- GitHub Actions.
 
-Las versiones concretas se fijarán al iniciar la implementación y se registrarán en `package.json` y `package-lock.json`.
+Las versiones directas están fijadas en `package.json`. El archivo `package-lock.json` queda pendiente de generación mediante npm; no se ha fabricado manualmente.
 
 ## Principio de desarrollo
 
