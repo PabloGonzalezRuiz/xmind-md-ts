@@ -59,7 +59,7 @@ Esta API valida invariantes semánticas; no sustituye todavía la validación co
 
 ## 6. Ejecución de la CLI
 
-La CLI se diseñará para invocarse desde PowerShell y terminales compatibles. Debe ofrecer ayuda, validación sin exportar, selección de adaptador, rutas de entrada/salida, modo estricto/compatible y diagnóstico detallado. La CLI aún no está implementada.
+La CLI inicial está implementada en `src/cli/main.ts`. Expone `parse`, `validate` y `export` JSON, admite rutas de Windows, stdin/stdout, modo compatible/estricto, directorio raíz de assets y códigos de salida estables. Consulta [CLI](cli.md) para el contrato y los ejemplos. La selección de adaptadores adicionales se incorporará cuando existan.
 
 ## 7. Depuración
 
