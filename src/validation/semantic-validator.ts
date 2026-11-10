@@ -54,14 +54,15 @@ function validUriReference(value: string): boolean {
     return false;
   }
   try {
-    new URL(value, 'https://xmind-md-ts.invalid/');
-    return true;
+    const parsed = new URL(value, 'https://xmind-md-ts.invalid/');
+    return !['file:', 'javascript:', 'vbscript:'].includes(parsed.protocol);
   } catch {
     return false;
   }
 }
 
 function isExternalUri(uri: string): boolean {
+  if (/^[a-z]:\\//i.test(uri)) return false;
   return /^[a-z][a-z0-9+.-]*:/i.test(uri) || uri.startsWith('//');
 }
 
