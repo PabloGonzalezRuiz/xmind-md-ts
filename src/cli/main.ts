@@ -189,9 +189,7 @@ function failValidation(
   throw new InputError('El documento no supera la validación.');
 }
 
-async function loadIr(
-  options: Options,
-): Promise<{
+async function loadIr(options: Options): Promise<{
   ir: unknown;
   warnings: ReturnType<typeof parseMarkdownWithDiagnostics>['diagnostics'];
 }> {
