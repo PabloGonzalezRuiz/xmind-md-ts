@@ -1,13 +1,22 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "rootDir": "./src",
+    "rootDir": ".",
     "outDir": "./dist",
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["test", "dist", "node_modules"]
+  "include": [
+    "src/**/*.ts",
+    "spec/ir-v1.types.ts"
+  ],
+  "exclude": [
+    "test",
+    "dist",
+    "node_modules"
+  ]
 }
