@@ -175,7 +175,7 @@ describe('Markdown parser', () => {
   });
 
   it('reports unsupported inline HTML and rejects it in strict mode', () => {
-    const source = '# Root\\n\\nText <span>inline</span>.';
+    const source = '# Root\n\nText <span>inline</span>.';
     const result = parseMarkdownWithDiagnostics(source);
     expect(result.diagnostics.some((item) => item.code === 'MD_UNSUPPORTED_INLINE')).toBe(true);
     expect(() => parseMarkdown(source, { mode: 'strict' })).toThrowError(/Elemento inline/);
