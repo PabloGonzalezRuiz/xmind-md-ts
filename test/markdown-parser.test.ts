@@ -69,16 +69,10 @@ describe('Markdown parser', () => {
       alignments: ['left', 'right'],
       rows: [
         {
-          cells: [
-            { blocks: [{ type: 'paragraph' }] },
-            { blocks: [{ type: 'paragraph' }] },
-          ],
+          cells: [{ blocks: [{ type: 'paragraph' }] }, { blocks: [{ type: 'paragraph' }] }],
         },
         {
-          cells: [
-            { blocks: [{ type: 'paragraph' }] },
-            { blocks: [{ type: 'paragraph' }] },
-          ],
+          cells: [{ blocks: [{ type: 'paragraph' }] }, { blocks: [{ type: 'paragraph' }] }],
         },
       ],
     });
