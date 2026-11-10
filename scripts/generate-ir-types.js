@@ -100,14 +100,14 @@ function typeOf(node) {
   if (Array.isArray(node.type)) {
     return node.type.map((type) => primitiveType(type)).join(" | ");
   }
-  if (node.type === "array") return `${typeOf(node.items)}[]`;
+  if (node.type === "array") return `(${typeOf(node.items)})[]`;
   if (node.type === "object") {
     if (!node.properties) {
-      if (node.additionalProperties === false) return "Record<string, never>";
+      if (node.additionalProperties === false) return "{ [key: string]: never }";
       if (node.additionalProperties === true || node.additionalProperties === undefined) {
-        return "Record<string, unknown>";
+        return "{ [key: string]: unknown }";
       }
-      return `Record<string, ${typeOf(node.additionalProperties)}>`;
+      return `{ [key: string]: ${typeOf(node.additionalProperties)} }`;
     }
     return objectBody(node, "  ");
   }
