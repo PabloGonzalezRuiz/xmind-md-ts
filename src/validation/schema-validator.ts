@@ -24,6 +24,7 @@ export interface IrSchemaValidationResult {
 const ajv = new Ajv2020({
   allErrors: true,
   strict: true,
+  allowUnionTypes: true,
   validateFormats: true,
 });
 
