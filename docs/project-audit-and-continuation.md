@@ -25,7 +25,7 @@ El trabajo está distribuido en ramas de características. No hay pull requests 
 | Fase 4: parser Markdown → IR | Completada y CI verde | Rama `feature/phase-4-markdown-parser`; CI run [42820998921](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42820998921) |
 | Fase 5: validación semántica e identidad | Completada y CI verde | Commit `954216e99a13106d88ba72652460047d826b9c55`; CI run [42823341031](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42823341031) |
 | Fase 6: motor de estilos | Implementada y verificada en su alcance actual | Rama `feature/phase-6-style-engine`; CI normal verde sobre el HEAD `21dae3248be2963ccc77b00b79dffd1afd92a98d`. Quedan integración/exportadores y validación real XMind/SVG como tareas posteriores |
-| JSON Schema en ejecución | Pendiente | El esquema existe, pero no hay validador runtime conectado ni pruebas SC automáticas |
+| JSON Schema en ejecución | Implementación en curso, pendiente de CI | Ajv 8 Draft 2020-12, `ajv-formats`, API estructural y pipeline compuesto añadidos; matriz SC automatizada en `test/ir-schema-validator.test.ts`; falta CI verde y cerrar revisión de coherencia tipos/schema |
 | Adaptador JSON y CLI | Pendientes | No existen módulos ejecutables de exportación ni comandos CLI |
 | Adaptador XMind | Pendiente | SDK oficial aún no evaluado; no se genera paquete XMind |
 | Adaptador SVG | Pendiente | No existe renderizador |
@@ -59,7 +59,7 @@ Las ramas de fase están encadenadas por orden de desarrollo y contienen cambios
 ### 3.2 Código implementado
 
 - `src/markdown/parser.ts`: parser basado en Unified/Remark (CommonMark, GFM, front matter y directivas); genera IR v1 y diagnósticos compatibles.
-- `src/validation/semantic-validator.ts`: validación semántica sobre `unknown`, IDs, referencias, ciclos, tablas, URI, límites y contención léxica de assets.
+- `src/validation/schema-validator.ts`: validación estructural runtime con Ajv 8 y schema Draft 2020-12; formatos URI registrados.\n- `src/validation/validate-ir.ts`: pipeline estructural → semántico, fail-fast si el schema falla.\n- `src/validation/semantic-validator.ts`: validación semántica sobre `unknown`, IDs, referencias, ciclos, tablas, URI, límites y contención léxica de assets.
 - `src/styles/catalog.ts`: catálogo de propiedades, tipos, compatibilidad, defaults y validadores.
 - `src/styles/style-engine.ts`: resolución por capas, herencia de StyleSets, roles, estilos con nombre, overrides, runs y procedencia.
 - `src/index.ts`: exporta parser, validador y motor de estilos.
@@ -113,7 +113,7 @@ Los IDs de tarea son permanentes. Cambiar el orden o el alcance exige actualizar
 |---|---:|---|---|---|
 | AUD-001 | P0 | Estabilizar CI y recuperar la puerta de calidad de la fase 6 | Test de procedencia corregido; workflow read-only sin auto-push; format, lint, typecheck, tests y build verdes sobre el commit de código | Completada y verificada |
 | AUD-002 | P1 | Completar revisión de robustez del motor de estilos | Validadores de color/objetos robustos; procedencia coherente; referencias y ciclos diagnosticados; contrato de IDs y límites de compatibilidad documentados; pruebas y CI verdes | Completada y verificada |
-| AUD-003 | P1 | Integrar validación JSON Schema runtime | Dependencia seleccionada; SC-001…SC-110 automatizados; prueba de equivalencia schema/tipos o generación de tipos; integración con validación semántica | Pendiente |
+| AUD-003 | P1 | Integrar validación JSON Schema runtime | Ajv Draft 2020-12 integrado; SC-001…SC-005 y SC-101…SC-110 automatizados; pipeline estructural→semántico; revisión de coherencia schema/tipos; CI verde | En curso |
 | AUD-004 | P1 | Completar corpus de conformidad parser/IR | Fixtures positivos y negativos de cada bloque/directiva, diagnósticos y posiciones de origen; regresión reproducible | Pendiente |
 | AUD-005 | P1 | Implementar adaptador JSON y CLI | Comandos de parse, validate y export JSON; códigos de salida; rutas Windows; ejecución local y CI | Pendiente |
 | AUD-006 | P1 | Evaluar SDK oficial XMind y decidir estrategia | Informe de API, formatos, Node, licencia, actividad, cobertura, dependencias y prueba mínima | Pendiente |
@@ -172,4 +172,5 @@ El documento rector es `docs/ai-master-prompt.md`. Se ha reescrito como especifi
 |---|---|---|---|
 | 2026-11-10 | Auditoría inicial completa y AUD-001 | Auditoría registrada; commit `2c594eaadd3a3bb794c73d5607ef39bb5b15a9ac`; CI [42826867694](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42826867694) verde con 46/46 pruebas, lint, typecheck, formato y build | AUD-002 |
 | 2026-11-10 | AUD-002: revisión, endurecimiento y verificación del motor | Corregidos catálogo de color, `shadow`, procedencia de reinicios, referencias inexistentes y cadenas de herencia incompletas; añadidas pruebas de regresión y actualizado `docs/style-system.md`. CI normal verde: [42833075950](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42833075950), SHA `21dae3248be2963ccc77b00b79dffd1afd92a98d` | Solicitar autorización para AUD-003 |
-| 2026-11-10 | Reescritura del prompt maestro y sincronización documental | `docs/ai-master-prompt.md` reescrito desde cero como especificación greenfield; auditoría corregida para reflejar AUD-002 verificada y el HEAD real; hoja de ruta y README sincronizados. Cambios documentales en curso de CI | Esperar autorización expresa para AUD-003 |
+| 2026-11-10 | Reescritura del prompt maestro y sincronización documental | `docs/ai-master-prompt.md` reescrito desde cero como especificación greenfield; auditoría corregida para reflejar AUD-002 verificada y el HEAD real; hoja de ruta y README sincronizados | AUD-003 |
+| 2026-11-10 | AUD-003: integración runtime JSON Schema | Añadidas dependencias Ajv 8.20.0 y ajv-formats 3.0.1; `schema-validator.ts`, pipeline `validateIr`, exportaciones y pruebas SC. Pendiente de CI y revisión de coherencia schema/tipos | Verificar CI, resolver incidencias y cerrar documentación |
