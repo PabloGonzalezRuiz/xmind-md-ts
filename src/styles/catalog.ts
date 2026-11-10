@@ -4,7 +4,7 @@ export type StyleElementType =
   'map' | 'topic' | 'relationship' | 'boundary' | 'summary' | 'textRun';
 
 export type StylePropertyKind =
-  'color' | 'length' | 'number' | 'string' | 'boolean' | 'enum' | 'object';
+  'color' | 'length' | 'number' | 'string' | 'boolean' | 'enum' | 'object' | 'numberList';
 
 export interface StylePropertyDefinition {
   kind: StylePropertyKind;
@@ -106,6 +106,11 @@ export const STYLE_PROPERTY_CATALOG = {
     elements: ['relationship'],
     defaultValue: true,
   },
+  dashArray: {
+    kind: 'numberList',
+    elements: LINES,
+    defaultValue: [],
+  },
   shape: {
     kind: 'enum',
     elements: SHAPES,
@@ -205,6 +210,10 @@ export function validateStyleProperty(
       return typeof value === 'object' && value !== null && !Array.isArray(value)
         ? undefined
         : 'Se esperaba un objeto JSON.';
+    case 'numberList':
+      return Array.isArray(value) && value.every((item) => typeof item === 'number' && Number.isFinite(item) && item >= 0)
+        ? undefined
+        : 'Se esperaba una lista de números no negativos.';
     case 'enum':
       return (typeof value === 'string' || typeof value === 'number') &&
         definition.enumValues?.includes(String(value))
