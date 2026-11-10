@@ -157,7 +157,15 @@ function parseJson(source: string): unknown {
   }
 }
 
-function reportDiagnostics(diagnostics: Array<{ code: string; message: string; path?: string; line?: number; column?: number }>): void {
+function reportDiagnostics(
+  diagnostics: Array<{
+    code: string;
+    message: string;
+    path?: string;
+    line?: number;
+    column?: number;
+  }>,
+): void {
   for (const diagnostic of diagnostics) {
     const location = diagnostic.path
       ? ` (${diagnostic.path})`
@@ -169,13 +177,24 @@ function reportDiagnostics(diagnostics: Array<{ code: string; message: string; p
 }
 
 function failValidation(
-  diagnostics: Array<{ code: string; message: string; path?: string; line?: number; column?: number }>,
+  diagnostics: Array<{
+    code: string;
+    message: string;
+    path?: string;
+    line?: number;
+    column?: number;
+  }>,
 ): never {
   reportDiagnostics(diagnostics);
   throw new InputError('El documento no supera la validación.');
 }
 
-async function loadIr(options: Options): Promise<{ ir: unknown; warnings: ReturnType<typeof parseMarkdownWithDiagnostics>['diagnostics'] }> {
+async function loadIr(
+  options: Options,
+): Promise<{
+  ir: unknown;
+  warnings: ReturnType<typeof parseMarkdownWithDiagnostics>['diagnostics'];
+}> {
   const source = await readInput(options.input);
   const inputFormat = detectInputFormat(options.input, options.inputFormat);
   if (inputFormat === 'json') return { ir: parseJson(source), warnings: [] };
@@ -189,9 +208,10 @@ async function loadIr(options: Options): Promise<{ ir: unknown; warnings: Return
   } catch (error) {
     if (error instanceof Error && 'code' in error) {
       const parserError = error as Error & { code: string; line?: number; column?: number };
-      const location = parserError.line === undefined
-        ? ''
-        : ` (línea ${parserError.line}${parserError.column === undefined ? '' : `, columna ${parserError.column}`})`;
+      const location =
+        parserError.line === undefined
+          ? ''
+          : ` (línea ${parserError.line}${parserError.column === undefined ? '' : `, columna ${parserError.column}`})`;
       process.stderr.write(`[${parserError.code}]${location} ${parserError.message}\n`);
       throw new InputError('No se pudo interpretar el Markdown.');
     }
