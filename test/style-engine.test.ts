@@ -224,6 +224,20 @@ describe('style resolution engine', () => {
     expect(JSON.stringify(ir)).toBe(before);
   });
 
+  it('does not share mutable object defaults between resolutions', () => {
+    const first = resolveIrStyles(createIr());
+    const firstShadow = styleFor(first, 'topic:root').values.shadow as {
+      offset: { x: number; y: number };
+    };
+    firstShadow.offset.x = 99;
+
+    const second = resolveIrStyles(createIr());
+
+    expect(
+      (styleFor(second, 'topic:root').values.shadow as { offset: { x: number } }).offset.x,
+    ).toBe(0);
+  });
+
   it('reports unknown, incompatible and invalid style properties', () => {
     const ir = createIr();
     ir.sheet.rootTopic.style = {
