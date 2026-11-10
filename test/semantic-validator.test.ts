@@ -109,7 +109,8 @@ describe('IR semantic validator', () => {
   it('checks default style sets, inherited references, roles and named styles', () => {
     const ir = validIr();
     ir.sheet.defaultStyleSetId = 'theme:missing';
-    ir.sheet.rootTopic.style = { role: 'main', styleId: 'focus' };
+    ir.sheet.rootTopic.style = { setId: 'theme:existing', role: 'main', styleId: 'focus' };
+    ir.styleSets.push({ id: 'theme:existing' });
 
     expect(codes(validateIrDocument(ir))).toEqual(
       expect.arrayContaining([
