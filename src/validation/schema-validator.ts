@@ -1,6 +1,6 @@
-import Ajv2020 from 'ajv2020/dist/2020.js';
+import { createRequire } from 'node:module';
+
 import type { AnySchema } from 'ajv2020';
-import addFormats from 'ajv-formats';
 
 import irSchema from '../../spec/ir-v1.schema.json' with { type: 'json' };
 
@@ -17,6 +17,28 @@ export interface IrSchemaValidationResult {
   valid: boolean;
   diagnostics: IrSchemaDiagnostic[];
 }
+
+interface AjvError {
+  instancePath: string;
+  schemaPath: string;
+  keyword: string;
+  message?: string;
+}
+
+interface ValidateFunction {
+  (input: unknown): boolean;
+  errors?: AjvError[] | null;
+}
+
+interface Ajv2020Instance {
+  compile(schema: AnySchema): ValidateFunction;
+}
+
+type Ajv2020Constructor = new (options: Record<string, unknown>) => Ajv2020Instance;
+
+const require = createRequire(import.meta.url);
+const Ajv2020 = require('ajv2020/dist/2020.js') as Ajv2020Constructor;
+const addFormats = require('ajv-formats') as (instance: Ajv2020Instance) => void;
 
 const ajv = new Ajv2020({
   allErrors: true,
