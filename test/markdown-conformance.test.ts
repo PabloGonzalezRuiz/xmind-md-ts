@@ -1,9 +1,12 @@
-import { readFileSync } from 'node:fs';
 
 import { describe, expect, it } from 'vitest';
 
 import { validateIrDocumentComplete } from '../src/validation/complete-validator.js';
-import { parseMarkdown, parseMarkdownWithDiagnostics, MarkdownParseError } from '../src/markdown/parser.js';
+import {
+  parseMarkdown,
+  parseMarkdownWithDiagnostics,
+  MarkdownParseError,
+} from '../src/markdown/parser.js';
 import { validateIrSchema } from '../src/validation/schema-validator.js';
 
 function fixture(path: string): string {
@@ -63,9 +66,21 @@ describe('Markdown parser conformance corpus', () => {
     expect(root.content[3]).toMatchObject({
       type: 'table',
       alignments: ['left', 'right'],
-      rows: [{ cells: [{ blocks: [{ type: 'paragraph' }] }, { blocks: [{ type: 'paragraph' }] }] }],
     });
-    expect(root.content[4]).toMatchObject({ type: 'quote', blocks: [{ type: 'paragraph' }, { type: 'paragraph' }] });
+    const table = root.content[3];
+    expect(table?.type).toBe('table');
+    if (table?.type === 'table') {
+      expect(table.rows).toHaveLength(2);
+      expect(table.rows[0]?.cells).toHaveLength(2);
+      expect(table.rows[0]?.cells[0]?.blocks[0]).toMatchObject({
+        type: 'paragraph',
+        runs: [{ text: 'Columna A' }],
+      });
+    }
+    expect(root.content[4]).toMatchObject({
+      type: 'quote',
+      blocks: [{ type: 'paragraph' }, { type: 'paragraph' }],
+    });
     expect(root.content[5]).toMatchObject({
       type: 'code',
       language: 'typescript',
@@ -163,6 +178,7 @@ describe('Markdown parser conformance corpus', () => {
     expect(result.diagnostics.map((item) => item.code)).toEqual([
       'MD_FRONTMATTER_UNKNOWN_KEY',
       'MD_UNSUPPORTED_INLINE',
+      'MD_UNSUPPORTED_INLINE',
       'MD_UNSUPPORTED_NODE',
     ]);
     expect(result.diagnostics[1]).toMatchObject({
@@ -170,7 +186,7 @@ describe('Markdown parser conformance corpus', () => {
       line: 6,
       column: 7,
     });
-    expect(result.diagnostics[2]).toMatchObject({
+    expect(result.diagnostics[3]).toMatchObject({
       severity: 'warning',
       line: 8,
       column: 1,
