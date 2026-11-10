@@ -17,6 +17,10 @@ Las fases se ejecutan secuencialmente. Al terminar cada fase se presenta el resu
 | 11 | Documentación de usuario y publicación | Guía, ejemplos, releases y artefactos | Pendiente |
 | 12 | Visor web TypeScript | Aplicación web que consume el IR, con pruebas Playwright | Pendiente |
 
+## Registro operativo
+
+El estado detallado, las ramas/commits auditados, los criterios de aceptación y el backlog priorizado se mantienen en [Auditoría del proyecto y registro de continuidad](project-audit-and-continuation.md). Ese documento es la referencia para retomar el trabajo entre sesiones.
+
 ## Reglas de avance
 
 - No empezar una fase sin autorización expresa.
