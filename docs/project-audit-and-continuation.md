@@ -5,7 +5,7 @@
 > **Última auditoría:** 2026-11-10  
 > **Repositorio:** https://github.com/PabloGonzalezRuiz/xmind-md-ts  
 > **Rama de trabajo auditada:** `feature/aud-003-runtime-schema`  
-> **HEAD verificado:** `a6a8afc31886170fbe5f4836c0587a746e31eb30` (AUD-004 completada y verificada)  
+> **HEAD verificado:** `1040eea3ae6b33f59a9fdb3b541db5b1df915971` (AUD-004 completada y verificada; commit documental posterior al CI de código)  
 > **Rama principal:** `main` — `6aca81b59dbfcfc13034e7e1115c70f7691c5035`
 
 ## 1. Resumen ejecutivo
@@ -39,7 +39,7 @@ El trabajo está distribuido en ramas de características. No hay pull requests 
 | `feature/phase-4-markdown-parser` | `d31892ba0895f513b8b19a284de929623d10af6b` | Parser Markdown y pruebas |
 | `feature/phase-5-semantic-validation` | `954216e99a13106d88ba72652460047d826b9c55` | Validador semántico, IDs deterministas y pruebas |
 | `feature/phase-6-style-engine` | `21dae3248be2963ccc77b00b79dffd1afd92a98d` | Catálogo y motor de estilos; AUD-001 y AUD-002 verificadas |
-| `feature/aud-003-runtime-schema` | `a6a8afc31886170fbe5f4836c0587a746e31eb30` | Ajv runtime, pipeline estructural-semántico, tipos generados y corpus parser/IR; AUD-003 y AUD-004 verificadas |
+| `feature/aud-003-runtime-schema` | `1040eea3ae6b33f59a9fdb3b541db5b1df915971` | Ajv runtime, pipeline estructural-semántico, tipos generados y corpus parser/IR; AUD-003 y AUD-004 verificadas |
 
 Las ramas de fase están encadenadas por orden de desarrollo y contienen cambios acumulados. No hay PRs abiertos ni issues registrados en el repositorio en el momento de esta auditoría. **No fusionar ni reescribir `main` sin autorización expresa.**
 
