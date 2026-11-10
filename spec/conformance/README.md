@@ -1,6 +1,6 @@
 # Casos de conformidad IR v1.0.0
 
-Estos casos forman la matriz normativa de conformidad IR v1.0.0. Los casos semánticos implementados se ejercitan mediante Vitest en `test/semantic-validator.test.ts`; los casos estructurales definidos se ejecutan contra JSON Schema Draft 2020-12 mediante `test/schema-validator.test.ts`. La matriz actual define quince casos estructurales: SC-001…SC-005 y SC-101…SC-110; no define SC-006…SC-100. El fixture válido de referencia es `../fixtures/ir-v1-minimal.json`.
+Estos casos forman la matriz normativa de conformidad IR v1.0.0. Los casos semánticos se ejercitan mediante Vitest en `test/semantic-validator.test.ts`; los estructurales definidos se ejecutan contra JSON Schema Draft 2020-12 mediante `test/schema-validator.test.ts`. La matriz define quince casos estructurales: SC-001…SC-005 y SC-101…SC-110; no define SC-006…SC-100. El corpus de sintaxis Markdown del parser está en `test/fixtures/markdown/` y se ejecuta desde `test/markdown-conformance.test.ts`. El fixture IR mínimo de referencia es `../fixtures/ir-v1-minimal.json`.
 
 ## A. Casos que debe aceptar JSON Schema
 
@@ -60,4 +60,29 @@ JSON Schema no puede garantizar por sí solo estas invariantes de todo el docume
 - Extensiones desconocidas se conservan en modo compatible.
 - Una versión major desconocida se rechaza antes de interpretar el contenido.
 
-Los casos SEM-001 a SEM-018 tienen cobertura automatizada en Vitest. Los casos SC-001 a SC-110 siguen pendientes de ejecución automática contra JSON Schema.
+Los casos SEM-001 a SEM-018 tienen cobertura automatizada en Vitest. Los quince casos SC definidos tienen cobertura automatizada contra JSON Schema. No se considera que existan casos SC-006…SC-100 mientras no se incorporen explícitamente a esta matriz.
+
+## E. Corpus de conformidad del parser Markdown
+
+Los fixtures de parser son archivos Markdown independientes, versionados y reutilizables como regresión. Cada caso positivo se transforma a IR y se contrasta con JSON Schema; el fixture de relaciones y grupos se contrasta además con la validación semántica completa.
+
+| ID | Fixture | Cobertura / resultado esperado |
+|---|---|---|
+| PAR-001 | `valid/core-blocks.md` | Front matter, párrafos/runs, marcas inline, enlaces, listas anidadas y ordenadas, tablas GFM/alineación, citas, código, separador, imágenes y deduplicación de assets; IR válido |
+| PAR-002 | `valid/relationships-and-groups.md` | Directivas de relación, boundary y summary; referencias semánticas válidas |
+| PAR-003 | `valid/frontmatter.md` | Metadatos, style_set y settings de hoja |
+| PAR-101 | `invalid/missing-root.md` | Rechazo: `MD_ROOT_HEADING` |
+| PAR-102 | `invalid/multiple-roots.md` | Rechazo: `MD_MULTIPLE_ROOTS` |
+| PAR-103 | `invalid/heading-gap.md` | Rechazo: `MD_HEADING_LEVEL_GAP` |
+| PAR-104 | `invalid/content-before-root.md` | Rechazo: `MD_CONTENT_BEFORE_ROOT` |
+| PAR-105 | `invalid/duplicate-topic-id.md` | Rechazo: `MD_DUPLICATE_TOPIC_ID` |
+| PAR-106 | `invalid/unknown-directive.md` | Rechazo: `MD_UNKNOWN_DIRECTIVE` |
+| PAR-107 | `invalid/invalid-directive-key.md` | Rechazo: `MD_DIRECTIVE_UNKNOWN_KEY` |
+| PAR-108 | `invalid/invalid-relationship.md` | Rechazo: `MD_DIRECTIVE_FIELD` |
+| PAR-109 | `invalid/invalid-boundary-topics.md` | Rechazo: `MD_DIRECTIVE_TOPICS` |
+| PAR-110 | `invalid/invalid-frontmatter-settings.md` | Rechazo: `MD_FRONTMATTER_SETTINGS` |
+| PAR-201 | `diagnostics/unsupported.md` | Diagnósticos compatibles de clave desconocida, HTML inline y HTML de bloque con líneas/columnas |
+| PAR-202 | Caso inline HTML estricto | Rechazo estricto con código y posición |
+| PAR-203 | Caso de directiva dentro de bloque de contenido | Rechazo: `MD_DIRECTIVE_CONTEXT` |
+
+La batería también comprueba posiciones de origen de temas y bloques, preservación del orden y validez del IR generado. Los códigos de error son parte del contrato observable del parser; cambios deliberados deben actualizar la matriz y sus fixtures en el mismo cambio.
