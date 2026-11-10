@@ -39,6 +39,9 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      - name: Check IR schema/type consistency
+        run: npm run check:ir-types
+
       - name: Test
         run: npm test
 
