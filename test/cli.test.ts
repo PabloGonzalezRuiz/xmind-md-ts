@@ -28,7 +28,11 @@ describe('CLI', () => {
     directory = await mkdtemp(join(tmpdir(), 'xmind md cli '));
     markdownPath = join(directory, 'mapa de prueba.md');
     jsonPath = join(directory, 'mapa generado.json');
-    await writeFile(markdownPath, '# Mapa de prueba\n\n## Rama A\n\nTexto de prueba.\n', 'utf8');
+    await writeFile(
+      markdownPath,
+      '# Mapa de prueba\n\n## Rama A\n\nTexto de prueba.\n',
+      'utf8',
+    );
   });
 
   afterEach(async () => {
