@@ -8,7 +8,7 @@ Cada cambio debe superar, según el alcance: Prettier, ESLint, typecheck, prueba
 
 La fuente normativa se materializa en `spec/ir-v1.schema.json` y `spec/ir-v1.types.ts`; ambos deben comprobar su equivalencia automáticamente. Los fixtures de `spec/fixtures/` y los casos de `spec/conformance/` son independientes de la implementación. Nunca se mantienen dos contratos manuales divergentes sin pruebas.
 
-La matriz de casos está en `spec/conformance/README.md`. Pruebas de conformidad obligatorias:
+La matriz de casos está en `spec/conformance/README.md`. La suite Vitest ya cubre los invariantes semánticos implementados; los casos pendientes de validación JSON Schema deberán conectarse a un validador de esquema en una fase específica. Pruebas de conformidad obligatorias:
 - Fixture mínimo válido.
 - Rechazo de versión IR desconocida.
 - Rechazo de propiedades desconocidas en objetos del núcleo.
@@ -26,7 +26,9 @@ JSON Schema no sustituye al validador semántico: las referencias cruzadas y la 
 
 - Parser: gramática válida, inválida, ubicación y escapes.
 - IR: schema, tipos, serialización y versionado.
-- Validación: IDs, referencias, jerarquía y ciclos.
+- Validación: IDs globalmente únicos (excepto el namespace separado del documento), referencias, ciclos de estilos, tablas, URI, límites y rutas de assets configuradas.
+
+La API `validateIrDocument(input, options)` está exportada desde `src/index.ts`. Recibe `unknown`, devuelve `valid` y diagnósticos (`code`, `severity`, `message`, `path` y posición de origen cuando existe), y no modifica la entrada. Los límites por defecto son 100 niveles, 100.000 temas, 250.000 bloques y 10.000 assets; pueden ajustarse. `assetRootDirectory` activa la comprobación de contención de rutas relativas.
 - Estilos: cascada, herencia, overrides y procedencia.
 - Adaptadores: salida, capacidades, pérdidas y errores.
 - CLI: códigos de salida, rutas, opciones y Windows/Linux.
