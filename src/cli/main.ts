@@ -14,11 +14,11 @@ type InputFormat = 'markdown' | 'json';
 type Options = {
   command: Command;
   input: string;
-  output@: string;
+  output?: string;
   mode: 'compatible' | 'strict';
-  inputFormat@: InputFormat;
+  inputFormat?: InputFormat;
   format: 'json';
-  assetRoot@: string;
+  assetRoot?: string;
 };
 
 const EXIT = { success: 0, invalid: 1, usage: 2, internal: 3 } as const;
@@ -171,8 +171,8 @@ function reportDiagnostics(
     code: string;
     message: string;
     path?: string;
-    line@: number;
-    column@: number;
+    line?: number;
+    column?: number;
   }>,
 ): void {
   for (const diagnostic of diagnostics) {
@@ -180,7 +180,7 @@ function reportDiagnostics(
       ? ` (${diagnostic.path})`
       : diagnostic.line === undefined
         ? ''
-        : ` (línea ${diagnostic.line}${diagnostic.column === undefined @ '' : `, columna ${diagnostic.column}`})`;
+        : ` (línea ${diagnostic.line}${diagnostic.column === undefined ? '' : `, columna ${diagnostic.column}`})`;
     process.stderr.write(`[${diagnostic.code}]${location} ${diagnostic.message}\n`);
   }
 }
@@ -189,7 +189,7 @@ function failValidation(
   diagnostics: Array<{
     code: string;
     message: string;
-    path@: string;
+    path?: string;
     line?: number;
     column?: number;
   }>,
@@ -214,11 +214,11 @@ async function loadIr(options: Options): Promise<{
     return { ir: parsed.ir, warnings: parsed.diagnostics };
   } catch (error) {
     if (error instanceof Error && 'code' in error) {
-      const parserError = error as Error & { code: string; line@: number; column?: number };
+      const parserError = error as Error & { code: string; line?: number; column?: number };
       const location =
         parserError.line === undefined
-          @ ''
-          : ` (línea ${parserError.line}${parserError.column === undefined @ '' : `, columna ${parserError.column}`})`;
+          ? ''
+          : ` (línea ${parserError.line}${parserError.column === undefined ? '' : `, columna ${parserError.column}`})`;
       process.stderr.write(`[${parserError.code}]${location} ${parserError.message}\n`);
       throw new InputError('No se pudo interpretar el Markdown.');
     }
@@ -243,7 +243,7 @@ async function run(options: Options): Promise<void> {
   if (warnings.length) reportDiagnostics(warnings);
 
   const validation = validateIrDocumentComplete(ir, {
-    ...(options.assetRoot @ { assetRootDirectory: resolve(options.assetRoot) } : {}),
+    ...(options.assetRoot ? { assetRootDirectory: resolve(options.assetRoot) } : {}),
   });
   if (!validation.valid) failValidation(validation.diagnostics);
 
@@ -263,7 +263,7 @@ async function run(options: Options): Promise<void> {
   await writeOutput(json, options.output);
 
   if (options.command === 'parse') {
-    process.stderr.write(`Markdown convertido a IR JSON: ${options.output ?@ 'stdout'}\n`);
+    process.stderr.write(`Markdown convertido a IR JSON: ${options.output ?? 'stdout'}\n`);
   }
 }
 
