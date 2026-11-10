@@ -19,7 +19,7 @@ Las fases se ejecutan secuencialmente. Al terminar cada fase se presenta el resu
 
 ## Verificación transversal del contrato IR
 
-Las auditorías AUD-001, AUD-002 y AUD-003 están completadas y verificadas en ramas de trabajo. AUD-003 incorpora validación JSON Schema Draft 2020-12 en runtime y generación sincronizada de tipos TypeScript. AUD-004 está autorizada y en curso: se está construyendo un corpus reproducible de fixtures Markdown positivos, negativos y de diagnóstico, con verificación de IR y posiciones de origen. `main` permanece sin cambios.
+Las auditorías AUD-001, AUD-002, AUD-003 y AUD-004 están completadas y verificadas en ramas de trabajo. AUD-003 incorpora validación JSON Schema Draft 2020-12 en runtime y generación sincronizada de tipos TypeScript. AUD-004 añade un corpus reproducible de fixtures Markdown positivos, negativos y de diagnóstico, con verificación estructural/semántica de IR y posiciones de origen. El siguiente elemento del backlog es AUD-005 (adaptador JSON y CLI), pendiente de autorización. `main` permanece sin cambios.
 
 ## Registro operativo
 
