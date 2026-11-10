@@ -75,6 +75,7 @@ function parseArguments(args: string[]): Options {
   for (let index = 1; index < args.length; index += 1) {
     const arg = args[index];
     const next = args[index + 1];
+    if (arg === undefined) continue;
     if (arg === '--output' || arg === '-o') {
       if (!next || next.startsWith('--')) throw new UsageError(`Falta el valor de ${arg}.`);
       output = next;
@@ -119,7 +120,15 @@ function parseArguments(args: string[]): Options {
     throw new UsageError('validate no genera archivos; elimina --output.');
   }
 
-  return { command, input, output, mode, inputFormat, format, assetRoot };
+  return {
+    command,
+    input,
+    mode,
+    format,
+    ...(output === undefined ? {} : { output }),
+    ...(inputFormat === undefined ? {} : { inputFormat }),
+    ...(assetRoot === undefined ? {} : { assetRoot }),
+  };
 }
 
 async function readInput(input: string): Promise<string> {
