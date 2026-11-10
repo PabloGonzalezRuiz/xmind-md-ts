@@ -291,7 +291,9 @@ describe('style resolution engine', () => {
 
     const result = resolveIrStyles(ir);
 
-    expect(result.diagnostics.filter((item) => item.code === 'STYLE_PROPERTY_INVALID')).toHaveLength(2);
+    expect(
+      result.diagnostics.filter((item) => item.code === 'STYLE_PROPERTY_INVALID'),
+    ).toHaveLength(2);
     expect(styleFor(result, 'topic:root').values.color).toBe('#777777');
   });
 
@@ -360,7 +362,9 @@ describe('style resolution engine', () => {
       offset: { x: 0, y: 2 },
       blur: 4,
     });
-    expect(Object.keys(child.provenance).filter((key) => key.startsWith('shadow.'))).toEqual([
+    expect(
+      Object.keys(child.provenance).filter((key) => key.startsWith('shadow.')),
+    ).toEqual([
       'shadow.enabled',
       'shadow.color',
       'shadow.offset.x',
@@ -423,8 +427,12 @@ describe('style resolution engine', () => {
   it('uses deterministic structural paths as text-run identity', () => {
     const first = resolveIrStyles(createIr());
     const second = resolveIrStyles(createIr());
-    const firstIds = first.styles.filter((style) => style.elementType === 'textRun').map((style) => style.elementId);
-    const secondIds = second.styles.filter((style) => style.elementType === 'textRun').map((style) => style.elementId);
+    const firstIds = first.styles
+      .filter((style) => style.elementType === 'textRun')
+      .map((style) => style.elementId);
+    const secondIds = second.styles
+      .filter((style) => style.elementType === 'textRun')
+      .map((style) => style.elementId);
 
     expect(firstIds).toEqual(secondIds);
     expect(new Set(firstIds).size).toBe(firstIds.length);
