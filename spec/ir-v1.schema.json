@@ -43,7 +43,7 @@
       "type": "string",
       "minLength": 1,
       "maxLength": 128,
-      "pattern": "^[^\\\\s]+$"
+      "pattern": "^\\\\S+$"
     },
     "sourcePosition": {
       "type": "object",
@@ -139,6 +139,9 @@
             "$ref": "#/$defs/summary"
           },
           "default": []
+        },
+        "defaultStyleSetId": {
+          "$ref": "#/$defs/id"
         }
       }
     },
