@@ -36,6 +36,8 @@
     "remark-gfm": "4.0.1",
     "remark-parse": "11.0.0",
     "unified": "11.0.5",
-    "yaml": "2.8.1"
+    "yaml": "2.8.1",
+    "ajv2020": "npm:ajv@8.17.1",
+    "ajv-formats": "3.0.1"
   }
 }
