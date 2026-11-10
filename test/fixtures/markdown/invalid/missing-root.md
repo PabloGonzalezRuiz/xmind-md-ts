@@ -1,0 +1,1 @@
+Texto sin encabezado raíz.
