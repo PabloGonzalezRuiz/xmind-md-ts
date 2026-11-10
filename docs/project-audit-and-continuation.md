@@ -6,7 +6,8 @@
 > **Repositorio:** https://github.com/PabloGonzalezRuiz/xmind-md-ts  
 > **Rama de trabajo auditada:** `feature/phase-6-style-engine`  
 > **Commit de código validado en AUD-001:** `2c594eaadd3a3bb794c73d5607ef39bb5b15a9ac`  
-> **HEAD de código validado para AUD-002:** `21dae3248be2963ccc77b00b79dffd1afd92a98d`  \n> **HEAD tras la actualización documental:** `988404d8d72aba56eda2cd1c43fc95c86be8ba2a`  
+> **HEAD de código validado para AUD-002:** `21dae3248be2963ccc77b00b79dffd1afd92a98d`  
+> **HEAD tras la actualización documental:** `988404d8d72aba56eda2cd1c43fc95c86be8ba2a`  
 > **Rama principal:** `main` — `6aca81b59dbfcfc13034e7e1115c70f7691c5035`
 
 ## 1. Resumen ejecutivo
