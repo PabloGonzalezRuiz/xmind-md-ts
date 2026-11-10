@@ -180,12 +180,12 @@ El estado vivo no se mantiene duplicado aquí: se registra en `docs/project-audi
 A fecha de la última actualización de este prompt:
 - Fases 1–5: completadas y verificadas.
 - Fase 6 (motor de estilos): implementación y robustez AUD-001/AUD-002 completadas y verificadas en `feature/phase-6-style-engine`.
-- La validación JSON Schema en ejecución aún no está integrada.
+- AUD-003: validación JSON Schema runtime en implementación; Ajv 8 Draft 2020-12, formatos URI, API `validateIrSchema`, pipeline `validateIr` y casos SC añadidos; pendiente de CI y revisión final de coherencia schema/tipos.
 - No hay exportadores JSON/XMind/SVG ni CLI terminados.
 - No existe todavía visor web.
 - El desarrollo de las ramas de características no se considera integrado en `main` por el mero hecho de superar CI.
 
-La siguiente tarea priorizada es **AUD-003: integrar validación JSON Schema runtime**. No iniciarla hasta que el usuario la autorice expresamente.
+La tarea autorizada en curso es **AUD-003: integrar validación JSON Schema runtime**. Consultar el registro de continuidad para su estado exacto y no darla por cerrada hasta que el CI del HEAD final sea verde y los criterios de aceptación estén cubiertos.
 
 ## 9. Protocolo obligatorio de trabajo con el repositorio
 
