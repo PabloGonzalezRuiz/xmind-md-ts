@@ -160,7 +160,7 @@ Al iniciar una sesión de trabajo:
 
 ### Primera acción de continuación
 
-**AUD-001 está completada y verificada.** La siguiente tarea es **AUD-002**, revisión de robustez del motor de estilos. No iniciarla hasta recibir autorización expresa.
+**AUD-001 está completada y verificada.** **AUD-002 está en curso** en `feature/phase-6-style-engine`; no iniciar AUD-003 hasta cerrar esta tarea y recibir autorización expresa.
 
 ## 8. Registro de sesiones
 
