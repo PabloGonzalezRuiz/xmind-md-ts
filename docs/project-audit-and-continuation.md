@@ -25,7 +25,7 @@ El trabajo está distribuido en ramas de características. No hay pull requests 
 | Fase 4: parser Markdown → IR | Completada y CI verde | Rama `feature/phase-4-markdown-parser`; CI run [42820998921](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42820998921) |
 | Fase 5: validación semántica e identidad | Completada y CI verde | Commit `954216e99a13106d88ba72652460047d826b9c55`; CI run [42823341031](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42823341031) |
 | Fase 6: motor de estilos | Implementada y verificada en su alcance actual | Rama `feature/phase-6-style-engine`; CI normal verde sobre el HEAD `21dae3248be2963ccc77b00b79dffd1afd92a98d`. Quedan integración/exportadores y validación real XMind/SVG como tareas posteriores |
-| JSON Schema en ejecución | Implementación en curso, pendiente de CI | Ajv 8 Draft 2020-12, `ajv-formats`, API estructural y pipeline compuesto añadidos; matriz SC automatizada en `test/ir-schema-validator.test.ts`; falta CI verde y cerrar revisión de coherencia tipos/schema |
+| JSON Schema en ejecución | Completada y verificada | Ajv 8 Draft 2020-12, `ajv-formats`, API estructural y pipeline compuesto; casos SC automatizados; CI normal verde en el HEAD `3720239503da81d950a9f83a2ebaa392302258fe` (run `42844634106`) |
 | Adaptador JSON y CLI | Pendientes | No existen módulos ejecutables de exportación ni comandos CLI |
 | Adaptador XMind | Pendiente | SDK oficial aún no evaluado; no se genera paquete XMind |
 | Adaptador SVG | Pendiente | No existe renderizador |
@@ -68,7 +68,7 @@ No existen todavía `src/adapters/`, `src/cli/` ni aplicación `viewer/`.
 
 ### 3.3 Toolchain y CI
 
-- Node.js 24, npm, TypeScript 6, Vitest 5, ESLint 10 y Prettier 3.
+- Node.js 24, npm, TypeScript 6, Vitest 5, ESLint 10, Prettier 3, Ajv 8 y `ajv-formats`.
 - `npm ci`, `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`.
 - `npm run verify` agrupa las puertas locales de calidad.
 - `package-lock.json` está versionado.
@@ -96,7 +96,7 @@ No existen todavía `src/adapters/`, `src/cli/` ni aplicación `viewer/`.
 - La ejecución final corresponde al workflow normal y confirma la cadena de calidad sobre el HEAD final: formato, lint, typecheck, tests y build.
 - El run diagnóstico [42832932075](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42832932075) también fue verde, pero no se utiliza como evidencia de cierre porque ejecutaba Prettier antes de comprobar el formato.
 
-### 4.3 Deuda técnica restante
+#### 4.4 AUD-003 — validación JSON Schema runtime\n\n- Dependencias directas: Ajv `8.20.0` y `ajv-formats` `3.0.1`; lockfile regenerado con `npm install --package-lock-only`.\n- `src/validation/schema-validator.ts`: Ajv 2020-12, `allErrors`, formatos URI, diagnósticos estructurados y rutas de instancia.\n- `src/validation/validate-ir.ts`: pipeline fail-fast; valida estructura y solo después ejecuta `validateIrDocument`.\n- `src/index.ts` exporta `validateIrSchema`, `validateIr` y sus tipos.\n- `test/ir-schema-validator.test.ts` automatiza SC-001…SC-005 y SC-101…SC-110, además de la integración estructural/semántica.\n- CI normal [42844634106](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42844634106), SHA `3720239503da81d950a9f83a2ebaa392302258fe`: formato, lint, typecheck, 75/75 tests y build correctos.\n- El workflow temporal usado para generar lockfile/formatear se eliminó; `.github/workflows/` contiene únicamente `ci.yml`.\n\n**Límite separado:** `spec/ir-v1.types.ts` continúa mantenido manualmente. TypeScript no expresa todas las restricciones JSON Schema de cadenas y formatos; automatizar la coherencia schema/tipos se registra como AUD-012.\n\n## 4.3 Deuda técnica restante
 
 1. El catálogo de estilos sigue siendo neutral: sus propiedades y compatibilidad no están contrastadas todavía con las capacidades reales de XMind ni con las del exportador SVG.
 2. Los IDs de runs son deterministas para un mismo IR, pero pueden variar si se insertan o reordenan elementos antes de rutas basadas en índices. Esta limitación está documentada.
@@ -113,7 +113,7 @@ Los IDs de tarea son permanentes. Cambiar el orden o el alcance exige actualizar
 |---|---:|---|---|---|
 | AUD-001 | P0 | Estabilizar CI y recuperar la puerta de calidad de la fase 6 | Test de procedencia corregido; workflow read-only sin auto-push; format, lint, typecheck, tests y build verdes sobre el commit de código | Completada y verificada |
 | AUD-002 | P1 | Completar revisión de robustez del motor de estilos | Validadores de color/objetos robustos; procedencia coherente; referencias y ciclos diagnosticados; contrato de IDs y límites de compatibilidad documentados; pruebas y CI verdes | Completada y verificada |
-| AUD-003 | P1 | Integrar validación JSON Schema runtime | Ajv Draft 2020-12 integrado; SC-001…SC-005 y SC-101…SC-110 automatizados; pipeline estructural→semántico; revisión de coherencia schema/tipos; CI verde | En curso |
+| AUD-003 | P1 | Integrar validación JSON Schema runtime | Ajv Draft 2020-12 integrado; SC-001…SC-005 y SC-101…SC-110 automatizados; pipeline estructural→semántico; CI verde | Completada y verificada |
 | AUD-004 | P1 | Completar corpus de conformidad parser/IR | Fixtures positivos y negativos de cada bloque/directiva, diagnósticos y posiciones de origen; regresión reproducible | Pendiente |
 | AUD-005 | P1 | Implementar adaptador JSON y CLI | Comandos de parse, validate y export JSON; códigos de salida; rutas Windows; ejecución local y CI | Pendiente |
 | AUD-006 | P1 | Evaluar SDK oficial XMind y decidir estrategia | Informe de API, formatos, Node, licencia, actividad, cobertura, dependencias y prueba mínima | Pendiente |
@@ -121,12 +121,12 @@ Los IDs de tarea son permanentes. Cambiar el orden o el alcance exige actualizar
 | AUD-008 | P2 | Implementar adaptador SVG | SVG válido, renderizado determinista, metadatos semánticos y pruebas visuales/estructurales | Pendiente |
 | AUD-009 | P2 | Crear corpus real y validar con XMind Desktop | Fixtures de referencia abiertos y guardados en versión Desktop identificada; informe de fidelidad | Pendiente |
 | AUD-010 | P2 | Documentación de usuario y publicación | Instalación, gramática, ejemplos, CLI, limitaciones, releases y artefactos | Pendiente |
-| AUD-011 | P3 | Diseñar e implementar visor web | Arquitectura aprobada, IR consumido sin duplicar semántica, accesibilidad y pruebas Playwright | Pendiente |
+| AUD-011 | P3 | Diseñar e implementar visor web | Arquitectura aprobada, IR consumido sin duplicar semántica, accesibilidad y pruebas Playwright | Pendiente |\n| AUD-012 | P1 | Automatizar coherencia entre JSON Schema y tipos TypeScript | Generación de tipos desde schema o prueba automática de equivalencia estructural; documentar restricciones no expresables en TS; CI verde | Pendiente |
 
 ### Dependencias
 
 - AUD-001 desbloquea el cierre formal de la fase 6.
-- AUD-002 y AUD-003 deben estar resueltas antes de considerar estable el pipeline de compilación.
+- AUD-002 y AUD-003 deben estar resueltas antes de considerar estable el pipeline de compilación.\n- AUD-012 depende de AUD-003: el runtime schema ya es operativo; la tarea separada automatizará la coherencia entre contrato y tipos estáticos.
 - AUD-005 consume parser, validador, schema y serialización JSON.
 - AUD-006 precede a AUD-007: no elegir SDK ni formato de salida antes de evaluar.
 - AUD-008 puede avanzar tras estabilizar el IR y el motor de estilos.
@@ -173,4 +173,4 @@ El documento rector es `docs/ai-master-prompt.md`. Se ha reescrito como especifi
 | 2026-11-10 | Auditoría inicial completa y AUD-001 | Auditoría registrada; commit `2c594eaadd3a3bb794c73d5607ef39bb5b15a9ac`; CI [42826867694](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42826867694) verde con 46/46 pruebas, lint, typecheck, formato y build | AUD-002 |
 | 2026-11-10 | AUD-002: revisión, endurecimiento y verificación del motor | Corregidos catálogo de color, `shadow`, procedencia de reinicios, referencias inexistentes y cadenas de herencia incompletas; añadidas pruebas de regresión y actualizado `docs/style-system.md`. CI normal verde: [42833075950](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42833075950), SHA `21dae3248be2963ccc77b00b79dffd1afd92a98d` | Solicitar autorización para AUD-003 |
 | 2026-11-10 | Reescritura del prompt maestro y sincronización documental | `docs/ai-master-prompt.md` reescrito desde cero como especificación greenfield; auditoría corregida para reflejar AUD-002 verificada y el HEAD real; hoja de ruta y README sincronizados | AUD-003 |
-| 2026-11-10 | AUD-003: integración runtime JSON Schema | Añadidas dependencias Ajv 8.20.0 y ajv-formats 3.0.1; `schema-validator.ts`, pipeline `validateIr`, exportaciones y pruebas SC. Pendiente de CI y revisión de coherencia schema/tipos | Verificar CI, resolver incidencias y cerrar documentación |
+| 2026-11-10 | AUD-003: integración runtime JSON Schema | Ajv 8.20.0 + `ajv-formats` 3.0.1; `validateIrSchema`, pipeline `validateIr` y casos SC automatizados. CI normal verde: [42844634106](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42844634106), HEAD `3720239503da81d950a9f83a2ebaa392302258fe`, 75/75 tests; formato, lint, typecheck y build verdes. | Solicitar autorización para AUD-012 |
