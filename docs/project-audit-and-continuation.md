@@ -6,7 +6,7 @@
 > **Repositorio:** https://github.com/PabloGonzalezRuiz/xmind-md-ts  
 > **Rama de trabajo auditada:** `feature/phase-6-style-engine`  
 > **Commit de código validado en AUD-001:** `2c594eaadd3a3bb794c73d5607ef39bb5b15a9ac`  
-**Rama de trabajo:** `feature/aud-003-runtime-schema` (AUD-003 en curso)  
+**Rama de trabajo:** `feature/aud-003-runtime-schema` — HEAD `f27022a82a6e87bbab328ce105469a89a0cf4a68` (AUD-003 en curso)  
 > **Rama principal:** `main` — `6aca81b59dbfcfc13034e7e1115c70f7691c5035`
 
 ## 1. Resumen ejecutivo
@@ -24,7 +24,7 @@ El trabajo está distribuido en ramas de características. No hay pull requests 
 | Fase 4: parser Markdown → IR | Completada y CI verde | Rama `feature/phase-4-markdown-parser`; CI run [42820998921](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42820998921) |
 | Fase 5: validación semántica e identidad | Completada y CI verde | Commit `954216e99a13106d88ba72652460047d826b9c55`; CI run [42823341031](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42823341031) |
 | Fase 6: motor de estilos | Motor implementado; robustez AUD-002 verificada | Rama `feature/phase-6-style-engine`; CI completo verde sobre el HEAD registrado. La fase aún requiere integración/exportadores y validación real XMind/SVG |
-| JSON Schema en ejecución | En desarrollo | Ajv 8 Draft 2020-12 integrado en `feature/aud-003-runtime-schema`; falta completar equivalencia schema/tipos y CI |
+| JSON Schema en ejecución | En desarrollo | Ajv 8 Draft 2020-12 integrado; 15 casos SC definidos y pipeline estructural-semántico cubiertos por tests; CI verde. Pendiente decidir e implementar equivalencia/generación de tipos |
 | Adaptador JSON y CLI | Pendientes | No existen módulos ejecutables de exportación ni comandos CLI |
 | Adaptador XMind | Pendiente | SDK oficial aún no evaluado; no se genera paquete XMind |
 | Adaptador SVG | Pendiente | No existe renderizador |
@@ -112,7 +112,7 @@ Los IDs de tarea son permanentes. Cambiar el orden o el alcance exige actualizar
 |---|---:|---|---|---|
 | AUD-001 | P0 | Estabilizar CI y recuperar la puerta de calidad de la fase 6 | Test de procedencia corregido; workflow read-only sin auto-push; format, lint, typecheck, tests y build verdes sobre el commit de código | Completada y verificada |
 | AUD-002 | P1 | Completar revisión de robustez del motor de estilos | Validadores de color/objetos robustos; procedencia coherente; referencias y ciclos diagnosticados; contrato de IDs y límites de compatibilidad documentados; pruebas y CI verdes | Completada y verificada |
-| AUD-003 | P1 | Integrar validación JSON Schema runtime | Ajv 2020; todos los casos SC definidos automatizados; prueba de equivalencia schema/tipos o generación; integración estructural-semántica; CI verde | En curso |
+| AUD-003 | P1 | Integrar validación JSON Schema runtime | Ajv 2020; todos los casos SC definidos automatizados; equivalencia schema/tipos o generación; integración estructural-semántica; CI verde | En curso (falta equivalencia/generación de tipos) |
 | AUD-004 | P1 | Completar corpus de conformidad parser/IR | Fixtures positivos y negativos de cada bloque/directiva, diagnósticos y posiciones de origen; regresión reproducible | Pendiente |
 | AUD-005 | P1 | Implementar adaptador JSON y CLI | Comandos de parse, validate y export JSON; códigos de salida; rutas Windows; ejecución local y CI | Pendiente |
 | AUD-006 | P1 | Evaluar SDK oficial XMind y decidir estrategia | Informe de API, formatos, Node, licencia, actividad, cobertura, dependencias y prueba mínima | Pendiente |
@@ -168,3 +168,5 @@ Al iniciar una sesión de trabajo:
 | 2026-11-10 | AUD-002: revisión, endurecimiento y verificación del motor | Corregidos catálogo de color, `shadow`, procedencia de reinicios, referencias inexistentes y cadenas de herencia incompletas; añadidas pruebas de regresión y actualizado `docs/style-system.md`. CI normal verde: [42833075950](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42833075950), SHA `21dae3248be2963ccc77b00b79dffd1afd92a98d` | Solicitar autorización para AUD-003 |
 
 | 2026-11-10 | AUD-003: integración inicial de JSON Schema runtime | Rama `feature/aud-003-runtime-schema`; Ajv 8 Draft 2020-12 y `ajv-formats`; validador estructural sin coerciones ni mutaciones; pipeline estructural→semántico; tests de los 15 casos SC actualmente definidos; decisión técnica documentada. Aún sin CI verificada ni prueba automatizada de equivalencia de tipos | Completar equivalencia schema/tipos, ejecutar CI y corregir incidencias |
+
+| 2026-11-10 | AUD-003: validador estructural y pipeline completo | Ajv 8 Draft 2020-12; alias `ajv2020` para coexistir con Ajv 6 de ESLint; formatos URI; diagnósticos con rutas/keyword/params; 15 casos SC definidos más pruebas de parser tipado, URI, paths, no mutación y pipeline semántico. CI verde: [42842076938](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42842076938), SHA `f27022a82a6e87bbab328ce105469a89a0cf4a68`. Pendiente: decidir e implementar comprobación completa o generación de tipos desde schema | Resolver fuente de verdad para los tipos TypeScript y completar CI final |
