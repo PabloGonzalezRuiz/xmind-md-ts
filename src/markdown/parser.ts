@@ -186,6 +186,8 @@ function inlineRuns(nodes: AstNode[], state: ParseState, marks: TextRun['marks']
       }
     } else if (node.type === 'break') {
       result.push({ text: '\n', ...(marks.length ? { marks: [...marks] } : {}) });
+    } else {
+      warn(state, 'MD_UNSUPPORTED_INLINE', `Elemento inline "${node.type}" no soportado en IR v1.`, node);
     }
   }
   return result;
