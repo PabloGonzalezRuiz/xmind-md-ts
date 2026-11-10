@@ -53,3 +53,5 @@ export type {
 
 export { validateIrDocumentComplete } from './validation/complete-validator.js';
 export type { IrCompleteValidationResult } from './validation/complete-validator.js';
+
+export { serializeIrJson } from './adapters/json/json-adapter.js';
