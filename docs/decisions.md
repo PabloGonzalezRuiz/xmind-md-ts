@@ -38,9 +38,21 @@ Este registro contiene decisiones normativas del diseño del IR v1.0.0 y asuntos
 | IR-013 | Exactamente un H1; sin saltos de nivel | Evitar padres implícitos y raíces ambiguas |
 | IR-014 | Tablas sin spans ni semántica especial de cabecera en v1 | Simplificar interoperabilidad inicial |
 
+## Decisiones de fase 6 — motor de estilos
+
+| ID | Decisión | Motivo / consecuencia |
+|---|---|---|
+| ST-001 | La resolución produce una vista derivada y no modifica el IR | Preserva las declaraciones de autoría y permite varios adaptadores |
+| ST-002 | Catálogo tipado y versionado por propiedad y tipo de elemento | Detecta propiedades desconocidas, incompatibles y valores fuera de rango |
+| ST-003 | Precedencia sistema → mapa → defaults heredados → rol → estilo nombrado → overrides → inline | Resultado determinista y explicable |
+| ST-004 | La herencia de conjuntos fluye del ancestro al descendiente; el contexto del conjunto se propaga a temas hijos | No implica herencia visual del tema padre |
+| ST-005 | Los defaults de mapa se almacenan en `sheet.settings.styleDefaults`, agrupados por tipo de elemento | Usa el espacio de configuración existente sin alterar la forma superior del IR |
+| ST-006 | Los valores `null` reinician la propiedad al default del sistema; objetos se fusionan y listas se reemplazan | Semántica uniforme para todos los adaptadores |
+| ST-007 | Cada propiedad resuelta conserva capa y origen | Permite explicar decisiones y registrar pérdidas en adaptadores |
+
 ## Pendiente para fases posteriores
 
-- Catálogo tipado completo de propiedades visuales y unidades.
+- Ampliar el catálogo de propiedades visuales y unidades según necesidades verificadas de XMind/SVG.
 - Sintaxis final de atributos/directivas y parser fixtures.
 - Política completa de carga remota de imágenes.
 - Restricciones geométricas específicas de boundaries/summaries por adaptador.
