@@ -8,7 +8,9 @@
   "required": [
     "irVersion",
     "document",
-    "sheet"
+    "sheet",
+    "assets",
+    "styleSets"
   ],
   "properties": {
     "irVersion": {
@@ -101,7 +103,10 @@
       "required": [
         "id",
         "title",
-        "rootTopic"
+        "rootTopic",
+        "relationships",
+        "boundaries",
+        "summaries"
       ],
       "properties": {
         "id": {
@@ -150,7 +155,9 @@
       "additionalProperties": false,
       "required": [
         "id",
-        "title"
+        "title",
+        "children",
+        "content"
       ],
       "properties": {
         "id": {
