@@ -4,7 +4,7 @@
 
 Requisitos:
 - Windows 10/11, Linux o macOS.
-- Node.js 22 o superior.
+- Node.js 24 o superior.
 - npm incluido con Node.js.
 - Git.
 - Visual Studio Code recomendado.
@@ -42,7 +42,7 @@ VS Code puede depurar Node.js/TypeScript mediante source maps. Los errores deben
 
 ## 5. GitHub Actions
 
-El workflow `.github/workflows/ci.yml` se activa en push, pull_request y workflow_dispatch. Configura Node.js 22 e instala dependencias para ejecutar formato, lint, typecheck, pruebas y build.
+El workflow `.github/workflows/ci.yml` se activa en push, pull_request y workflow_dispatch. Configura Node.js 24 e instala dependencias para ejecutar formato, lint, typecheck, pruebas y build.
 
 Cuando `package-lock.json` esté versionado, el paso de instalación deberá cambiar de `npm install` a `npm ci`.
 
