@@ -380,15 +380,14 @@ function parseBlocks(nodes: AstNode[], state: ParseState): ContentBlock[] {
 
 function parseTopicHeading(
   node: AstNode,
-  parentId: string,
-  siblingIndex: number,
+  documentId: string,
+  structuralPath: string,
   state: ParseState,
 ): Topic {
   const rawTitle = plainText(node).trim();
   const match = rawTitle.match(/\s+\{#([^{}\s]+)\}\s*$/);
   const title = match ? rawTitle.slice(0, match.index).trim() : rawTitle;
-  const id =
-    match?.[1] ?? `topic:${parentId.replace(/^topic:/, '')}/${siblingIndex}-${slug(title)}`;
+  const id = match?.[1] ?? `topic:${slug(documentId).slice(0, 48)}/${structuralPath}`;
   if (state.topicIds.has(id))
     throw new MarkdownParseError('MD_DUPLICATE_TOPIC_ID', `ID de tema duplicado: ${id}`, node);
   state.topicIds.add(id);
@@ -575,9 +574,10 @@ export function parseMarkdownWithDiagnostics(
   const documentId =
     typeof frontMatter.id === 'string' ? frontMatter.id : `doc:${slug(fallbackName)}`;
   const documentTitle = typeof frontMatter.title === 'string' ? frontMatter.title : rootTitle;
-  const sheetId = `sheet:${slug(fallbackName)}`;
-  const rootTopic = parseTopicHeading(firstHeading, 'topic:root', 1, state);
+  const sheetId = `sheet:${slug(fallbackName).slice(0, 100)}`;
+  const rootTopic = parseTopicHeading(firstHeading, documentId, '1', state);
   const stack: Topic[] = [rootTopic];
+  const topicPaths = new Map<Topic, string>([[rootTopic, '1']]);
   const siblingCounts = new Map<Topic, number>([[rootTopic, 0]]);
   const rootIndex = contentNodes.indexOf(firstHeading);
 
@@ -607,7 +607,9 @@ export function parseMarkdownWithDiagnostics(
         );
       const index = (siblingCounts.get(parent) ?? 0) + 1;
       siblingCounts.set(parent, index);
-      const topic = parseTopicHeading(node, parent.id, index, state);
+      const structuralPath = `${topicPaths.get(parent) ?? '1'}/${index}`;
+      const topic = parseTopicHeading(node, documentId, structuralPath, state);
+      topicPaths.set(topic, structuralPath);
       parent.children.push(topic);
       stack.push(topic);
       siblingCounts.set(topic, 0);
