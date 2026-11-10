@@ -207,7 +207,7 @@ describe('IR JSON Schema Draft 2020-12 conformance', () => {
   });
 
   it('accepts the typed IR returned by the Markdown parser', () => {
-    const parsed: IrDocument = parseMarkdown('# Root\\n\\n## Child');
+    const parsed: IrDocument = parseMarkdown('# Root\n\n## Child');
 
     expect(validateIrSchema(parsed).valid).toBe(true);
   });
