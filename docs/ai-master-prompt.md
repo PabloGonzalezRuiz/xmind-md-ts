@@ -47,7 +47,7 @@ Cada cambio incorpora pruebas proporcionadas al riesgo: unitarias, integración,
 
 ## Estado de implementación
 
-La fase 3 creó la base TypeScript y tooling en `feature/phase-3-project-scaffold`. La fase 4 implementó el parser Markdown → IR v1 y su corpus de pruebas en `feature/phase-4-markdown-parser`. La validación semántica, el motor de estilos y los adaptadores siguen siendo fases posteriores.
+La fase 3 creó la base TypeScript y tooling en `feature/phase-3-project-scaffold`. La fase 4 implementó el parser Markdown → IR v1 en `feature/phase-4-markdown-parser`. La fase 5 implementó `validateIrDocument` y la generación de IDs de tema deterministas y namespaced en `feature/phase-5-semantic-validation`. El motor de estilos y los adaptadores siguen siendo fases posteriores. La validación completa con JSON Schema aún no está integrada en el pipeline.
 
 ## Protocolo de trabajo
 
