@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { MarkdownParseError, parseMarkdown, parseMarkdownWithDiagnostics } from '../src/markdown/parser.js';
+import {
+  MarkdownParseError,
+  parseMarkdown,
+  parseMarkdownWithDiagnostics,
+} from '../src/markdown/parser.js';
 
 describe('Markdown parser', () => {
   it('creates one IR document and one sheet from a heading tree', () => {
@@ -19,24 +23,26 @@ describe('Markdown parser', () => {
   });
 
   it('preserves inline marks, links, lists, tables, quotes and code', () => {
-    const ir = parseMarkdown([
-      '# Root',
-      '',
-      '**bold** *italic* ~~strike~~ `code` [link](https://example.com)',
-      '',
-      '- first',
-      '- second',
-      '',
-      '| A | B |',
-      '|:--|--:|',
-      '| x | y |',
-      '',
-      '> quoted',
-      '',
-      '```ts',
-      'const answer = 42;',
-      '```',
-    ].join('\n'));
+    const ir = parseMarkdown(
+      [
+        '# Root',
+        '',
+        '**bold** *italic* ~~strike~~ `code` [link](https://example.com)',
+        '',
+        '- first',
+        '- second',
+        '',
+        '| A | B |',
+        '|:--|--:|',
+        '| x | y |',
+        '',
+        '> quoted',
+        '',
+        '```ts',
+        'const answer = 42;',
+        '```',
+      ].join('\n'),
+    );
 
     const blocks = ir.sheet.rootTopic.content;
     expect(blocks[0]).toMatchObject({
@@ -53,32 +59,42 @@ describe('Markdown parser', () => {
         { text: 'link', link: 'https://example.com' },
       ],
     });
-    expect(blocks[1]).toMatchObject({ type: 'list', ordered: false, items: [{ blocks: [{ type: 'paragraph' }] }] });
-    expect(blocks[2]).toMatchObject({ type: 'table', alignments: ['left', 'right'], rows: [{ cells: [{ blocks: [{ type: 'paragraph' }] }] }] });
+    expect(blocks[1]).toMatchObject({
+      type: 'list',
+      ordered: false,
+      items: [{ blocks: [{ type: 'paragraph' }] }],
+    });
+    expect(blocks[2]).toMatchObject({
+      type: 'table',
+      alignments: ['left', 'right'],
+      rows: [{ cells: [{ blocks: [{ type: 'paragraph' }] }] }],
+    });
     expect(blocks[3]).toMatchObject({ type: 'quote', blocks: [{ type: 'paragraph' }] });
     expect(blocks[4]).toMatchObject({ type: 'code', language: 'ts', value: 'const answer = 42;' });
   });
 
   it('reads front matter, map style and Markdown notes', () => {
-    const ir = parseMarkdown([
-      '---',
-      'id: doc:test',
-      'title: Document title',
-      'style_set: theme:test',
-      'settings:',
-      '  layout: logic',
-      '---',
-      '# Root',
-      '',
-      ':::xmind',
-      'role: main',
-      'style: highlighted',
-      ':::' ,
-      '',
-      ':::xmind-note',
-      'A **note**.',
-      ':::' ,
-    ].join('\n'));
+    const ir = parseMarkdown(
+      [
+        '---',
+        'id: doc:test',
+        'title: Document title',
+        'style_set: theme:test',
+        'settings:',
+        '  layout: logic',
+        '---',
+        '# Root',
+        '',
+        ':::xmind',
+        'role: main',
+        'style: highlighted',
+        ':::',
+        '',
+        ':::xmind-note',
+        'A **note**.',
+        ':::',
+      ].join('\n'),
+    );
 
     expect(ir.document).toMatchObject({ id: 'doc:test', title: 'Document title' });
     expect(ir.sheet).toMatchObject({
@@ -103,32 +119,34 @@ describe('Markdown parser', () => {
   });
 
   it('parses relationships, boundaries and summaries', () => {
-    const ir = parseMarkdown([
-      '# Root {#root}',
-      '',
-      '## A {#a}',
-      '',
-      '## B {#b}',
-      '',
-      ':::xmind-relationship',
-      'id: rel:1',
-      'from: a',
-      'to: b',
-      'label: depends on',
-      ':::',
-      '',
-      ':::xmind-boundary',
-      'id: boundary:1',
-      'topics: [a, b]',
-      ':::',
-      '',
-      ':::xmind-summary',
-      'id: summary:1',
-      'topics:',
-      '  - a',
-      '  - b',
-      ':::',
-    ].join('\n'));
+    const ir = parseMarkdown(
+      [
+        '# Root {#root}',
+        '',
+        '## A {#a}',
+        '',
+        '## B {#b}',
+        '',
+        ':::xmind-relationship',
+        'id: rel:1',
+        'from: a',
+        'to: b',
+        'label: depends on',
+        ':::',
+        '',
+        ':::xmind-boundary',
+        'id: boundary:1',
+        'topics: [a, b]',
+        ':::',
+        '',
+        ':::xmind-summary',
+        'id: summary:1',
+        'topics:',
+        '  - a',
+        '  - b',
+        ':::',
+      ].join('\n'),
+    );
 
     expect(ir.sheet.relationships[0]).toMatchObject({
       id: 'rel:1',
@@ -144,13 +162,17 @@ describe('Markdown parser', () => {
     expect(() => parseMarkdown('No heading')).toThrowError(MarkdownParseError);
     expect(() => parseMarkdown('# One\n\n# Two')).toThrowError(/un único encabezado H1/);
     expect(() => parseMarkdown('# Root\n\n#### Gap')).toThrowError(/no tiene un padre/);
-    expect(() => parseMarkdown('# Root\n\n## Same {#same}\n\n## Same {#same}')).toThrowError(/duplicado/);
+    expect(() => parseMarkdown('# Root\n\n## Same {#same}\n\n## Same {#same}')).toThrowError(
+      /duplicado/,
+    );
   });
 
   it('reports unknown front matter keys in compatible mode and rejects them in strict mode', () => {
     const source = '---\nunknown: value\n---\n# Root';
     const result = parseMarkdownWithDiagnostics(source);
     expect(result.diagnostics[0]?.code).toBe('MD_FRONTMATTER_UNKNOWN_KEY');
-    expect(() => parseMarkdown(source, { mode: 'strict' })).toThrowError(/Clave de front matter desconocida/);
+    expect(() => parseMarkdown(source, { mode: 'strict' })).toThrowError(
+      /Clave de front matter desconocida/,
+    );
   });
 });
