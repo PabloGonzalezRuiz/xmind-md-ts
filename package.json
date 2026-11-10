@@ -5,14 +5,14 @@
   "description": "Compilador de Markdown enriquecido a mapas mentales XMind.",
   "type": "module",
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=24.0.0"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "clean": "node -e \"import('node:fs').then(({rmSync}) => rmSync('dist', { recursive: true, force: true }))\"",
     "dev": "tsx watch src/index.ts",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"vitest.config.ts\" \"eslint.config.js\" \"package.json\" \"tsconfig*.json\" \".prettierrc.json\" \".github/workflows/*.yml\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\" \"vitest.config.ts\" \"eslint.config.js\" \"package.json\" \"tsconfig*.json\" \".prettierrc.json\" \".github/workflows/*.yml\"",
     "lint": "eslint .",
     "start": "node dist/index.js",
     "test": "vitest run",
@@ -21,13 +21,13 @@
     "verify": "npm run format:check && npm run lint && npm run typecheck && npm test && npm run build"
   },
   "devDependencies": {
-    "@eslint/js": "9.39.1",
-    "@types/node": "22.19.0",
-    "eslint": "9.39.1",
-    "prettier": "3.6.2",
-    "tsx": "4.20.6",
-    "typescript": "5.9.3",
-    "typescript-eslint": "8.46.2",
-    "vitest": "3.2.4"
+    "@eslint/js": "10.14.0",
+    "@types/node": "24.19.2",
+    "eslint": "10.14.0",
+    "prettier": "3.9.10",
+    "tsx": "4.23.15",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.2",
+    "vitest": "5.0.5"
   }
 }
