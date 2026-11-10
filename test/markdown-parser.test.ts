@@ -165,6 +165,31 @@ describe('Markdown parser', () => {
     expect(ir.sheet.summaries[0]?.topicIds).toEqual(['a', 'b']);
   });
 
+  it('generates deterministic topic IDs from the document namespace and structural path', () => {
+    const source = '# Root\\n\\n## First\\n\\n### Nested\\n\\n## Second';
+    const first = parseMarkdown(source, { sourcePath: 'maps/alpha.md' });
+    const second = parseMarkdown(source, { sourcePath: 'maps/alpha.md' });
+    const otherDocument = parseMarkdown(
+      ['---', 'id: doc:other', '---', '# Root', '', '## First'].join('\\n'),
+      { sourcePath: 'maps/alpha.md' },
+    );
+
+    expect(first.sheet.rootTopic.id).toBe('topic-doc-alpha/1');
+    expect(first.sheet.rootTopic.children[0]?.id).toBe('topic-doc-alpha/1/1');
+    expect(first.sheet.rootTopic.children[0]?.children[0]?.id).toBe('topic-doc-alpha/1/1/1');
+    expect(first.sheet.rootTopic.children[1]?.id).toBe('topic-doc-alpha/1/2');
+    expect(first.sheet.rootTopic.id).toBe(second.sheet.rootTopic.id);
+    expect(first.sheet.rootTopic.children[0]?.id).toBe(second.sheet.rootTopic.children[0]?.id);
+    expect(otherDocument.sheet.rootTopic.id).toBe('topic-doc-other/1');
+  });
+
+  it('preserves explicit topic IDs unchanged', () => {
+    const ir = parseMarkdown('# Root {#Author-ID_01}\\n\\n## Child {#child.id}');
+
+    expect(ir.sheet.rootTopic.id).toBe('Author-ID_01');
+    expect(ir.sheet.rootTopic.children[0]?.id).toBe('child.id');
+  });
+
   it('rejects missing roots, multiple roots, skipped levels and duplicate explicit IDs', () => {
     expect(() => parseMarkdown('No heading')).toThrowError(MarkdownParseError);
     expect(() => parseMarkdown('# One\n\n# Two')).toThrowError(/exactamente un encabezado H1/);
