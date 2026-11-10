@@ -127,9 +127,7 @@ describe('style resolution engine', () => {
 
     const result = resolveIrStyles(ir);
 
-    expect(result.diagnostics.map((diagnostic) => diagnostic.code)).toContain(
-      'STYLE_SET_REQUIRED',
-    );
+    expect(result.diagnostics.map((diagnostic) => diagnostic.code)).toContain('STYLE_SET_REQUIRED');
   });
 
   it('detects a style-set inheritance cycle while resolving', () => {
@@ -138,9 +136,7 @@ describe('style resolution engine', () => {
 
     const result = resolveIrStyles(ir);
 
-    expect(result.diagnostics.map((diagnostic) => diagnostic.code)).toContain(
-      'STYLE_SET_CYCLE',
-    );
+    expect(result.diagnostics.map((diagnostic) => diagnostic.code)).toContain('STYLE_SET_CYCLE');
   });
 
   it('resolves text runs after topic styles and preserves inline provenance', () => {

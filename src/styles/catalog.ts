@@ -221,7 +221,8 @@ export function validateStyleProperty(
         ? undefined
         : 'Se esperaba un objeto JSON.';
     case 'numberList':
-      return Array.isArray(value) && value.every((item) => typeof item === 'number' && Number.isFinite(item) && item >= 0)
+      return Array.isArray(value) &&
+        value.every((item) => typeof item === 'number' && Number.isFinite(item) && item >= 0)
         ? undefined
         : 'Se esperaba una lista de números no negativos.';
     case 'enum':
