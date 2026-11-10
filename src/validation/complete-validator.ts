@@ -1,8 +1,5 @@
 import { validateIrDocument } from './semantic-validator.js';
-import type {
-  IrValidationOptions,
-  IrValidationResult,
-} from './semantic-validator.js';
+import type { IrValidationOptions, IrValidationResult } from './semantic-validator.js';
 import { validateIrSchema } from './schema-validator.js';
 import type { IrSchemaDiagnostic } from './schema-validator.js';
 
