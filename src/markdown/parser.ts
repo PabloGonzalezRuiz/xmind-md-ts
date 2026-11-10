@@ -59,8 +59,8 @@ export interface MarkdownParseResult {
 
 export class MarkdownParseError extends Error {
   readonly code: string;
-  readonly line?: number;
-  readonly column?: number;
+  readonly line: number | undefined;
+  readonly column: number | undefined;
 
   constructor(code: string, message: string, node?: AstNode) {
     super(message);
@@ -86,7 +86,7 @@ function plainText(node: AstNode): string {
   return children(node).map(plainText).join('');
 }
 
-function position(node: AstNode, sourcePath: string): Topic['sourcePosition'] {
+function position(node: AstNode, sourcePath: string): NonNullable<Topic['sourcePosition']> | undefined {
   const start = node.position?.start;
   const end = node.position?.end;
   if (!start && !end) return undefined;
@@ -390,13 +390,15 @@ function parseDirective(node: AstNode, topic: Topic | undefined, state: ParseSta
     return;
   }
   if (name === 'xmind-relationship') {
+    const style = optionalStyle(record);
+    const sourcePosition = position(node, state.sourcePath);
     state.relationships.push({
       id: requiredString(record, 'id', node),
       sourceTopicId: requiredString(record, 'from', node),
       targetTopicId: requiredString(record, 'to', node),
       ...(typeof record.label === 'string' ? { label: record.label } : {}),
       ...(typeof record.kind === 'string' ? { kind: record.kind } : {}),
-      ...(optionalStyle(record) ? { style: optionalStyle(record) } : {}),
+      ...(style ? { style } : {}),
       ...(position(node, state.sourcePath)
         ? { sourcePosition: position(node, state.sourcePath) }
         : {}),
@@ -412,6 +414,7 @@ function parseDirective(node: AstNode, topic: Topic | undefined, state: ParseSta
         node,
       );
     }
+    const style = optionalStyle(record);
     const common = {
       id: requiredString(record, 'id', node),
       topicIds: rawTopics as string[],
