@@ -7,7 +7,7 @@ Las fases se ejecutan secuencialmente. Al terminar cada fase se presenta el resu
 | 1 | Prompt maestro y documentación funcional/técnica | Documentación base y plan | Completada |
 | 2 | Contrato IR y JSON Schema | IR v1, tipos TS, schema, fixture y matriz de conformidad | Completada |
 | 3 | Esqueleto TypeScript y tooling | package.json, tsconfig estricto, lockfile, lint, formato, Vitest y CI verificados | Completada |
-| 4 | Parser Markdown | Gramática implementada y corpus de parser | En curso |
+| 4 | Parser Markdown | Gramática implementada y corpus de parser | Completada |
 | 5 | Validación semántica e identidad | IDs, referencias, jerarquía y diagnósticos | Pendiente |
 | 6 | Motor de estilos | Conjuntos, roles, estilos, precedencia y procedencia | Pendiente |
 | 7 | Adaptador JSON y CLI | Ejecución local reproducible | Pendiente |
