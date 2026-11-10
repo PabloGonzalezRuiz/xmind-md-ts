@@ -17,15 +17,17 @@ El proyecto no es una traducción mecánica del código Python de `xmind-md`. Re
 
 ## Estado
 
-**Fase 1 — Documentación y especificación**
+**Fase 2 — Contrato IR v1.0.0 en revisión**
 
-El repositorio comienza como proyecto nuevo. La documentación inicial definirá el alcance, el prompt maestro, la arquitectura, la gramática prevista, el IR, la estrategia de pruebas y las fases de implementación. No se afirmará que existen funcionalidades hasta que estén implementadas y verificadas.
+La documentación inicial está completada. Se ha definido el contrato IR v1.0.0, su JSON Schema y un fixture mínimo. Todavía no existe código ejecutable ni se han ejecutado pruebas automatizadas; el contrato está pendiente de revisión antes de iniciar la fase 3.
 
 ## Documentación
 
 - [Prompt maestro para IA](docs/ai-master-prompt.md)
 - [Arquitectura](docs/architecture.md)
-- [Especificación del IR](docs/ir-specification.md)\n- [JSON Schema IR v1.0.0](spec/ir-v1.schema.json)\n- [Fixture mínimo IR v1.0.0](spec/fixtures/ir-v1-minimal.json)
+- [Especificación del IR](docs/ir-specification.md)
+- [JSON Schema IR v1.0.0](spec/ir-v1.schema.json)
+- [Fixture mínimo IR v1.0.0](spec/fixtures/ir-v1-minimal.json)
 - [Gramática Markdown](docs/grammar.md)
 - [Sistema de estilos](docs/style-system.md)
 - [Adaptadores y XMind](docs/adapters.md)
