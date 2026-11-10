@@ -5,7 +5,7 @@
 > **Última auditoría:** 2026-11-10  
 > **Repositorio:** https://github.com/PabloGonzalezRuiz/xmind-md-ts  
 > **Rama de trabajo auditada:** `feature/aud-003-runtime-schema`  
-> **HEAD verificado:** `f804931a45ec57d38fb17a4251b2818917cefdf4` (AUD-004 completada y verificada)  
+> **HEAD verificado:** `a6a8afc31886170fbe5f4836c0587a746e31eb30` (AUD-004 completada y verificada)  
 > **Rama principal:** `main` — `6aca81b59dbfcfc13034e7e1115c70f7691c5035`
 
 ## 1. Resumen ejecutivo
@@ -38,7 +38,8 @@ El trabajo está distribuido en ramas de características. No hay pull requests 
 | `feature/phase-3-project-scaffold` | `43a006096aa65f72c73b5ec20ab3d457fe698019` | Scaffold, configuración, dependencias, tests y CI |
 | `feature/phase-4-markdown-parser` | `d31892ba0895f513b8b19a284de929623d10af6b` | Parser Markdown y pruebas |
 | `feature/phase-5-semantic-validation` | `954216e99a13106d88ba72652460047d826b9c55` | Validador semántico, IDs deterministas y pruebas |
-| `feature/phase-6-style-engine` | `21dae3248be2963ccc77b00b79dffd1afd92a98d` | Catálogo y motor de estilos; AUD-001 y AUD-002 verificadas |\n| `feature/aud-003-runtime-schema` | `957ae096359cfa9d62ddbe70883bfa2020efe5ed` | Ajv runtime, pipeline estructural-semántico y tipos generados; AUD-003 verificada |
+| `feature/phase-6-style-engine` | `21dae3248be2963ccc77b00b79dffd1afd92a98d` | Catálogo y motor de estilos; AUD-001 y AUD-002 verificadas |
+| `feature/aud-003-runtime-schema` | `a6a8afc31886170fbe5f4836c0587a746e31eb30` | Ajv runtime, pipeline estructural-semántico, tipos generados y corpus parser/IR; AUD-003 y AUD-004 verificadas |
 
 Las ramas de fase están encadenadas por orden de desarrollo y contienen cambios acumulados. No hay PRs abiertos ni issues registrados en el repositorio en el momento de esta auditoría. **No fusionar ni reescribir `main` sin autorización expresa.**
 
@@ -176,4 +177,4 @@ Al iniciar una sesión de trabajo:
 
 | 2026-11-10 | AUD-004: corpus inicial de conformidad Markdown | Añadidos fixtures positivos, negativos y de diagnóstico; batería `test/markdown-conformance.test.ts` con comprobación de bloques Markdown, directivas, códigos de error, posiciones y validación IR. Se corrigieron expectativas detectadas por CI (filas GFM, etiquetas HTML separadas e import de fixtures). CI pendiente de verificación final tras actualizar la documentación | Completar matriz de casos, confirmar CI verde y actualizar el estado de auditoría |
 
-| 2026-11-10 | AUD-004: cierre y verificación final del corpus parser/IR | Fixtures versionados para bloques Markdown, front matter y directivas XMind; casos positivos, negativos y diagnósticos; códigos de error estables, líneas/columnas, posiciones de temas/bloques y validación estructural/semántica. Matriz registrada en `spec/conformance/README.md`. CI verde: [42849917420](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42849917420), SHA `f804931a45ec57d38fb17a4251b2818917cefdf4`; 96 tests, format, lint, typecheck y build correctos | Solicitar autorización para AUD-005 |
+| 2026-11-10 | AUD-004: cierre y verificación final del corpus parser/IR | Fixtures versionados para bloques Markdown, front matter y directivas XMind; casos positivos, negativos y diagnósticos; códigos de error estables, líneas/columnas, posiciones de temas/bloques y validación estructural/semántica. Matriz registrada en `spec/conformance/README.md`. CI verde: [42850018812](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42850018812), SHA `a6a8afc31886170fbe5f4836c0587a746e31eb30`; 96 tests, format, lint, typecheck y build correctos | Solicitar autorización para AUD-005 |
