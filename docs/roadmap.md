@@ -17,6 +17,10 @@ Las fases se ejecutan secuencialmente. Al terminar cada fase se presenta el resu
 | 11 | Documentación de usuario y publicación | Guía, ejemplos, releases y artefactos | Pendiente |
 | 12 | Visor web TypeScript | Aplicación web que consume el IR, con pruebas Playwright | Pendiente |
 
+## Verificación transversal del contrato IR
+
+Las auditorías AUD-001, AUD-002 y AUD-003 están completadas y verificadas en ramas de trabajo. AUD-003 incorpora validación JSON Schema Draft 2020-12 en runtime y generación sincronizada de tipos TypeScript. `main` permanece sin cambios; el siguiente elemento del backlog es AUD-004 y requiere autorización antes de iniciarse.
+
 ## Registro operativo
 
 El estado detallado, las ramas/commits auditados, los criterios de aceptación y el backlog priorizado se mantienen en [Auditoría del proyecto y registro de continuidad](project-audit-and-continuation.md). Ese documento es la referencia para retomar el trabajo entre sesiones.
