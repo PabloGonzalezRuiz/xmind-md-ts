@@ -11,7 +11,7 @@ Las fases se ejecutan secuencialmente. El número de fase puede cambiar al refin
 | 5 | Validación semántica e identidad | IDs deterministas, unicidad, referencias, ciclos, límites y diagnósticos probados | Completada y verificada |
 | 6 | Motor de estilos | Catálogo tipado, conjuntos heredados, roles, estilos, precedencia, fusión y procedencia; robustez AUD-001/AUD-002 verificada en `feature/phase-6-style-engine` | Completada y verificada en su alcance actual |
 | 7 | Validación JSON Schema runtime | Ajv Draft 2020-12, casos SC automatizados y pipeline estructural→semántico (AUD-003) | Completada y verificada |
-| 8 | Coherencia automática entre JSON Schema y tipos TypeScript | Generación de tipos o prueba de equivalencia estructural (AUD-012) | Pendiente de autorización |
+| 8 | Coherencia automática entre JSON Schema y tipos TypeScript | Checker estructural bidireccional de todas las definiciones y del IR raíz, prueba negativa de drift y CI verde (AUD-012) | En curso |
 | 9 | Adaptador JSON y CLI | Ejecución local reproducible | Pendiente |
 | 10 | Evaluación e integración XMind | Matriz de capacidades, SDK evaluado y exportación inicial | Pendiente |
 | 11 | Adaptador SVG | Renderizado y metadatos semánticos | Pendiente |
