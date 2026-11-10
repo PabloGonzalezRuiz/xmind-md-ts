@@ -48,46 +48,42 @@ function assertSupportedKeywords(schema, location = "$") {
   if (!schema || typeof schema !== "object" || Array.isArray(schema)) return;
   for (const key of Object.keys(schema)) {
     if (!allowedKeywords.has(key)) {
-      throw new Error(\`Unsupported JSON Schema keyword "\${key}" at \${location}; extend the type projection deliberately.\`);
+      throw new Error('Unsupported JSON Schema keyword "' + key + '" at ' + location + "; extend the type projection deliberately.");
     }
   }
   if (schema.properties) {
     for (const [key, value] of Object.entries(schema.properties)) {
-      assertSupportedKeywords(value, \`\${location}/properties/\${key}\`);
+      assertSupportedKeywords(value, location + "/properties/" + key);
     }
   }
   if (schema.$defs) {
     for (const [key, value] of Object.entries(schema.$defs)) {
-      assertSupportedKeywords(value, \`\${location}/$defs/\${key}\`);
+      assertSupportedKeywords(value, location + "/$defs/" + key);
     }
   }
   if (schema.items && typeof schema.items === "object") {
-    assertSupportedKeywords(schema.items, \`\${location}/items\`);
+    assertSupportedKeywords(schema.items, location + "/items");
   }
   if (schema.additionalProperties && typeof schema.additionalProperties === "object") {
-    assertSupportedKeywords(schema.additionalProperties, \`\${location}/additionalProperties\`);
+    assertSupportedKeywords(schema.additionalProperties, location + "/additionalProperties");
   }
   for (const keyword of ["anyOf", "oneOf"]) {
     for (const [index, value] of (schema[keyword] ?? []).entries()) {
-      assertSupportedKeywords(value, \`\${location}/\${keyword}/\${index}\`);
+      assertSupportedKeywords(value, location + "/" + keyword + "/" + index);
     }
   }
-}
-
-function quote(value) {
-  return JSON.stringify(value);
 }
 
 function toType(schema) {
   if (schema.$ref) {
     const match = schema.$ref.match(/^#\/\$defs\/([^/]+)$/);
     if (!match || !typeMap[match[1]]) {
-      throw new Error(\`Unsupported or unmapped schema reference: \${schema.$ref}\`);
+      throw new Error("Unsupported or unmapped schema reference: " + schema.$ref);
     }
-    return \`Schema_\${match[1]}\`;
+    return "Schema_" + match[1];
   }
-  if (Object.hasOwn(schema, "const")) return quote(schema.const);
-  if (schema.enum) return schema.enum.map(quote).join(" | ");
+  if (Object.hasOwn(schema, "const")) return JSON.stringify(schema.const);
+  if (schema.enum) return schema.enum.map(JSON.stringify).join(" | ");
   if (schema.anyOf || schema.oneOf) {
     const branches = schema.anyOf ?? schema.oneOf;
     return branches.map(toType).join(" | ");
@@ -104,7 +100,7 @@ function toType(schema) {
     case "null": return "null";
     case "array":
       if (!schema.items) throw new Error("Array schema without items is not supported.");
-      return \`Array<\${toType(schema.items)}>\`;
+      return "Array<" + toType(schema.items) + ">";
     case "object": {
       const properties = Object.entries(schema.properties ?? {});
       const required = new Set(schema.required ?? []);
@@ -112,18 +108,18 @@ function toType(schema) {
       if (properties.length === 0) {
         if (additional === false) return "Record<string, never>";
         if (additional === true || additional === undefined) return "Record<string, unknown>";
-        return \`Record<string, \${toType(additional)}>\`;
+        return "Record<string, " + toType(additional) + ">";
       }
       if (additional && additional !== false) {
         throw new Error("Mixed named properties and additionalProperties need an explicit projection rule.");
       }
       const members = properties.map(([name, value]) =>
-        \`  \${quote(name)}\${required.has(name) ? "" : "?"}: \${toType(value)};\`,
+        "  " + JSON.stringify(name) + (required.has(name) ? "" : "?") + ": " + toType(value) + ";",
       );
-      return \`{\\n\${members.join("\\n")}\\n}\`;
+      return "{\n" + members.join("\n") + "\n}";
     }
     default:
-      throw new Error(\`Unsupported or missing schema type: \${JSON.stringify(schema)}\`);
+      throw new Error("Unsupported or missing schema type: " + JSON.stringify(schema));
   }
 }
 
@@ -134,20 +130,21 @@ const schemaNames = Object.keys(definitions).sort();
 const mappedNames = Object.keys(typeMap).sort();
 if (JSON.stringify(schemaNames) !== JSON.stringify(mappedNames)) {
   throw new Error(
-    \`Schema $defs and TypeScript mapping differ. Schema: \${schemaNames.join(", ")}. Mapping: \${mappedNames.join(", ")}.\`,
+    "Schema $defs and TypeScript mapping differ. Schema: " + schemaNames.join(", ") +
+    ". Mapping: " + mappedNames.join(", ") + ".",
   );
 }
 
 const generated = Object.entries(definitions)
-  .map(([name, definition]) => \`type Schema_\${name} = \${toType(definition)};\`)
-  .join("\\n\\n");
+  .map(([name, definition]) => "type Schema_" + name + " = " + toType(definition) + ";")
+  .join("\n\n");
 const rootType = toType(schema);
 const checks = [
   ...Object.entries(typeMap).map(([definition, publicName]) =>
-    \`type Check_\${publicName} = Assert<Equal<Existing.\${publicName}, Schema_\${definition}>>;\`,
+    "type Check_" + publicName + " = Assert<Equal<Existing." + publicName + ", Schema_" + definition + ">>;",
   ),
-  \`type Check_IrDocument = Assert<Equal<Existing.IrDocument, \${rootType}>>;\`,
-].join("\\n");
+  "type Check_IrDocument = Assert<Equal<Existing.IrDocument, " + rootType + ">>;",
+].join("\n");
 
 const source = [
   'import type * as Existing from "./spec/ir-v1.types.js";',
@@ -156,7 +153,7 @@ const source = [
   generated,
   checks,
   "",
-].join("\\n");
+].join("\n");
 
 try {
   await writeFile(tempPath, source, "utf8");
@@ -171,7 +168,7 @@ try {
     process.exitCode = result.status ?? 1;
   } else {
     process.stdout.write("IR JSON Schema and public TypeScript types are structurally equivalent.\n");
-    console.log(\`Checked root IR and \${Object.keys(typeMap).length} schema definitions.\`);
+    process.stdout.write("Checked root IR and " + Object.keys(typeMap).length + " schema definitions.\n");
   }
 } finally {
   await rm(tempPath, { force: true });
