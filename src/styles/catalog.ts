@@ -125,8 +125,8 @@ export const STYLE_PROPERTY_CATALOG = {
 export type StylePropertyName = keyof typeof STYLE_PROPERTY_CATALOG;
 
 const COLOR_PATTERN =
-  /^(#[0-9a-f]{3,4}|#[0-9a-f]{6}|#[0-9a-f]{8}|transparent|currentColor|[a-z]+|rgba?\\([\\d\\s.,%]+\\)|hsla?\\([\\d\\s.,%deg]+\\))$/i;
-const LENGTH_PATTERN = /^-?(?:\\d+\\.?\\d*|\\.\\d+)(?:px|pt|em|rem|%)?$/i;
+  /^(#[0-9a-f]{3,4}|#[0-9a-f]{6}|#[0-9a-f]{8}|transparent|currentColor|[a-z]+|rgba?\([0-9\s.,%]+\)|hsla?\([0-9\s.,%deg]+\))$/i;
+const LENGTH_PATTERN = /^-?(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:px|pt|em|rem|%)?$/i;
 
 export function getSystemStyleDefaults(
   elementType: StyleElementType,
