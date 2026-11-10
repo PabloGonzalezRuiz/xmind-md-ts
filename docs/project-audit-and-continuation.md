@@ -5,7 +5,7 @@
 > **Última auditoría:** 2026-11-10  
 > **Repositorio:** https://github.com/PabloGonzalezRuiz/xmind-md-ts  
 > **Rama de trabajo auditada:** `feature/phase-6-style-engine`  
-> **Commit auditado:** `0fc17e933531245f700bf04ea5661d0601a48c56`  
+> **Commit auditado:** `2c594eaadd3a3bb794c73d5607ef39bb5b15a9ac`  
 > **Rama principal:** `main` — `6aca81b59dbfcfc13034e7e1115c70f7691c5035`
 
 ## 1. Resumen ejecutivo
@@ -22,7 +22,7 @@ El trabajo está distribuido en ramas de características. No hay pull requests 
 | Fase 3: base TypeScript | Completada y CI verde | Rama `feature/phase-3-project-scaffold`; CI run [42818879886](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42818879886) |
 | Fase 4: parser Markdown → IR | Completada y CI verde | Rama `feature/phase-4-markdown-parser`; CI run [42820998921](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42820998921) |
 | Fase 5: validación semántica e identidad | Completada y CI verde | Commit `954216e99a13106d88ba72652460047d826b9c55`; CI run [42823341031](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42823341031) |
-| Fase 6: motor de estilos | Implementada parcialmente; no cerrada | Rama actual. Última CI fallida por una aserción desactualizada; 45/46 pruebas pasaron. Build no llegó a ejecutarse en ese run |
+| Fase 6: motor de estilos | Implementada parcialmente; no cerrada | Rama actual. AUD-001 ya está verificada; quedan pendientes las tareas de robustez AUD-002 |
 | JSON Schema en ejecución | Pendiente | El esquema existe, pero no hay validador runtime conectado ni pruebas SC automáticas |
 | Adaptador JSON y CLI | Pendientes | No existen módulos ejecutables de exportación ni comandos CLI |
 | Adaptador XMind | Pendiente | SDK oficial aún no evaluado; no se genera paquete XMind |
@@ -71,7 +71,7 @@ No existen todavía `src/adapters/`, `src/cli/` ni aplicación `viewer/`.
 - `npm run verify` agrupa las puertas locales de calidad.
 - `package-lock.json` está versionado.
 
-**Hallazgo prioritario de CI:** el workflow actual concede `contents: write` y ejecuta Prettier con un paso que hace commit y push automáticos. Esto permite que CI modifique la rama y excede los permisos necesarios para verificar calidad. Debe volver a `contents: read`; el formato debe corregirse en commits normales del desarrollo, no mediante auto-push de CI.
+**Hallazgo de CI corregido en AUD-001:** el workflow ahora concede `contents: read` y solo comprueba formato; ya no crea commits ni hace push. El formato debe corregirse en commits normales del desarrollo.
 
 ## 4. Auditoría de la fase 6
 
@@ -111,7 +111,7 @@ Los IDs de tarea son permanentes. Cambiar el orden o el alcance exige actualizar
 
 | ID | Prioridad | Tarea | Criterio de aceptación | Estado |
 |---|---:|---|---|---|
-| AUD-001 | P0 | Estabilizar CI y cerrar la fase 6 | Test de procedencia corregido; workflow read-only sin auto-push; format, lint, typecheck, tests y build verdes sobre el HEAD final | En curso |
+| AUD-001 | P0 | Estabilizar CI y cerrar la fase 6 | Test de procedencia corregido; workflow read-only sin auto-push; format, lint, typecheck, tests y build verdes sobre el HEAD final | Completada y verificada |
 | AUD-002 | P1 | Completar revisión de robustez del motor de estilos | Resolver los puntos 3–9 del apartado 4.3 con pruebas y documentación; API determinista y sin mutaciones | Pendiente |
 | AUD-003 | P1 | Integrar validación JSON Schema runtime | Dependencia seleccionada; SC-001…SC-110 automatizados; prueba de equivalencia schema/tipos o generación de tipos; integración con validación semántica | Pendiente |
 | AUD-004 | P1 | Completar corpus de conformidad parser/IR | Fixtures positivos y negativos de cada bloque/directiva, diagnósticos y posiciones de origen; regresión reproducible | Pendiente |
@@ -159,15 +159,10 @@ Al iniciar una sesión de trabajo:
 
 ### Primera acción de continuación
 
-Continuar con **AUD-001** en `feature/phase-6-style-engine`:
-- cambiar `permissions.contents` a `read`;
-- eliminar el paso que ejecuta Prettier, crea commits y hace push;
-- actualizar la expectativa del `sourceId` del run para que coincida con el identificador real basado en ruta;
-- ejecutar de nuevo todas las puertas de CI;
-- solo entonces marcar fase 6 verificada y pedir autorización para AUD-002.
+**AUD-001 está completada y verificada.** La siguiente tarea es **AUD-002**, revisión de robustez del motor de estilos. No iniciarla hasta recibir autorización expresa.
 
 ## 8. Registro de sesiones
 
 | Fecha | Trabajo | Resultado / commit | Próxima acción |
 |---|---|---|---|
-| 2026-11-10 | Auditoría inicial completa de ramas, contrato, código, documentación y CI | HEAD auditado `0fc17e933531245f700bf04ea5661d0601a48c56`; fase 6 con CI fallida por 1 aserción desactualizada y workflow con permisos de escritura | AUD-001 |
+| 2026-11-10 | Auditoría inicial completa y AUD-001 | Auditoría registrada; commit `2c594eaadd3a3bb794c73d5607ef39bb5b15a9ac`; CI [42826867694](https://github.com/${repo}/actions/runs/42826867694) verde con 46/46 pruebas, lint, typecheck, formato y build | Solicitar autorización para AUD-002 |
