@@ -175,13 +175,7 @@ describe('Markdown parser', () => {
   });
 
   it('rejects unknown directive configuration keys', () => {
-    const source = [
-      '# Root',
-      '',
-      ':::xmind',
-      'unexpected: true',
-      ':::',
-    ].join('\n');
+    const source = ['# Root', '', ':::xmind', 'unexpected: true', ':::'].join('\n');
     expect(() => parseMarkdown(source)).toThrowError(/Clave desconocida en directiva/);
   });
 

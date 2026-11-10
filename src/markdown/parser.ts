@@ -202,7 +202,12 @@ function inlineRuns(nodes: AstNode[], state: ParseState, marks: TextRun['marks']
     } else if (node.type === 'break') {
       result.push({ text: '\n', ...(marks.length ? { marks: [...marks] } : {}) });
     } else {
-      warn(state, 'MD_UNSUPPORTED_INLINE', `Elemento inline "${node.type}" no soportado en IR v1.`, node);
+      warn(
+        state,
+        'MD_UNSUPPORTED_INLINE',
+        `Elemento inline "${node.type}" no soportado en IR v1.`,
+        node,
+      );
     }
   }
   return result;
@@ -423,7 +428,11 @@ function parseDirective(node: AstNode, topic: Topic | undefined, state: ParseSta
     return;
   }
   if (name === 'xmind-relationship') {
-    assertAllowedKeys(record, ['id', 'from', 'to', 'label', 'kind', 'role', 'style', 'style_set', 'overrides'], node);
+    assertAllowedKeys(
+      record,
+      ['id', 'from', 'to', 'label', 'kind', 'role', 'style', 'style_set', 'overrides'],
+      node,
+    );
     const style = optionalStyle(record);
     const sourcePosition = position(node, state.sourcePath);
     state.relationships.push({
@@ -438,7 +447,11 @@ function parseDirective(node: AstNode, topic: Topic | undefined, state: ParseSta
     return;
   }
   if (name === 'xmind-boundary' || name === 'xmind-summary') {
-    assertAllowedKeys(record, ['id', 'topics', 'label', 'role', 'style', 'style_set', 'overrides'], node);
+    assertAllowedKeys(
+      record,
+      ['id', 'topics', 'label', 'role', 'style', 'style_set', 'overrides'],
+      node,
+    );
     const rawTopics = record.topics;
     if (!Array.isArray(rawTopics) || rawTopics.some((value) => typeof value !== 'string')) {
       throw new MarkdownParseError(
