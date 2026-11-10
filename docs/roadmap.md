@@ -10,13 +10,13 @@ Las fases se ejecutan secuencialmente. El número de fase puede cambiar al refin
 | 4 | Parser Markdown | Gramática implementada y corpus de parser | Completada |
 | 5 | Validación semántica e identidad | IDs deterministas, unicidad, referencias, ciclos, límites y diagnósticos probados | Completada y verificada |
 | 6 | Motor de estilos | Catálogo tipado, conjuntos heredados, roles, estilos, precedencia, fusión y procedencia; robustez AUD-001/AUD-002 verificada en `feature/phase-6-style-engine` | Completada y verificada en su alcance actual |
-| 7 | Validación JSON Schema runtime | Ajv Draft 2020-12, casos SC automatizados y pipeline estructural→semántico (AUD-003) | En curso |
-| 8 | Adaptador JSON y CLI | Ejecución local reproducible | Pendiente |
-| 9 | Evaluación e integración XMind | Matriz de capacidades, SDK evaluado y exportación inicial | Pendiente |
-| 10 | Adaptador SVG | Renderizado y metadatos semánticos | Pendiente |
-| 11 | Corpus XMind y validación Desktop | Pruebas estructurales y visuales documentadas | Pendiente |
-| 12 | Documentación de usuario y publicación | Guía, ejemplos, releases y artefactos | Pendiente |
-| 13 | Visor web TypeScript | Aplicación web que consume el IR, con pruebas Playwright | Pendiente |
+| 7 | Validación JSON Schema runtime | Ajv Draft 2020-12, casos SC automatizados y pipeline estructural→semántico (AUD-003) | Completada y verificada |\n| 8 | Coherencia automática entre JSON Schema y tipos TypeScript | Generación de tipos o prueba de equivalencia estructural (AUD-012) | Pendiente de autorización |
+| 9 | Adaptador JSON y CLI | Ejecución local reproducible | Pendiente |
+| 10 | Evaluación e integración XMind | Matriz de capacidades, SDK evaluado y exportación inicial | Pendiente |
+| 11 | Adaptador SVG | Renderizado y metadatos semánticos | Pendiente |
+| 12 | Corpus XMind y validación Desktop | Pruebas estructurales y visuales documentadas | Pendiente |
+| 13 | Documentación de usuario y publicación | Guía, ejemplos, releases y artefactos | Pendiente |
+| 14 | Visor web TypeScript | Aplicación web que consume el IR, con pruebas Playwright | Pendiente |
 
 ## Registro operativo
 
