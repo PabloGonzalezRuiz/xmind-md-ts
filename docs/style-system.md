@@ -42,6 +42,7 @@ El catálogo ejecutable está en `src/styles/catalog.ts`. Cada propiedad define 
 | `strokeWidth` | topic, relationship, boundary, summary | número 0–32 |
 | `lineStyle` | relationship, boundary, summary | solid, dashed, dotted |
 | `arrowStart`, `arrowEnd` | relationship | booleanos |
+| `dashArray` | relationship, boundary, summary | lista de números no negativos; reemplazo completo |
 | `shape` | topic | rectangle, rounded-rectangle, ellipse, diamond |
 | `padding` | topic | longitud 0–256 |
 | `borderRadius` | topic, boundary | longitud 0–256 |
