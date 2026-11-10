@@ -145,7 +145,7 @@ describe('style resolution engine', () => {
 
     expect(run.values.color).toBe('#999999');
     expect(run.values.fontSize).toBe(16);
-    expect(run.provenance.color).toEqual({ layer: 'inline', sourceId: 'topic:root:run:0' });
+    expect(run.provenance.color).toEqual({ layer: 'inline', sourceId: run.elementId });
     expect(run.provenance.fontSize).toEqual({ layer: 'styleSet', sourceId: 'theme:base' });
     expect(
       styleFor(result, 'topic:root:run:$.sheet.rootTopic.content[1].runs[0]').elementId,
