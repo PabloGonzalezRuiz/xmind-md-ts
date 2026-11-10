@@ -8,7 +8,9 @@ La API pública es `resolveIrStyles(ir)`, exportada desde `src/index.ts`. Devuel
 - `styles[]`: un resultado por mapa, tema, relación, boundary, summary y run de texto.
 - `diagnostics[]`: propiedades desconocidas, no aplicables o con valores inválidos.
 
-Cada resultado contiene `elementId`, `elementType`, `values` y `provenance`. La procedencia identifica la capa y el origen que aportó el valor de cada propiedad.
+Cada resultado contiene `elementId`, `elementType`, `values` y `provenance`. La procedencia identifica la capa y el origen que aportó el valor de cada propiedad. El motor no modifica el IR ni comparte objetos mutables entre llamadas.
+
+Los IDs de runs se construyen como `topicId:run:<ruta JSON del run>`, por ejemplo `topic:root:run:$.sheet.rootTopic.content[0].runs[0]`. Son deterministas para el mismo IR y únicos dentro de una estructura válida; no son IDs persistentes frente a inserciones o reordenaciones anteriores en arrays, porque la ruta incluye índices. Si se necesita identidad estable frente a cambios estructurales, el IR deberá incorporar un ID explícito para cada run en una versión futura.
 
 ## 2. Elementos estilables
 
@@ -46,15 +48,17 @@ El catálogo ejecutable está en `src/styles/catalog.ts`. Cada propiedad define 
 | `shape` | topic | rectangle, rounded-rectangle, ellipse, diamond |
 | `padding` | topic | longitud 0–256 |
 | `borderRadius` | topic, boundary | longitud 0–256 |
-| `shadow` | topic, boundary | objeto JSON fusionado recursivamente |
+| `shadow` | topic, boundary | objeto con `enabled` booleano, `color` CSS, `offset` con `x`/`y` numéricos y `blur` no negativo; claves desconocidas rechazadas |
 
-Las longitudes admiten números o cadenas con unidades `px`, `pt`, `em`, `rem` y `%`. Los colores admiten hexadecimal, nombres CSS y funciones rgb/rgba/hsl/hsla. Las propiedades y sus rangos son deliberadamente neutrales; los adaptadores traducirán o declararán pérdidas.
+Las longitudes admiten números o cadenas con unidades `px`, `pt`, `em`, `rem` y `%`. Los colores admiten hexadecimal de 3/4/6/8 dígitos, nombres CSS estándar (incluido `rebeccapurple`), `transparent`, `currentColor` y funciones RGB/HSL con sintaxis de comas y rangos comprobados. En esta versión no se aceptan todavía todas las variantes modernas de sintaxis CSS Color 4 (por ejemplo, RGB/HSL con separadores por espacios y barra). Las propiedades y sus rangos son deliberadamente neutrales; los adaptadores traducirán o declararán pérdidas.
 
-Una propiedad desconocida, no compatible con el tipo de elemento o con un valor fuera de rango genera un diagnóstico. El motor no descarta silenciosamente una declaración explícita inválida.
+Una propiedad desconocida, no compatible con el tipo de elemento o con un valor fuera de rango genera un diagnóstico. El motor no descarta silenciosamente una declaración explícita inválida. La validación de `shadow` es estructural y comprueba claves y tipos anidados; los campos omitidos conservan los valores anteriores durante la fusión.
 
 ## 4. Conjuntos y contexto efectivo
 
-Un `StyleSet` contiene `defaults`, perfiles `roles`, estilos con nombre `styles` y un único padre `extends`. La cadena de herencia se resuelve de ancestro a descendiente. Dentro de una misma capa, el conjunto descendiente prevalece sobre el ancestro.
+Un `StyleSet` contiene `defaults`, perfiles `roles`, estilos con nombre `styles` y un único padre `extends`. La cadena de herencia se resuelve de ancestro a descendiente. Dentro de una misma capa, el conjunto descendiente prevalece sobre el ancestro. Una cadena con ciclo o padre inexistente se considera inválida y no se aplica parcialmente: solo permanecen los defaults de sistema/mapa y las capas locales independientes de la cadena.
+
+Si la referencia solicita un rol o estilo con nombre inexistente, el motor emite `STYLE_ROLE_NOT_FOUND` o `STYLE_NAMED_STYLE_NOT_FOUND`. Si se invoca sin conjunto efectivo una referencia de rol/estilo, emite `STYLE_SET_REQUIRED`. Estas comprobaciones existen también en el motor, sin depender del validador semántico.
 
 El conjunto efectivo de un tema se determina así:
 1. `topic.style.setId`, si se declara.
@@ -100,7 +104,7 @@ El formato de un run se limita a ese tramo de texto. El estilo del tema se utili
 - Escalar + escalar: gana el valor de mayor prioridad.
 - Lista + lista: reemplazo completo.
 - Propiedad ausente: conserva el valor previo.
-- `null`: reinicia la propiedad al default del sistema.
+- `null`: reinicia la propiedad al default del sistema y sustituye también la procedencia de todas sus subpropiedades; no quedan entradas obsoletas.
 - Un valor incompatible con el tipo/rango de catálogo genera diagnóstico y no sustituye el último valor válido.
 
 La procedencia se conserva por propiedad, incluso al fusionar objetos. Un reinicio registra la capa `system` y el origen que solicitó el reinicio.
@@ -108,3 +112,8 @@ La procedencia se conserva por propiedad, incluso al fusionar objetos. Un reinic
 ## 8. Adaptadores
 
 Cada adaptador declara `native`, `mapped`, `approximate` o `unsupported` por propiedad y tipo de elemento. En modo estricto, una propiedad requerida no soportada bloquea la exportación. En modo compatible, solo se permite continuar si la pérdida queda registrada.
+
+
+## 9. Límites de compatibilidad del catálogo
+
+El catálogo v1 define un vocabulario neutral del IR; **no constituye una garantía de compatibilidad con XMind, SVG u otro destino**. No se ha contrastado todavía cada propiedad con las capacidades reales de esos formatos ni con una versión concreta de XMind Desktop. Esa matriz debe construirse en las tareas de adaptadores y validación (AUD-006, AUD-007, AUD-008 y AUD-009). Hasta entonces, no se debe etiquetar ninguna propiedad como nativa, mapeada o aproximada de un destino.
