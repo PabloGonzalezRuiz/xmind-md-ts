@@ -100,6 +100,16 @@ export const STYLE_PROPERTY_CATALOG = {
     defaultValue: 'solid',
     enumValues: ['solid', 'dashed', 'dotted'],
   },
+  arrowStart: {
+    kind: 'boolean',
+    elements: ['relationship'],
+    defaultValue: false,
+  },
+  arrowEnd: {
+    kind: 'boolean',
+    elements: ['relationship'],
+    defaultValue: true,
+  },
   shape: {
     kind: 'enum',
     elements: SHAPES,
