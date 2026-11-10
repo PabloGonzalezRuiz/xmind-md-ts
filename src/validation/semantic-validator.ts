@@ -1,3 +1,5 @@
+import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
+
 import type { SourcePosition, StyleReference } from '../../spec/ir-v1.types.js';
 
 export interface IrValidationDiagnostic {
@@ -13,6 +15,7 @@ export interface IrValidationOptions {
   maxTopics?: number;
   maxContentBlocks?: number;
   maxAssets?: number;
+  assetRootDirectory?: string;
 }
 
 export interface IrValidationResult {
@@ -56,6 +59,30 @@ function validUriReference(value: string): boolean {
   } catch {
     return false;
   }
+}
+
+function isExternalUri(uri: string): boolean {
+  return /^[a-z][a-z0-9+.-]*:/i.test(uri) || uri.startsWith('//');
+}
+
+function isAssetWithinRoot(uri: string, source: unknown, rootDirectory: string): boolean {
+  const uriPath = uri.split(/[?#]/, 1)[0] ?? '';
+  let decodedPath: string;
+  try {
+    decodedPath = decodeURIComponent(uriPath);
+  } catch {
+    return false;
+  }
+  const sourceDirectory = isString(source) ? dirname(resolve(source)) : resolve('.');
+  const targetPath = resolve(sourceDirectory, decodedPath);
+  const rootPath = resolve(rootDirectory);
+  const pathFromRoot = relative(rootPath, targetPath);
+  return (
+    pathFromRoot === '' ||
+    (!isAbsolute(pathFromRoot) &&
+      pathFromRoot !== '..' &&
+      !pathFromRoot.startsWith(`..${sep}`))
+  );
 }
 
 /**
@@ -304,7 +331,7 @@ export function validateIrDocument(
     if (input.assets.length > limits.maxAssets) {
       report('IR_ASSET_LIMIT', `El documento supera el límite de ${limits.maxAssets} assets.`, '$.assets');
     }
-    input.assets.forEach((asset, index) => {
+    input.assets.slice(0, limits.maxAssets).forEach((asset, index) => {
       const path = `$.assets[${index}]`;
       if (!isRecord(asset)) {
         report('IR_ASSET_INVALID', 'El asset debe ser un objeto.', path);
@@ -314,6 +341,14 @@ export function validateIrDocument(
       if (isString(asset.id)) assetIds.add(asset.id);
       if (!isString(asset.uri) || !validUriReference(asset.uri)) {
         report('IR_ASSET_URI', 'La URI del asset no es una referencia URI válida.', `${path}.uri`);
+      } else if (options.assetRootDirectory && !isExternalUri(asset.uri)) {
+        if (!isAssetWithinRoot(asset.uri, document?.source, options.assetRootDirectory)) {
+          report(
+            'IR_ASSET_PATH_ESCAPE',
+            'La ruta del asset escapa del directorio permitido.',
+            `${path}.uri`,
+          );
+        }
       }
     });
   }
