@@ -47,7 +47,7 @@ Se ha creado la estructura de proyecto, configuración estricta de TypeScript, s
 - Prettier 3.9.10.
 - GitHub Actions.
 
-Las versiones directas están fijadas en `package.json`. El archivo `package-lock.json` queda pendiente de generación mediante npm; no se ha fabricado manualmente.
+Las versiones directas están fijadas en `package.json`. El primer workflow de push genera y versiona `package-lock.json` mediante npm; los siguientes CI usan `npm ci`.
 
 ## Principio de desarrollo
 
