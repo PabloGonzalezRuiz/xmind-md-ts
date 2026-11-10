@@ -17,11 +17,11 @@ El proyecto no es una traducción mecánica del código Python de `xmind-md`. Re
 
 ## Estado
 
-**Fases 1–5 — Completadas y verificadas. Fase 6 — En desarrollo.**
+**Contrato IR, parser, validación estructural/semántica, motor de estilos y corpus de conformidad — implementados y verificados en la rama de trabajo. AUD-005 — CLI y exportación JSON en implementación.**
 
 Ya están implementados el contrato IR v1, la base TypeScript, el parser Markdown y el validador semántico. El validador comprueba IDs, referencias cruzadas, relaciones, límites, herencia de conjuntos de estilos, alineaciones de tablas y rutas de assets cuando se configura un directorio permitido. No muta el IR y devuelve diagnósticos con código y ruta.
 
-La validación completa mediante JSON Schema todavía no está conectada al pipeline. El motor de estilos se está implementando en `feature/phase-6-style-engine`; después quedan los adaptadores, la CLI y el visor.
+La validación completa mediante JSON Schema Draft 2020-12 está integrada en el pipeline, con tipos TypeScript generados desde el schema. La CLI inicial coordina el parser y el validador para parsear, validar y exportar IR JSON; el adaptador XMind, SVG y el visor siguen pendientes.
 
 ## Documentación
 
@@ -35,6 +35,7 @@ La validación completa mediante JSON Schema todavía no está conectada al pipe
 - [Gramática Markdown](docs/grammar.md)
 - [Sistema de estilos](docs/style-system.md)
 - [Adaptadores y XMind](docs/adapters.md)
+- [CLI](docs/cli.md)
 - [Calidad y pruebas](docs/quality-and-testing.md)
 - [Desarrollo local y GitHub Actions](docs/development.md)
 - [Hoja de ruta](docs/roadmap.md)
