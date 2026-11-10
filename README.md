@@ -17,11 +17,11 @@ El proyecto no es una traducción mecánica del código Python de `xmind-md`. Re
 
 ## Estado
 
-**Fases 1–4 — Completadas. Fase 5 — Implementación realizada; verificación CI del último commit pendiente.**
+**Fases 1–5 — Completadas y verificadas. Fase 6 — En desarrollo.**
 
 Ya están implementados el contrato IR v1, la base TypeScript, el parser Markdown y el validador semántico. El validador comprueba IDs, referencias cruzadas, relaciones, límites, herencia de conjuntos de estilos, alineaciones de tablas y rutas de assets cuando se configura un directorio permitido. No muta el IR y devuelve diagnósticos con código y ruta.
 
-La validación completa mediante JSON Schema todavía no está conectada al pipeline. Siguen pendientes el motor de estilos, los adaptadores, la CLI y el visor.
+La validación completa mediante JSON Schema todavía no está conectada al pipeline. El motor de estilos se está implementando en `feature/phase-6-style-engine`; después quedan los adaptadores, la CLI y el visor.
 
 ## Documentación
 
