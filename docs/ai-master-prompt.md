@@ -20,7 +20,7 @@ Mantén separadas autoría, parser, IR, validación semántica, resolución de e
 
 La versión actual del IR es **1.0.0**:
 - Especificación: `docs/ir-specification.md`.
-- JSON Schema Draft 2020-12: `spec/ir-v1.schema.json`.
+- JSON Schema Draft 2020-12: `spec/ir-v1.schema.json`.\n- Tipos TypeScript: `spec/ir-v1.types.ts`.\n- Casos de conformidad: `spec/conformance/README.md`.
 - Fixture mínimo: `spec/fixtures/ir-v1-minimal.json`.
 - Gramática: `docs/grammar.md`.
 - Estilos: `docs/style-system.md`.
