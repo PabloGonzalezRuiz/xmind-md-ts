@@ -11,16 +11,12 @@ let markdownPath: string;
 let jsonPath: string;
 
 function execute(args: string[], input?: string) {
-  return spawnSync(
-    process.execPath,
-    ['--import', 'tsx', cliPath, ...args],
-    {
-      cwd: process.cwd(),
-      encoding: 'utf8',
-      input,
-      windowsHide: true,
-    },
-  );
+  return spawnSync(process.execPath, ['--import', 'tsx', cliPath, ...args], {
+    cwd: process.cwd(),
+    encoding: 'utf8',
+    input,
+    windowsHide: true,
+  });
 }
 
 describe('CLI', () => {
@@ -28,11 +24,7 @@ describe('CLI', () => {
     directory = await mkdtemp(join(tmpdir(), 'xmind md cli '));
     markdownPath = join(directory, 'mapa de prueba.md');
     jsonPath = join(directory, 'mapa generado.json');
-    await writeFile(
-      markdownPath,
-      '# Mapa de prueba\n\n## Rama A\n\nTexto de prueba.\n',
-      'utf8',
-    );
+    await writeFile(markdownPath, '# Mapa de prueba\n\n## Rama A\n\nTexto de prueba.\n', 'utf8');
   });
 
   afterEach(async () => {
