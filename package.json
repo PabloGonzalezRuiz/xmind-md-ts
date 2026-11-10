@@ -43,6 +43,6 @@
     "ajv-formats": "3.0.1"
   },
   "bin": {
-    "xmind-md": "./dist/src/cli/main.js"
+    "xmind-md": "./bin/xmind-md.js"
   }
 }
