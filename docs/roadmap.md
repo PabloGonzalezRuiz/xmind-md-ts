@@ -8,7 +8,7 @@ Las fases se ejecutan secuencialmente. Al terminar cada fase se presenta el resu
 | 2 | Contrato IR y JSON Schema | IR v1, tipos TS, schema, fixture y matriz de conformidad | Completada |
 | 3 | Esqueleto TypeScript y tooling | package.json, tsconfig estricto, lockfile, lint, formato, Vitest y CI verificados | Completada |
 | 4 | Parser Markdown | Gramática implementada y corpus de parser | Completada |
-| 5 | Validación semántica e identidad | IDs deterministas, unicidad, referencias, ciclos, límites y diagnósticos probados | Completada |
+| 5 | Validación semántica e identidad | IDs deterministas, unicidad, referencias, ciclos, límites y diagnósticos probados | Verificación CI final pendiente |
 | 6 | Motor de estilos | Conjuntos, roles, estilos, precedencia y procedencia | Pendiente |
 | 7 | Adaptador JSON y CLI | Ejecución local reproducible | Pendiente |
 | 8 | Evaluación e integración XMind | Matriz de capacidades, SDK evaluado y exportación inicial | Pendiente |
