@@ -91,7 +91,7 @@ La versión vigente del modelo intermedio es **IR v1.0.0**. Estos documentos y a
 
 - Especificación: `docs/ir-specification.md`.
 - JSON Schema Draft 2020-12: `spec/ir-v1.schema.json`.
-- Tipos TypeScript: `spec/ir-v1.types.ts`.
+- Tipos TypeScript públicos: `spec/ir-v1.types.ts`; su equivalencia estructural con el schema se comprueba mediante `scripts/check-ir-types.mjs`.
 - Casos de conformidad: `spec/conformance/README.md`.
 - Fixture mínimo: `spec/fixtures/ir-v1-minimal.json`.
 - Gramática: `docs/grammar.md`.
@@ -167,6 +167,7 @@ La puerta de calidad actual incluye:
 - `npm run format:check`
 - `npm run lint`
 - `npm run typecheck`
+- `npm run check:ir-types`
 - `npm test`
 - `npm run build`
 
@@ -186,7 +187,7 @@ A fecha de la última actualización de este prompt:
 - No existe todavía visor web.
 - El desarrollo de las ramas de características no se considera integrado en `main` por el mero hecho de superar CI.
 
-AUD-003 está completada y verificada. La siguiente tarea priorizada es **AUD-012: automatizar la coherencia entre JSON Schema y tipos TypeScript**. No iniciarla hasta recibir autorización expresa.
+AUD-003 está completada y verificada. **AUD-012 está en curso**: `scripts/check-ir-types.mjs` proyecta las estructuras admitidas del schema y exige equivalencia bidireccional con los tipos públicos; el comando está integrado en `verify` y CI. No iniciar AUD-004 hasta que AUD-012 tenga prueba positiva, prueba negativa de drift y CI verde sobre el HEAD final.
 
 ## 9. Protocolo obligatorio de trabajo con el repositorio
 
