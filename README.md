@@ -17,11 +17,11 @@ El proyecto no es una traducción mecánica del código Python de `xmind-md`. Re
 
 ## Estado
 
-**Contrato IR, parser, validación estructural/semántica, motor de estilos y corpus de conformidad — implementados y verificados en la rama de trabajo. AUD-005 — CLI y exportación JSON en implementación.**
+**Contrato IR, parser, validación estructural/semántica, motor de estilos, corpus de conformidad, adaptador JSON y CLI — implementados y verificados en la rama de trabajo.**
 
 Ya están implementados el contrato IR v1, la base TypeScript, el parser Markdown y el validador semántico. El validador comprueba IDs, referencias cruzadas, relaciones, límites, herencia de conjuntos de estilos, alineaciones de tablas y rutas de assets cuando se configura un directorio permitido. No muta el IR y devuelve diagnósticos con código y ruta.
 
-La validación completa mediante JSON Schema Draft 2020-12 está integrada en el pipeline, con tipos TypeScript generados desde el schema. La CLI inicial coordina el parser y el validador para parsear, validar y exportar IR JSON; el adaptador XMind, SVG y el visor siguen pendientes.
+La validación completa mediante JSON Schema Draft 2020-12 está integrada en el pipeline, con tipos TypeScript generados desde el schema. El adaptador JSON serializa el IR de forma determinista y la CLI ofrece `parse`, `validate` y `export`, con códigos de salida estables y pruebas en Windows/Linux. El adaptador XMind, SVG y el visor siguen pendientes.
 
 ## Documentación
 
