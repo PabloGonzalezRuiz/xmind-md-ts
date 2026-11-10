@@ -31,10 +31,7 @@ jobs:
         run: npm ci --no-audit --no-fund
 
       - name: Check formatting
-        run: |
-          npx prettier --write "src/styles/catalog.ts" "test/style-engine.test.ts"
-          git diff -- "src/styles/catalog.ts" "test/style-engine.test.ts"
-          npm run format:check
+        run: npm run format:check
 
       - name: Lint
         run: npm run lint
