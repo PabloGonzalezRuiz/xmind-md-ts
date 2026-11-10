@@ -5,14 +5,14 @@
 > **Última auditoría:** 2026-11-10  
 > **Repositorio:** https://github.com/PabloGonzalezRuiz/xmind-md-ts  
 > **Rama de trabajo auditada:** `feature/aud-003-runtime-schema`  
-> **HEAD verificado:** `1040eea3ae6b33f59a9fdb3b541db5b1df915971` (AUD-004 completada y verificada; commit documental posterior al CI de código)  
+> **HEAD de implementación verificado:** `55c1700e2d4df7787dddcc65a273e267d112ff42` (AUD-005; CI [42856600346](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42856600346) verde en Ubuntu y Windows; el commit de esta actualización documental será posterior)  
 > **Rama principal:** `main` — `6aca81b59dbfcfc13034e7e1115c70f7691c5035`
 
 ## 1. Resumen ejecutivo
 
-El proyecto tiene definido el contrato IR v1.0.0 y ya dispone de una base TypeScript, parser Markdown, validador semántico y un motor de estilos en desarrollo. Todavía **no es una aplicación funcional de extremo a extremo**: no exporta XMind, JSON ni SVG, no dispone de CLI y no tiene visor.
+El proyecto tiene definido el contrato IR v1.0.0 y dispone de parser Markdown, validación estructural y semántica, motor de estilos, adaptador JSON y CLI inicial. Todavía **no es una aplicación funcional de extremo a extremo para XMind**: no exporta paquetes XMind ni SVG y no tiene visor.
 
-El trabajo está distribuido en ramas de características. No hay pull requests abiertos y no se ha integrado el desarrollo de las fases 3–6 en `main`. No se debe confundir que una fase esté implementada y verificada en su rama con que esté integrada en la rama principal.
+El trabajo está distribuido en ramas de características. No hay pull requests abiertos y no se ha integrado el desarrollo de las fases 3–7 en `main`. No se debe confundir que una fase esté implementada y verificada en su rama con que esté integrada en la rama principal.
 
 ### Estado verificable
 
@@ -24,7 +24,7 @@ El trabajo está distribuido en ramas de características. No hay pull requests 
 | Fase 5: validación semántica e identidad | Completada y CI verde | Commit `954216e99a13106d88ba72652460047d826b9c55`; CI run [42823341031](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42823341031) |
 | Fase 6: motor de estilos | Motor implementado; robustez AUD-002 verificada | Rama `feature/phase-6-style-engine`; CI completo verde sobre el HEAD registrado. La fase aún requiere integración/exportadores y validación real XMind/SVG |
 | JSON Schema en ejecución | Completada y verificada (AUD-003) | Ajv 8 Draft 2020-12; 15 casos SC definidos; pipeline estructural-semántico; tipos generados desde el schema; comprobación de sincronización y CI verde en HEAD `957ae096359cfa9d62ddbe70883bfa2020efe5ed` |
-| Adaptador JSON y CLI | Pendientes | No existen módulos ejecutables de exportación ni comandos CLI |
+| Adaptador JSON y CLI | Completada y verificada (AUD-005) | `src/adapters/json/json-adapter.ts`; comandos `parse`, `validate` y `export`; bin `xmind-md`; CI Ubuntu/Windows [42856600346](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42856600346) |
 | Adaptador XMind | Pendiente | SDK oficial aún no evaluado; no se genera paquete XMind |
 | Adaptador SVG | Pendiente | No existe renderizador |
 | Validación en XMind Desktop | Pendiente | No hay pruebas de apertura/guardado ni corpus real |
@@ -39,7 +39,7 @@ El trabajo está distribuido en ramas de características. No hay pull requests 
 | `feature/phase-4-markdown-parser` | `d31892ba0895f513b8b19a284de929623d10af6b` | Parser Markdown y pruebas |
 | `feature/phase-5-semantic-validation` | `954216e99a13106d88ba72652460047d826b9c55` | Validador semántico, IDs deterministas y pruebas |
 | `feature/phase-6-style-engine` | `21dae3248be2963ccc77b00b79dffd1afd92a98d` | Catálogo y motor de estilos; AUD-001 y AUD-002 verificadas |
-| `feature/aud-003-runtime-schema` | `1040eea3ae6b33f59a9fdb3b541db5b1df915971` | Ajv runtime, pipeline estructural-semántico, tipos generados y corpus parser/IR; AUD-003 y AUD-004 verificadas |
+| `feature/aud-003-runtime-schema` | `55c1700e2d4df7787dddcc65a273e267d112ff42` | Ajv runtime, corpus parser/IR, adaptador JSON y CLI; AUD-003, AUD-004 y AUD-005 verificadas |
 
 Las ramas de fase están encadenadas por orden de desarrollo y contienen cambios acumulados. No hay PRs abiertos ni issues registrados en el repositorio en el momento de esta auditoría. **No fusionar ni reescribir `main` sin autorización expresa.**
 
@@ -61,13 +61,17 @@ Las ramas de fase están encadenadas por orden de desarrollo y contienen cambios
 - `src/validation/semantic-validator.ts`: validación semántica sobre `unknown`, IDs, referencias, ciclos, tablas, URI, límites y contención léxica de assets.
 - `src/styles/catalog.ts`: catálogo de propiedades, tipos, compatibilidad, defaults y validadores.
 - `src/styles/style-engine.ts`: resolución por capas, herencia de StyleSets, roles, estilos con nombre, overrides, runs y procedencia.
-- `src/index.ts`: exporta parser, validador y motor de estilos.
+- `src/adapters/json/json-adapter.ts`: serialización determinista del IR validado a JSON, sin mutar el documento.
+- `src/cli/main.ts`: comandos `parse`, `validate` y `export`, stdin/stdout, diagnósticos y códigos de salida.
+- `bin/xmind-md.js`: punto de entrada del ejecutable `xmind-md`.
+- `src/index.ts`: exporta parser, validadores, motor de estilos y adaptador JSON.
 
-No existen todavía `src/adapters/`, `src/cli/` ni aplicación `viewer/`.
+No existen todavía adaptadores XMind/SVG ni aplicación `viewer/`.
 
 ### 3.3 Toolchain y CI
 
 - Node.js 24, npm, TypeScript 6, Vitest 5, ESLint 10 y Prettier 3.
+- CI ejecutada en `ubuntu-latest` y `windows-latest`; `.gitattributes` y `.editorconfig` fijan finales LF.
 - `npm ci`, `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`.
 - `npm run verify` agrupa las puertas locales de calidad.
 - `package-lock.json` está versionado.
@@ -114,7 +118,7 @@ Los IDs de tarea son permanentes. Cambiar el orden o el alcance exige actualizar
 | AUD-002 | P1 | Completar revisión de robustez del motor de estilos | Validadores de color/objetos robustos; procedencia coherente; referencias y ciclos diagnosticados; contrato de IDs y límites de compatibilidad documentados; pruebas y CI verdes | Completada y verificada |
 | AUD-003 | P1 | Integrar validación JSON Schema runtime | Ajv 2020; todos los casos SC definidos automatizados; tipos generados desde el schema y sincronización comprobada; integración estructural-semántica; CI verde | Completada y verificada |
 | AUD-004 | P1 | Completar corpus de conformidad parser/IR | Fixtures positivos y negativos de bloques/directivas; códigos estables; diagnósticos y posiciones de origen; validez estructural/semántica del IR; regresión reproducible en CI | Completada y verificada |
-| AUD-005 | P1 | Implementar adaptador JSON y CLI | Comandos de parse, validate y export JSON; códigos de salida; rutas Windows; ejecución local y CI | Pendiente |
+| AUD-005 | P1 | Implementar adaptador JSON y CLI | Comandos de parse, validate y export JSON; códigos de salida; rutas Windows; ejecución local y CI | Completada y verificada |
 | AUD-006 | P1 | Evaluar SDK oficial XMind y decidir estrategia | Informe de API, formatos, Node, licencia, actividad, cobertura, dependencias y prueba mínima | Pendiente |
 | AUD-007 | P1 | Implementar exportador XMind inicial | Paquete generado, matriz de capacidades y diagnósticos de pérdidas; estructura ZIP/JSON comprobada | Pendiente |
 | AUD-008 | P2 | Implementar adaptador SVG | SVG válido, renderizado determinista, metadatos semánticos y pruebas visuales/estructurales | Pendiente |
@@ -158,7 +162,7 @@ Al iniciar una sesión de trabajo:
 
 ### Primera acción de continuación
 
-**AUD-001, AUD-002, AUD-003 y AUD-004 están completadas y verificadas.** La siguiente tarea es AUD-005 (adaptador JSON y CLI), pendiente de autorización.
+**AUD-001, AUD-002, AUD-003, AUD-004 y AUD-005 están completadas y verificadas.** La siguiente tarea es AUD-006 (evaluación del SDK oficial XMind y decisión de estrategia), pendiente de autorización.
 
 ## 8. Registro de sesiones
 
@@ -178,3 +182,6 @@ Al iniciar una sesión de trabajo:
 | 2026-11-10 | AUD-004: corpus inicial de conformidad Markdown | Añadidos fixtures positivos, negativos y de diagnóstico; batería `test/markdown-conformance.test.ts` con comprobación de bloques Markdown, directivas, códigos de error, posiciones y validación IR. Se corrigieron expectativas detectadas por CI (filas GFM, etiquetas HTML separadas e import de fixtures). CI pendiente de verificación final tras actualizar la documentación | Completar matriz de casos, confirmar CI verde y actualizar el estado de auditoría |
 
 | 2026-11-10 | AUD-004: cierre y verificación final del corpus parser/IR | Fixtures versionados para bloques Markdown, front matter y directivas XMind; casos positivos, negativos y diagnósticos; códigos de error estables, líneas/columnas, posiciones de temas/bloques y validación estructural/semántica. Matriz registrada en `spec/conformance/README.md`. CI verde: [42850018812](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42850018812), SHA `a6a8afc31886170fbe5f4836c0587a746e31eb30`; 96 tests, format, lint, typecheck y build correctos | Solicitar autorización para AUD-005 |
+
+
+| 2026-11-10 | AUD-005: adaptador JSON y CLI | Añadido adaptador tipado `serializeIrJson`; CLI `parse`, `validate` y `export`; códigos de salida 0–3; rutas con espacios y Windows; stdin/stdout; `--mode`, `--asset-root` y detección/forzado de formato. Añadido bin `xmind-md`, documentación y CI multiplataforma. `.gitattributes` fija LF para evitar diferencias de formato en Windows. CI verde: [42856600346](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42856600346), SHA `55c1700e2d4df7787dddcc65a273e267d112ff42`; 9 archivos de test y 107 pruebas correctas en Ubuntu y Windows; formato, lint, tipos generados, typecheck, build y smoke test CLI correctos | Solicitar autorización para AUD-006 |
