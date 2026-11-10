@@ -62,10 +62,7 @@ describe('Markdown parser', () => {
     expect(blocks[1]).toMatchObject({
       type: 'list',
       ordered: false,
-      items: [
-        { blocks: [{ type: 'paragraph' }] },
-        { blocks: [{ type: 'paragraph' }] },
-      ],
+      items: [{ blocks: [{ type: 'paragraph' }] }, { blocks: [{ type: 'paragraph' }] }],
     });
     expect(blocks[2]).toMatchObject({
       type: 'table',
