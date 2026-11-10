@@ -30,7 +30,7 @@ El front matter se sitúa al principio del archivo y solo puede aparecer una vez
 | `style_set` | string | Conjunto de estilos por defecto |
 | `settings` | object | Ajustes neutrales de hoja definidos por el esquema |
 
-Claves desconocidas producen advertencia en modo compatible y error en modo estricto. Una clave no puede contradecir otra fuente de metadatos sin regla definida: `title` del front matter prevalece sobre el título del H1 para el documento y la hoja, pero no cambia el título del tema raíz. `id` identifica el documento, no el tema raíz.
+Claves desconocidas producen advertencia en modo compatible y error en modo estricto. Una clave no puede contradecir otra fuente de metadatos sin regla definida: `title` del front matter prevalece sobre el título del H1 para el documento y la hoja, pero no cambia el título del tema raíz. `id` identifica el documento, no el tema raíz. `style_set` se normaliza como `sheet.defaultStyleSetId` y debe referenciar un conjunto incluido en `styleSets`.
 
 ## 5. Bloques Markdown
 
