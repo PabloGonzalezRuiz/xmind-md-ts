@@ -390,6 +390,7 @@ describe('style resolution engine', () => {
 
   it('does not apply a partial style-set chain after detecting a cycle', () => {
     const ir = createIr();
+    delete ir.sheet.rootTopic.style;
     ir.styleSets[0]!.extends = 'theme:child';
     ir.styleSets[0]!.defaults = { color: '#FF0000' };
     ir.styleSets[1]!.defaults = { color: '#00FF00' };
@@ -407,6 +408,7 @@ describe('style resolution engine', () => {
 
   it('does not apply a partial style-set chain when an ancestor is missing', () => {
     const ir = createIr();
+    delete ir.sheet.rootTopic.style;
     ir.styleSets[1]!.extends = 'theme:missing';
 
     const result = resolveIrStyles(ir);
