@@ -59,6 +59,7 @@ interface LayerInput {
   sourceId: string;
   properties: StyleProperties | undefined;
   path: string;
+  provenance?: Record<string, StyleProvenance>;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -186,6 +187,13 @@ export function resolveIrStyles(ir: IrDocument): StyleResolutionResult {
         }
         values[key] = mergeValue(values[key], value);
         mergeProvenance(provenance, value, key, { layer: input.layer, sourceId: input.sourceId });
+        if (input.provenance) {
+          for (const [propertyPath, source] of Object.entries(input.provenance)) {
+            if (propertyPath === key || propertyPath.startsWith(`${key}.`)) {
+              provenance[propertyPath] = source;
+            }
+          }
+        }
       }
     }
     const result = { elementId, elementType, values, provenance };
@@ -209,19 +217,8 @@ export function resolveIrStyles(ir: IrDocument): StyleResolutionResult {
       path: `$.sheet.settings.styleDefaults.${elementType}`,
     });
     if (!setId) return layers;
-    const styleSet = styleSets.get(setId);
-    if (!styleSet) {
-      addDiagnostic('STYLE_SET_NOT_FOUND', `No existe el conjunto "${setId}".`, path, elementId);
-      return layers;
-    }
-    layers.push({
-      layer: 'styleSet',
-      sourceId: styleSet.id,
-      properties: styleSet.defaults,
-      path: `$.styleSets[${setId}].defaults`,
-    });
 
-    const chain = [];
+    const chain: Array<(typeof ir.styleSets)[number]> = [];
     const visited = new Set<string>();
     let current: string | undefined = setId;
     while (current && !visited.has(current)) {
@@ -231,23 +228,44 @@ export function resolveIrStyles(ir: IrDocument): StyleResolutionResult {
       chain.unshift(currentSet);
       current = currentSet.extends;
     }
-    for (const inherited of chain.slice(1)) {
-      if (reference?.role) {
-        const role = inherited.roles?.[reference.role];
-        if (role) layers.push({ layer: 'role', sourceId: `${inherited.id}:${reference.role}`, properties: role, path: `$.styleSets[${inherited.id}].roles.${reference.role}` });
-      }
-      if (reference?.styleId) {
-        const named = inherited.styles?.[reference.styleId];
-        if (named) layers.push({ layer: 'namedStyle', sourceId: `${inherited.id}:${reference.styleId}`, properties: named, path: `$.styleSets[${inherited.id}].styles.${reference.styleId}` });
-      }
+    if (chain.length === 0 || chain[chain.length - 1]?.id !== setId) {
+      addDiagnostic('STYLE_SET_NOT_FOUND', `No existe el conjunto "${setId}".`, path, elementId);
+      return layers;
+    }
+
+    for (const inherited of chain) {
+      layers.push({
+        layer: 'styleSet',
+        sourceId: inherited.id,
+        properties: inherited.defaults,
+        path: `$.styleSets[${inherited.id}].defaults`,
+      });
     }
     if (reference?.role) {
-      const role = styleSet.roles?.[reference.role];
-      if (role) layers.push({ layer: 'role', sourceId: `${styleSet.id}:${reference.role}`, properties: role, path: `$.styleSets[${styleSet.id}].roles.${reference.role}` });
+      for (const inherited of chain) {
+        const role = inherited.roles?.[reference.role];
+        if (role) {
+          layers.push({
+            layer: 'role',
+            sourceId: `${inherited.id}:${reference.role}`,
+            properties: role,
+            path: `$.styleSets[${inherited.id}].roles.${reference.role}`,
+          });
+        }
+      }
     }
     if (reference?.styleId) {
-      const named = styleSet.styles?.[reference.styleId];
-      if (named) layers.push({ layer: 'namedStyle', sourceId: `${styleSet.id}:${reference.styleId}`, properties: named, path: `$.styleSets[${styleSet.id}].styles.${reference.styleId}` });
+      for (const inherited of chain) {
+        const named = inherited.styles?.[reference.styleId];
+        if (named) {
+          layers.push({
+            layer: 'namedStyle',
+            sourceId: `${inherited.id}:${reference.styleId}`,
+            properties: named,
+            path: `$.styleSets[${inherited.id}].styles.${reference.styleId}`,
+          });
+        }
+      }
     }
     return layers;
   };
@@ -279,26 +297,32 @@ export function resolveIrStyles(ir: IrDocument): StyleResolutionResult {
         block.runs.forEach((run: TextRun, index) => {
           const runPath = `${blockPath}.runs[${index}]`;
           const inherited = filterApplicable(topicStyle.values, 'textRun');
-          const inheritedProvenance: Record<string, StyleProvenance> = {};
-          for (const [key, value] of Object.entries(inherited)) {
-            inheritedProvenance[key] = topicStyle.provenance[key] ?? { layer: 'topic', sourceId: topic.id };
+          const inheritedProvenance = Object.fromEntries(
+            Object.entries(topicStyle.provenance).filter(([key]) => Object.hasOwn(inherited, key)),
+          );
+          const runLayers = resolveSetLayers(
+            `${topic.id}:run:${index}`,
+            'textRun',
+            setId,
+            undefined,
+            `${runPath}.style`,
+          );
+          runLayers.push({
+            layer: 'topic',
+            sourceId: topic.id,
+            properties: inherited,
+            path: `${path}.topicStyle`,
+            provenance: inheritedProvenance,
+          });
+          if (run.style) {
+            runLayers.push({
+              layer: 'inline',
+              sourceId: `${topic.id}:run:${index}`,
+              properties: run.style,
+              path: `${runPath}.style`,
+            });
           }
-          const runLayers: LayerInput[] = [
-            {
-              layer: 'map',
-              sourceId: 'sheet.settings.styleDefaults',
-              properties: isRecord(mapDefaults.textRun) ? (mapDefaults.textRun as StyleProperties) : undefined,
-              path: '$.sheet.settings.styleDefaults.textRun',
-            },
-          ];
-          const currentSet = setId ? styleSets.get(setId) : undefined;
-          if (currentSet?.defaults) runLayers.push({ layer: 'styleSet', sourceId: currentSet.id, properties: filterApplicable(currentSet.defaults, 'textRun'), path: `$.styleSets[${setId}].defaults` });
-          runLayers.push({ layer: 'topic', sourceId: topic.id, properties: inherited, path: `${path}.topicStyle` });
-          if (run.style) runLayers.push({ layer: 'inline', sourceId: `${topic.id}:run:${index}`, properties: run.style, path: `${runPath}.style` });
-          const resolved = applyLayers(`${topic.id}:run:${index}`, 'textRun', runLayers);
-          for (const [key, value] of Object.entries(inheritedProvenance)) {
-            if (!resolved.provenance[key]) resolved.provenance[key] = value;
-          }
+          applyLayers(`${topic.id}:run:${index}`, 'textRun', runLayers);
         });
       } else if (block.type === 'list') {
         block.items.forEach((item, itemIndex) => item.blocks.forEach((child, childIndex) => visitBlock(child, `${blockPath}.items[${itemIndex}].blocks[${childIndex}]`)));
