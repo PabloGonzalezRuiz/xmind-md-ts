@@ -42,7 +42,7 @@ describe('IR semantic validator', () => {
   });
 
   it('accepts IR produced by the Markdown parser', () => {
-    const ir = parseMarkdown('# Root\\n\\n## Child {#child}\\n\\n![Diagram](images/map.png)');
+    const ir = parseMarkdown('# Root\n\n## Child {#child}\n\n![Diagram](images/map.png)');
 
     expect(validateIrDocument(ir).valid).toBe(true);
   });
