@@ -3,8 +3,8 @@
 La implementación se organizará por módulos según `docs/architecture.md`.
 
 - `ir/`: modelo y operaciones del IR.
-- `parser/`: Markdown y directivas.
-- `validation/`: validación estructural y semántica.
+- `markdown/parser.ts`: Markdown y directivas a IR v1.
+- `validation/semantic-validator.ts`: invariantes semánticas y referencias cruzadas.
 - `styles/`: resolución de estilos.
 - `adapters/`: exportadores por formato.
 - `cli/`: interfaz de línea de comandos.
