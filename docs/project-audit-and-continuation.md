@@ -165,4 +165,4 @@ Al iniciar una sesión de trabajo:
 
 | Fecha | Trabajo | Resultado / commit | Próxima acción |
 |---|---|---|---|
-| 2026-11-10 | Auditoría inicial completa y AUD-001 | Auditoría registrada; commit `2c594eaadd3a3bb794c73d5607ef39bb5b15a9ac`; CI [42826867694](https://github.com/${repo}/actions/runs/42826867694) verde con 46/46 pruebas, lint, typecheck, formato y build | Solicitar autorización para AUD-002 |
+| 2026-11-10 | Auditoría inicial completa y AUD-001 | Auditoría registrada; commit `2c594eaadd3a3bb794c73d5607ef39bb5b15a9ac`; CI [42826867694](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42826867694) verde con 46/46 pruebas, lint, typecheck, formato y build | Solicitar autorización para AUD-002 |
