@@ -38,6 +38,7 @@ La validación completa mediante JSON Schema todavía no está conectada al pipe
 - [Calidad y pruebas](docs/quality-and-testing.md)
 - [Desarrollo local y GitHub Actions](docs/development.md)
 - [Hoja de ruta](docs/roadmap.md)
+- [Auditoría del proyecto y registro de continuidad](docs/project-audit-and-continuation.md)
 - [Registro de decisiones](docs/decisions.md)
 
 ## Tecnologías configuradas
