@@ -59,7 +59,7 @@ Esta API valida invariantes semánticas; no sustituye todavía la validación co
 
 ## 6. Ejecución de la CLI
 
-La CLI inicial está implementada en `src/cli/main.ts`. Expone `parse`, `validate` y `export` JSON, admite rutas de Windows, stdin/stdout, modo compatible/estricto, directorio raíz de assets y códigos de salida estables. Consulta [CLI](cli.md) para el contrato y los ejemplos. La selección de adaptadores adicionales se incorporará cuando existan.
+La CLI está implementada en `src/cli/main.ts` y el adaptador JSON en `src/adapters/json/json-adapter.ts`. Expone `parse`, `validate` y `export` JSON, admite rutas de Windows, stdin/stdout, modo compatible/estricto, directorio raíz de assets y códigos de salida estables. CI ejecuta formato, lint, typecheck, pruebas, build y smoke test en Ubuntu y Windows. Consulta [CLI](cli.md) para el contrato y los ejemplos. La selección de adaptadores adicionales se incorporará cuando existan.
 
 ## 7. Depuración
 
