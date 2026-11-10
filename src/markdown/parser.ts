@@ -112,8 +112,13 @@ function slug(value: string): string {
   return normalized || 'documento';
 }
 
-function yamlBody(node: AstNode): unknown {
-  const source = children(node).map(plainText).join('\n').trim();
+function yamlBody(node: AstNode, state: ParseState): unknown {
+  const lines = state.source.split(/\r?\n/);
+  const startLine = node.position?.start?.line;
+  const endLine = node.position?.end?.line;
+  const source = startLine !== undefined && endLine !== undefined
+    ? lines.slice(startLine, Math.max(startLine, endLine - 1)).join('\n').trim()
+    : children(node).map(plainText).join('\n').trim();
   if (!source) return {};
   try {
     return parseYaml(source);
@@ -165,7 +170,8 @@ function inlineRuns(nodes: AstNode[], marks: TextRun['marks'] = []): TextRun[] {
   for (const node of nodes) {
     if (node.type === 'text' || node.type === 'inlineCode') {
       const text = node.value ?? '';
-      if (text) result.push({ text, ...(marks.length ? { marks: [...marks] } : {}) });
+      const runMarks = node.type === 'inlineCode' ? [...marks, 'inlineCode' as const] : marks;
+      if (text) result.push({ text, ...(runMarks.length ? { marks: [...runMarks] } : {}) });
     } else if (node.type === 'strong' || node.type === 'emphasis' || node.type === 'delete') {
       const mark =
         node.type === 'strong' ? 'strong' : node.type === 'emphasis' ? 'emphasis' : 'strike';
@@ -186,6 +192,7 @@ interface ParseState {
   diagnostics: ParserDiagnostic[];
   assets: Asset[];
   assetIds: Map<string, string>;
+  source: string;
   relationships: IrDocument['sheet']['relationships'];
   boundaries: IrDocument['sheet']['boundaries'];
   summaries: IrDocument['sheet']['summaries'];
@@ -378,7 +385,7 @@ function parseDirective(node: AstNode, topic: Topic | undefined, state: ParseSta
     topic.notes = [...(topic.notes ?? []), ...parseBlocks(children(node), state)];
     return;
   }
-  const record = asRecord(yamlBody(node), 'MD_DIRECTIVE_OBJECT', node);
+  const record = asRecord(yamlBody(node, state), 'MD_DIRECTIVE_OBJECT', node);
   if (name === 'xmind') {
     if (!topic)
       throw new MarkdownParseError(
@@ -483,6 +490,7 @@ export function parseMarkdownWithDiagnostics(
   const state: ParseState = {
     sourcePath,
     diagnostics,
+    source: markdown,
     assets: [],
     assetIds: new Map(),
     relationships: [],
