@@ -6,8 +6,10 @@ import process from 'node:process';
 import {
   applicationVersion,
   parseMarkdownWithDiagnostics,
+  serializeIrJson,
   validateIrDocumentComplete,
 } from '../index.js';
+import type { IrDocument } from '../../spec/ir-v1.types.js';
 
 type Command = 'parse' | 'validate' | 'export';
 type InputFormat = 'markdown' | 'json';
@@ -252,7 +254,7 @@ async function run(options: Options): Promise<void> {
     return;
   }
 
-  const json = `${JSON.stringify(ir, null, 2)}\n`;
+  const json = serializeIrJson(ir as IrDocument);
   if (options.output && options.input !== '-') {
     const inputPath = resolve(options.input);
     const outputPath = resolve(options.output);
