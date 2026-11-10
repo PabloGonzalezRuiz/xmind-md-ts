@@ -43,6 +43,7 @@ const addFormats = require('ajv-formats') as (instance: Ajv2020Instance) => void
 const ajv = new Ajv2020({
   allErrors: true,
   strict: true,
+  allowUnionTypes: true,
   validateFormats: true,
   coerceTypes: false,
   removeAdditional: false,
