@@ -155,9 +155,83 @@ function cloneJsonValue(value: JsonValue): JsonValue {
   return value;
 }
 
-const COLOR_PATTERN =
-  /^(#[0-9a-f]{3,4}|#[0-9a-f]{6}|#[0-9a-f]{8}|transparent|currentColor|[a-z]+|rgba?\([0-9\s.,%]+\)|hsla?\([0-9\s.,%deg]+\))$/i;
-const LENGTH_PATTERN = /^-?(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:px|pt|em|rem|%)?$/i;
+const CSS_NAMED_COLORS = new Set(
+  (
+    'aliceblue antiquewhite aqua aquamarine azure beige bisque black blanchedalmond blue blueviolet brown burlywood cadetblue chartreuse chocolate coral cornflowerblue cornsilk crimson cyan darkblue darkcyan darkgoldenrod darkgray darkgreen darkgrey darkkhaki darkmagenta darkolivegreen darkorange darkorchid darkred darksalmon darkseagreen darkslateblue darkslategray darkslategrey darkturquoise darkviolet deeppink deepskyblue dimgray dimgrey dodgerblue firebrick floralwhite forestgreen fuchsia gainsboro ghostwhite gold goldenrod gray green greenyellow grey honeydew hotpink indianred indigo ivory khaki lavender lavenderblush lawngreen lemonchiffon lightblue lightcoral lightcyan lightgoldenrodyellow lightgray lightgreen lightgrey lightpink lightsalmon lightseagreen lightskyblue lightslategray lightslategrey lightsteelblue lightyellow lime limegreen linen magenta maroon mediumaquamarine mediumblue mediumorchid mediumpurple mediumseagreen mediumslateblue mediumspringgreen mediumturquoise mediumvioletred midnightblue mintcream mistyrose moccasin navajowhite navy oldlace olive olivedrab orange orangered orchid palegoldenrod palegreen paleturquoise palevioletred papayawhip peachpuff peru pink plum powderblue purple rebeccapurple red rosybrown royalblue saddlebrown salmon sandybrown seagreen seashell sienna silver skyblue slateblue slategray slategrey snow springgreen steelblue tan teal thistle tomato turquoise violet wheat white whitesmoke yellow yellowgreen'
+  ).split(/\\s+/),
+);
+const HEX_COLOR_PATTERN = /^#(?:[0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
+const LENGTH_PATTERN = /^-?(?:[0-9]+\\.?[0-9]*|\\.[0-9]+)(?:px|pt|em|rem|%)?$/i;
+
+function isValidCssColor(value: string): boolean {
+  const color = value.trim();
+  if (HEX_COLOR_PATTERN.test(color)) return true;
+  if (/^(transparent|currentcolor)$/i.test(color) || CSS_NAMED_COLORS.has(color.toLowerCase())) {
+    return true;
+  }
+
+  const rgb = color.match(/^rgba?\\(\\s*([+-]?[\\d.]+%?)\\s*,\\s*([+-]?[\\d.]+%?)\\s*,\\s*([+-]?[\\d.]+%?)(?:\\s*,\\s*([+-]?[\\d.]+%?))?\\s*\\)$/i);
+  if (rgb) {
+    const channels = rgb.slice(1, 4);
+    const percent = channels.every((channel) => channel.endsWith('%'));
+    const mixedUnits = channels.some((channel) => channel.endsWith('%')) && !percent;
+    if (mixedUnits) return false;
+    const max = percent ? 100 : 255;
+    if (channels.some((channel) => !Number.isFinite(Number.parseFloat(channel)) || Number.parseFloat(channel) < 0 || Number.parseFloat(channel) > max)) return false;
+    const alpha = rgb[4];
+    return alpha === undefined || isValidAlpha(alpha);
+  }
+
+  const hsl = color.match(/^hsla?\\(\\s*([+-]?[\\d.]+)(?:deg)?\\s*,\\s*([+-]?[\\d.]+)%\\s*,\\s*([+-]?[\\d.]+)%(?:\\s*,\\s*([+-]?[\\d.]+%?))?\\s*\\)$/i);
+  if (hsl) {
+    const hue = Number.parseFloat(hsl[1]!);
+    const saturation = Number.parseFloat(hsl[2]!);
+    const lightness = Number.parseFloat(hsl[3]!);
+    return Number.isFinite(hue) && saturation >= 0 && saturation <= 100 &&
+      lightness >= 0 && lightness <= 100 &&
+      (hsl[4] === undefined || isValidAlpha(hsl[4]));
+  }
+  return false;
+}
+
+function isValidAlpha(value: string): boolean {
+  const percentage = value.endsWith('%');
+  const alpha = Number.parseFloat(value);
+  return Number.isFinite(alpha) && alpha >= 0 && alpha <= (percentage ? 100 : 1);
+}
+
+function validateShadow(value: unknown): string | undefined {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+    return 'Se esperaba un objeto JSON para shadow.';
+  }
+  const shadow = value as Record<string, unknown>;
+  const allowed = new Set(['enabled', 'color', 'offset', 'blur']);
+  const unknown = Object.keys(shadow).find((key) => !allowed.has(key));
+  if (unknown) return `La clave de shadow "${unknown}" no está admitida.`;
+  if (shadow.enabled !== undefined && typeof shadow.enabled !== 'boolean') {
+    return 'shadow.enabled debe ser booleano.';
+  }
+  if (shadow.color !== undefined && (typeof shadow.color !== 'string' || !isValidCssColor(shadow.color))) {
+    return 'shadow.color debe ser un color CSS válido.';
+  }
+  if (shadow.blur !== undefined && (typeof shadow.blur !== 'number' || !Number.isFinite(shadow.blur) || shadow.blur < 0)) {
+    return 'shadow.blur debe ser un número no negativo.';
+  }
+  if (shadow.offset !== undefined) {
+    if (typeof shadow.offset !== 'object' || shadow.offset === null || Array.isArray(shadow.offset)) {
+      return 'shadow.offset debe ser un objeto con coordenadas x e y.';
+    }
+    const offset = shadow.offset as Record<string, unknown>;
+    if (Object.keys(offset).some((key) => key !== 'x' && key !== 'y')) {
+      return 'shadow.offset solo admite las claves x e y.';
+    }
+    if (['x', 'y'].some((key) => offset[key] !== undefined &&
+      (typeof offset[key] !== 'number' || !Number.isFinite(offset[key])))) {
+      return 'shadow.offset.x e shadow.offset.y deben ser números finitos.';
+    }
+  }
+  return undefined;
+}
 
 export function isStylePropertyApplicable(name: string, elementType: StyleElementType): boolean {
   const definition = STYLE_PROPERTY_CATALOG[name as StylePropertyName] as
@@ -187,7 +261,7 @@ export function validateStyleProperty(
 
   switch (definition.kind) {
     case 'color':
-      return typeof value === 'string' && COLOR_PATTERN.test(value)
+      return typeof value === 'string' && isValidCssColor(value)
         ? undefined
         : 'Se esperaba un color CSS admitido.';
     case 'length': {
@@ -217,9 +291,11 @@ export function validateStyleProperty(
     case 'boolean':
       return typeof value === 'boolean' ? undefined : 'Se esperaba un booleano.';
     case 'object':
-      return typeof value === 'object' && value !== null && !Array.isArray(value)
-        ? undefined
-        : 'Se esperaba un objeto JSON.';
+      return name === 'shadow'
+        ? validateShadow(value)
+        : typeof value === 'object' && value !== null && !Array.isArray(value)
+          ? undefined
+          : 'Se esperaba un objeto JSON.';
     case 'numberList':
       return Array.isArray(value) &&
         value.every((item) => typeof item === 'number' && Number.isFinite(item) && item >= 0)
