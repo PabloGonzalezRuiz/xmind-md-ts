@@ -233,9 +233,7 @@ function parseParagraph(node: AstNode, state: ParseState): ContentBlock[] {
     blocks.push({
       type: 'paragraph',
       runs: inlineRuns(inline),
-      ...(position(node, state.sourcePath)
-        ? { sourcePosition: position(node, state.sourcePath) }
-        : {}),
+      ...(sourcePosition ? { sourcePosition } : {}),
     });
     inline = [];
   };
@@ -422,7 +420,7 @@ function parseDirective(node: AstNode, topic: Topic | undefined, state: ParseSta
       id: requiredString(record, 'id', node),
       topicIds: rawTopics as string[],
       ...(typeof record.label === 'string' ? { label: record.label } : {}),
-      ...(optionalStyle(record) ? { style: optionalStyle(record) } : {}),
+      ...(style ? { style } : {}),
     };
     if (name === 'xmind-boundary') state.boundaries.push(common);
     else state.summaries.push(common);
