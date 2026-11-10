@@ -201,7 +201,8 @@ describe('IR JSON Schema Draft 2020-12 conformance', () => {
     expect(result.diagnostics.length).toBeGreaterThan(0);
     expect(result.diagnostics[0]?.code).toMatch(/^IR_SCHEMA_/);
     expect(result.diagnostics[0]?.path).toBe('$.sheet');
-    expect(result.diagnostics[0]?.schemaPath).toContain('rootTopic');
+    expect(result.diagnostics[0]?.schemaPath).toBe('#/required');
+    expect(result.diagnostics[0]?.params).toMatchObject({ missingProperty: 'rootTopic' });
   });
 
   it('does not mutate the input document', () => {
