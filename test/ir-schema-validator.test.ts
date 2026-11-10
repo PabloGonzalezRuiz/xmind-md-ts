@@ -27,9 +27,7 @@ describe('IR v1 JSON Schema conformance', () => {
   it('SC-002 accepts notes and valid links', () => {
     const ir = validIr();
     ir.sheet.rootTopic.hyperlink = 'https://example.com/map';
-    ir.sheet.rootTopic.notes = [
-      { type: 'paragraph', runs: [{ text: 'Nota', link: '#details' }] },
-    ];
+    ir.sheet.rootTopic.notes = [{ type: 'paragraph', runs: [{ text: 'Nota', link: '#details' }] }];
 
     expect(validateIrSchema(ir).valid).toBe(true);
   });
@@ -140,14 +138,11 @@ describe('IR v1 JSON Schema conformance', () => {
     expectSchemaInvalid('SC-107', ir);
   });
 
-  it.each(['', 'id with spaces', 'x'.repeat(129)])(
-    'SC-108 rejects invalid IDs (%s)',
-    (id) => {
-      const ir = validIr();
-      ir.sheet.rootTopic.id = id;
-      expectSchemaInvalid('SC-108', ir);
-    },
-  );
+  it.each(['', 'id with spaces', 'x'.repeat(129)])('SC-108 rejects invalid IDs (%s)', (id) => {
+    const ir = validIr();
+    ir.sheet.rootTopic.id = id;
+    expectSchemaInvalid('SC-108', ir);
+  });
 
   it('SC-109 rejects an empty list and a table without rows', () => {
     const listIr = validIr();

@@ -5,9 +5,7 @@ import {
   type IrValidationOptions,
 } from './semantic-validator.js';
 
-export type CompleteIrValidationDiagnostic =
-  | IrSchemaValidationDiagnostic
-  | IrValidationDiagnostic;
+export type CompleteIrValidationDiagnostic = IrSchemaValidationDiagnostic | IrValidationDiagnostic;
 
 export interface CompleteIrValidationResult {
   valid: boolean;
