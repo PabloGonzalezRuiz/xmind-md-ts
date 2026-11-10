@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://PabloGonzalezRuiz.github.io/xmind-md-ts/schema/ir-v1.schema.json",
+  "$id": "https://raw.githubusercontent.com/PabloGonzalezRuiz/xmind-md-ts/main/spec/ir-v1.schema.json",
   "title": "XMind MD TS Intermediate Representation v1",
   "description": "Canonical, target-neutral IR for one Markdown source document and one mind-map sheet.",
   "type": "object",
