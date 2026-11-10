@@ -312,16 +312,16 @@ function parseTopicHeading(
 
 function parseDirective(node: AstNode, topic: Topic | undefined, state: ParseState): void {
   const name = node.name ?? '';
+  if (name === 'xmind-note') {
+    if (!topic) throw new MarkdownParseError('MD_DIRECTIVE_CONTEXT', ':::xmind-note requiere un tema activo.', node);
+    topic.notes = [...(topic.notes ?? []), ...parseBlocks(children(node), state)];
+    return;
+  }
   const record = asRecord(yamlBody(node), 'MD_DIRECTIVE_OBJECT', node);
   if (name === 'xmind') {
     if (!topic) throw new MarkdownParseError('MD_DIRECTIVE_CONTEXT', ':::xmind requiere un tema activo.', node);
     const style = optionalStyle(record);
     if (style) topic.style = { ...topic.style, ...style };
-    return;
-  }
-  if (name === 'xmind-note') {
-    if (!topic) throw new MarkdownParseError('MD_DIRECTIVE_CONTEXT', ':::xmind-note requiere un tema activo.', node);
-    topic.notes = [...(topic.notes ?? []), ...parseBlocks(children(node), state)];
     return;
   }
   if (name === 'xmind-relationship') {
@@ -363,16 +363,18 @@ export function parseMarkdownWithDiagnostics(
   const tree = processor.parse(markdown) as unknown as AstNode;
   const topNodes = children(tree);
   let frontMatter: Record<string, unknown> = {};
+  let hasFrontMatter = false;
   const contentNodes: AstNode[] = [];
   let seenContent = false;
 
   for (const node of topNodes) {
     if (node.type === 'yaml') {
-      if (seenContent || Object.keys(frontMatter).length) {
+      if (seenContent || hasFrontMatter) {
         throw new MarkdownParseError('MD_FRONTMATTER_POSITION', 'El front matter YAML solo puede aparecer una vez al inicio.', node);
       }
       try {
         frontMatter = asRecord(parseYaml(node.value ?? ''), 'MD_FRONTMATTER_OBJECT', node);
+        hasFrontMatter = true;
       } catch (error) {
         if (error instanceof MarkdownParseError) throw error;
         const message = error instanceof Error ? error.message : 'YAML no válido';
@@ -406,6 +408,9 @@ export function parseMarkdownWithDiagnostics(
   };
   const headings = contentNodes.filter((node) => node.type === 'heading');
   const firstHeading = headings[0];
+  if (firstHeading && contentNodes.slice(0, contentNodes.indexOf(firstHeading)).length > 0) {
+    throw new MarkdownParseError('MD_CONTENT_BEFORE_ROOT', 'No puede haber contenido antes del encabezado H1.', contentNodes[0]);
+  }
   if (!firstHeading || firstHeading.depth !== 1) {
     throw new MarkdownParseError('MD_ROOT_HEADING', 'El documento debe comenzar su estructura con un único encabezado H1.', firstHeading);
   }
