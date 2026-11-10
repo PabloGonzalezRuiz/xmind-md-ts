@@ -17,7 +17,7 @@ El proyecto no es una traducción mecánica del código Python de `xmind-md`. Re
 
 ## Estado
 
-**Fase 3 — Esqueleto TypeScript creado; lockfile y ejecución CI pendientes de verificación.**
+**Fase 3 — Esqueleto creado y lockfile versionado; falta verificar la instalación reproducible con `npm ci`.**
 
 Se ha creado la estructura de proyecto, configuración estricta de TypeScript, scripts npm, ESLint, Prettier, Vitest y workflow de GitHub Actions. No se ha implementado todavía el parser, la validación IR, el motor de estilos ni los adaptadores.
 
