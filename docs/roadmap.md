@@ -6,7 +6,7 @@ Las fases se ejecutan secuencialmente. Al terminar cada fase se presenta el resu
 |---|---|---|---|
 | 1 | Prompt maestro y documentación funcional/técnica | Documentación base y plan | Completada |
 | 2 | Contrato IR y JSON Schema | IR v1, tipos TS, schema, fixture y matriz de conformidad | En revisión |
-| 3 | Esqueleto TypeScript y tooling | package.json, tsconfig estricto, lint, formato, Vitest y CI | Pendiente |
+| 3 | Esqueleto TypeScript y tooling | package.json, tsconfig estricto, lint, formato, Vitest y CI; lockfile pendiente | En curso |
 | 4 | Parser Markdown | Gramática implementada y corpus de parser | Pendiente |
 | 5 | Validación semántica e identidad | IDs, referencias, jerarquía y diagnósticos | Pendiente |
 | 6 | Motor de estilos | Conjuntos, roles, estilos, precedencia y procedencia | Pendiente |
@@ -22,4 +22,5 @@ Las fases se ejecutan secuencialmente. Al terminar cada fase se presenta el resu
 - No empezar una fase sin autorización expresa.
 - Una fase puede dividirse en subfases si el alcance lo exige; solicitar autorización cuando cambie sustancialmente el plan.
 - No declarar una fase completada si quedan criterios de aceptación pendientes.
-- La fase 3 no empieza hasta que el usuario revise y autorice el contrato IR v1.
+- La fase 3 no se considerará completada hasta que exista lockfile versionado y el workflow de CI haya terminado correctamente.
+- La fase 4 no empieza hasta que la fase 3 esté verificada y el usuario la autorice.
