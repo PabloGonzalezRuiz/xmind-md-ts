@@ -5,7 +5,7 @@ import type { IrDocument } from '../spec/ir-v1.types.js';
 import { validateIrSchema } from '../src/validation/schema-validator.js';
 
 function validIr(): IrDocument {
-  return structuredClone(minimalIr) as IrDocument;
+  return structuredClone(minimalIr) as unknown as IrDocument;
 }
 
 function record(value: unknown): Record<string, unknown> {
@@ -19,6 +19,32 @@ function rootTopic(ir: Record<string, unknown>): Record<string, unknown> {
 function firstContentBlock(ir: Record<string, unknown>): Record<string, unknown> {
   return record((rootTopic(ir).content as unknown[])[0]);
 }
+
+const invalidCases: Array<[string, (ir: Record<string, unknown>) => void]> = [
+  ['SC-101', (ir) => { delete ir.irVersion; }],
+  ['SC-102', (ir) => { ir.irVersion = '2.0.0'; }],
+  ['SC-103', (ir) => { delete record(ir.sheet).rootTopic; }],
+  ['SC-104', (ir) => { delete rootTopic(ir).children; }],
+  ['SC-105', (ir) => { delete firstContentBlock(ir).type; }],
+  ['SC-106', (ir) => { firstContentBlock(ir).type = 'unknownBlock'; }],
+  ['SC-107', (ir) => { record(ir.document).unexpected = true; }],
+  ['SC-110', (ir) => { ir.extensions = { 'X-Bad': { value: true } }; }],
+];
+
+const invalidCollectionCases: Array<[string, (ir: Record<string, unknown>) => void]> = [
+  [
+    'empty list',
+    (ir) => {
+      rootTopic(ir).content = [{ type: 'list', ordered: false, items: [] }];
+    },
+  ],
+  [
+    'empty table',
+    (ir) => {
+      rootTopic(ir).content = [{ type: 'table', rows: [] }];
+    },
+  ],
+];
 
 describe('IR JSON Schema Draft 2020-12 conformance', () => {
   it('SC-001 accepts the minimal reference fixture', () => {
@@ -40,13 +66,35 @@ describe('IR JSON Schema Draft 2020-12 conformance', () => {
   it('SC-003 accepts lists, tables, quotes and code blocks', () => {
     const ir = validIr();
     ir.sheet.rootTopic.content = [
-      { type: 'list', ordered: true, start: 2, items: [{ blocks: [{ type: 'code', value: 'x' }] }] },
+      {
+        type: 'list',
+        ordered: true,
+        start: 2,
+        items: [{ blocks: [{ type: 'code', value: 'x' }] }],
+      },
       {
         type: 'table',
         alignments: ['left', 'center'],
-        rows: [{ cells: [{ blocks: [] }, { blocks: [{ type: 'quote', blocks: [{ type: 'paragraph', runs: [{ text: 'Cita' }] }] }] }] }],
+        rows: [
+          {
+            cells: [
+              { blocks: [] },
+              {
+                blocks: [
+                  {
+                    type: 'quote',
+                    blocks: [{ type: 'paragraph', runs: [{ text: 'Cita' }] }],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
       },
-      { type: 'quote', blocks: [{ type: 'paragraph', runs: [{ text: 'Cita' }] }] },
+      {
+        type: 'quote',
+        blocks: [{ type: 'paragraph', runs: [{ text: 'Cita' }] }],
+      },
       { type: 'code', language: 'ts', value: 'const value = 1;' },
     ];
 
@@ -55,7 +103,9 @@ describe('IR JSON Schema Draft 2020-12 conformance', () => {
 
   it('SC-004 accepts namespaced extensions with JSON values', () => {
     const ir = validIr();
-    ir.extensions = { 'x-example': { enabled: true, nested: { count: 2, values: ['a', null] } } };
+    ir.extensions = {
+      'x-example': { enabled: true, nested: { count: 2, values: ['a', null] } },
+    };
 
     expect(validateIrSchema(ir).valid).toBe(true);
   });
@@ -63,7 +113,11 @@ describe('IR JSON Schema Draft 2020-12 conformance', () => {
   it('SC-005 accepts style defaults, roles and named styles', () => {
     const ir = validIr();
     ir.sheet.defaultStyleSetId = 'theme:default';
-    ir.sheet.rootTopic.style = { setId: 'theme:default', role: 'root', styleId: 'emphasis' };
+    ir.sheet.rootTopic.style = {
+      setId: 'theme:default',
+      role: 'root',
+      styleId: 'emphasis',
+    };
     ir.styleSets = [
       {
         id: 'theme:default',
@@ -76,16 +130,7 @@ describe('IR JSON Schema Draft 2020-12 conformance', () => {
     expect(validateIrSchema(ir).valid).toBe(true);
   });
 
-  it.each([
-    ['SC-101', (ir: Record<string, unknown>) => { delete ir.irVersion; }],
-    ['SC-102', (ir: Record<string, unknown>) => { ir.irVersion = '2.0.0'; }],
-    ['SC-103', (ir: Record<string, unknown>) => { delete record(ir.sheet).rootTopic; }],
-    ['SC-104', (ir: Record<string, unknown>) => { delete rootTopic(ir).children; }],
-    ['SC-105', (ir: Record<string, unknown>) => { delete firstContentBlock(ir).type; }],
-    ['SC-106', (ir: Record<string, unknown>) => { firstContentBlock(ir).type = 'unknownBlock'; }],
-    ['SC-107', (ir: Record<string, unknown>) => { record(ir.document).unexpected = true; }],
-    ['SC-110', (ir: Record<string, unknown>) => { ir.extensions = { 'X-Bad': { value: true } }; }],
-  ])('%s rejects an invalid structural document', (_id, mutate) => {
+  it.each(invalidCases)('%s rejects an invalid structural document', (_id, mutate) => {
     const ir = validIr() as unknown as Record<string, unknown>;
     mutate(ir);
 
@@ -102,14 +147,7 @@ describe('IR JSON Schema Draft 2020-12 conformance', () => {
     },
   );
 
-  it.each([
-    ['empty list', (ir: Record<string, unknown>) => {
-      rootTopic(ir).content = [{ type: 'list', ordered: false, items: [] }];
-    }],
-    ['empty table', (ir: Record<string, unknown>) => {
-      rootTopic(ir).content = [{ type: 'table', rows: [] }];
-    }],
-  ])('SC-109 rejects a %s', (_label, mutate) => {
+  it.each(invalidCollectionCases)('SC-109 rejects a %s', (_label, mutate) => {
     const ir = validIr() as unknown as Record<string, unknown>;
     mutate(ir);
 
