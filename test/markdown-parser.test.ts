@@ -174,13 +174,13 @@ describe('Markdown parser', () => {
       { sourcePath: 'maps/alpha.md' },
     );
 
-    expect(first.sheet.rootTopic.id).toBe('topic-doc-alpha/1');
-    expect(first.sheet.rootTopic.children[0]?.id).toBe('topic-doc-alpha/1/1');
-    expect(first.sheet.rootTopic.children[0]?.children[0]?.id).toBe('topic-doc-alpha/1/1/1');
-    expect(first.sheet.rootTopic.children[1]?.id).toBe('topic-doc-alpha/1/2');
+    expect(first.sheet.rootTopic.id).toBe('topic:doc-alpha/1');
+    expect(first.sheet.rootTopic.children[0]?.id).toBe('topic:doc-alpha/1/1');
+    expect(first.sheet.rootTopic.children[0]?.children[0]?.id).toBe('topic:doc-alpha/1/1/1');
+    expect(first.sheet.rootTopic.children[1]?.id).toBe('topic:doc-alpha/1/2');
     expect(first.sheet.rootTopic.id).toBe(second.sheet.rootTopic.id);
     expect(first.sheet.rootTopic.children[0]?.id).toBe(second.sheet.rootTopic.children[0]?.id);
-    expect(otherDocument.sheet.rootTopic.id).toBe('topic-doc-other/1');
+    expect(otherDocument.sheet.rootTopic.id).toBe('topic:doc-other/1');
   });
 
   it('preserves explicit topic IDs unchanged', () => {
