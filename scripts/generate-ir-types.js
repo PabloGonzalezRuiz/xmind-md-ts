@@ -60,7 +60,7 @@ function assertSupported(node, path = "$") {
   for (const key of Object.keys(node)) {
     if (!supported.has(key)) throw new Error(`Keyword JSON Schema no soportada: ${path}/${key}`);
   }
-  if (node.$ref && !/^#\\/$defs\\/[A-Za-z0-9_-]+$/.test(node.$ref)) {
+  if (node.$ref && !/^#\/\$defs\/[A-Za-z0-9_-]+$/.test(node.$ref)) {
     throw new Error(`Referencia no local o no admitida en ${path}: ${node.$ref}`);
   }
   for (const [key, value] of Object.entries(node.properties ?? {})) {
@@ -134,7 +134,7 @@ function objectBody(node, indent) {
     const valueType = node.additionalProperties === true ? "unknown" : typeOf(node.additionalProperties);
     lines.push(`${indent}[key: string]: ${valueType};`);
   }
-  return lines.length ? `{\\n${lines.join("\\n")}\\n${indent.slice(0, -2)}}` : "{}";
+  return lines.length ? `{\n${lines.join("\n")}\n${indent.slice(0, -2)}}` : "{}";
 }
 
 function declaration(name, node) {
@@ -158,7 +158,7 @@ const generated = [
   ...definitions,
   declaration("IrDocument", schema),
   "",
-].join("\\n");
+].join("\n");
 const formatted = await prettier.format(generated, { filepath: outputPath });
 const check = process.argv.includes("--check");
 
