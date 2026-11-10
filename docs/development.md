@@ -32,25 +32,25 @@ Scripts disponibles:
 
 `package-lock.json` está versionado. Utiliza `npm ci` tanto en local como en CI; no edites el lockfile manualmente.
 
-## 3. Ejecución de la CLI
+## 3. Parser Markdown\n\nLa API inicial se exporta desde `src/index.ts`: `parseMarkdown(markdown, options)` devuelve un `IrDocument`; `parseMarkdownWithDiagnostics(markdown, options)` devuelve el IR y advertencias compatibles. Las opciones incluyen `sourcePath` y `mode` (`compatible` o `strict`). La implementación y sus límites se describen en `docs/grammar.md`.\n\n## 4. Ejecución de la CLI
 
 La CLI se diseñará para invocarse desde PowerShell y terminales compatibles. Debe ofrecer ayuda, validación sin exportar, selección de adaptador, rutas de entrada/salida, modo estricto/compatible y diagnóstico detallado. La CLI aún no está implementada.
 
-## 4. Depuración
+## 5. Depuración
 
 VS Code puede depurar Node.js/TypeScript mediante source maps. Los errores deben conservar stack trace en modo debug y ofrecer mensajes concisos en modo normal.
 
-## 5. GitHub Actions
+## 6. GitHub Actions
 
 El workflow `.github/workflows/ci.yml` se activa en push, pull_request y workflow_dispatch. Configura Node.js 24 e instala dependencias para ejecutar formato, lint, typecheck, pruebas y build.
 
 El workflow instala con `npm ci` y ejecuta formato, lint, typecheck, pruebas y build.
 
-## 6. Contribución asistida por IA
+## 7. Contribución asistida por IA
 
 Antes de pedir a la IA un cambio, indicar objetivo y criterio de aceptación. Mantener tareas pequeñas, exigir pruebas, revisar diff y comprobar que la documentación coincide con el comportamiento.
 
-## 7. Reproducibilidad y seguridad
+## 8. Reproducibilidad y seguridad
 
 - Versiones directas de desarrollo fijadas en `package.json`.
 - Versionar `package-lock.json` y mantener las instalaciones reproducibles con `npm ci`.
