@@ -21,7 +21,7 @@ El proyecto no es una traducción mecánica del código Python de `xmind-md`. Re
 
 Ya están implementados el contrato IR v1, la base TypeScript, el parser Markdown y el validador semántico. El validador comprueba IDs, referencias cruzadas, relaciones, límites, herencia de conjuntos de estilos, alineaciones de tablas y rutas de assets cuando se configura un directorio permitido. No muta el IR y devuelve diagnósticos con código y ruta.
 
-La validación JSON Schema runtime está implementada en `feature/phase-6-style-engine` mediante Ajv Draft 2020-12. El pipeline estructural→semántico y los casos SC están verificados por CI (75 tests). El motor de estilos y su revisión de robustez están implementados y verificados en `feature/phase-6-style-engine`. AUD-003 está completada y verificada. AUD-012 está en curso: se ha añadido un control estructural bidireccional entre el schema y los tipos TypeScript, pendiente de validación final en CI y prueba negativa de divergencia. Siguen pendientes los adaptadores, la CLI y el visor.
+La validación JSON Schema runtime está implementada en `feature/phase-6-style-engine` mediante Ajv Draft 2020-12. El pipeline estructural→semántico y los casos SC están verificados por CI (75 tests). El motor de estilos y su revisión de robustez están implementados y verificados en `feature/phase-6-style-engine`. AUD-003 está completada y verificada. AUD-012 está en curso: se ha añadido un control estructural bidireccional entre el schema y los tipos TypeScript, pendiente de validación final en CI; el checker incluye una prueba negativa de divergencia que aún debe ejecutarse. Siguen pendientes los adaptadores, la CLI y el visor.
 
 ## Documentación
 
