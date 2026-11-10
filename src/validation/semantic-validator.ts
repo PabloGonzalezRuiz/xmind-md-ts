@@ -1,9 +1,4 @@
-import type {
-  IrDocument,
-  SourcePosition,
-  StyleReference,
-  Topic,
-} from '../../spec/ir-v1.types.js';
+import type { SourcePosition, StyleReference } from '../../spec/ir-v1.types.js';
 
 export interface IrValidationDiagnostic {
   code: string;
@@ -160,6 +155,10 @@ export function validateIrDocument(
     for (let index = 0; index < blocks.length; index += 1) {
       const block = blocks[index];
       const blockPath = `${path}[${index}]`;
+      if (nesting > limits.maxDepth) {
+        report('IR_CONTENT_DEPTH', `El contenido supera la profundidad máxima de ${limits.maxDepth}.`, blockPath);
+        return;
+      }
       contentBlockCount += 1;
       if (contentBlockCount > limits.maxContentBlocks) {
         report(
@@ -174,6 +173,17 @@ export function validateIrDocument(
         continue;
       }
       switch (block.type) {
+        case 'paragraph':
+          if (!isArray(block.runs) || block.runs.length === 0) {
+            report('IR_PARAGRAPH_RUNS', 'El párrafo debe contener al menos un run.', `${blockPath}.runs`);
+          } else {
+            block.runs.forEach((run, runIndex) => {
+              if (isRecord(run) && isString(run.link) && !validUriReference(run.link)) {
+                report('IR_TEXT_LINK_URI', 'El enlace del texto no es una referencia URI válida.', `${blockPath}.runs[${runIndex}].link`);
+              }
+            });
+          }
+          break;
         case 'image':
           if (isString(block.assetId) && !assetIds.has(block.assetId)) {
             report(
@@ -241,12 +251,12 @@ export function validateIrDocument(
           }
           break;
         }
-        default:
+        case 'code':
+        case 'thematicBreak':
           break;
-      }
-      if (nesting > limits.maxDepth) {
-        report('IR_CONTENT_DEPTH', `El contenido supera la profundidad máxima de ${limits.maxDepth}.`, blockPath);
-        return;
+        default:
+          report('IR_BLOCK_TYPE', `Tipo de bloque no admitido: ${block.type}.`, `${blockPath}.type`);
+          break;
       }
     }
   };
@@ -264,6 +274,9 @@ export function validateIrDocument(
     registerEntityId(topic.id, `${path}.id`, 'un tema');
     if (isString(topic.id)) topicIds.add(topic.id);
 
+    if (isString(topic.hyperlink) && !validUriReference(topic.hyperlink)) {
+      report('IR_TOPIC_HYPERLINK_URI', 'El hyperlink del tema no es una referencia URI válida.', `${path}.hyperlink`, sourcePosition(topic));
+    }
     const style = isRecord(topic.style) ? topic.style as StyleReference : undefined;
     const effectiveSetId = isString(style?.setId) ? style.setId : inheritedSetId;
     validateStyleReference(style, effectiveSetId, `${path}.style`, sourcePosition(topic));
@@ -356,9 +369,6 @@ export function validateIrDocument(
   };
 
   const defaultStyleSetId = isString(sheet.defaultStyleSetId) ? sheet.defaultStyleSetId : undefined;
-  if (defaultStyleSetId && !styleSets.has(defaultStyleSetId)) {
-    // styleSets is populated above; this is checked again after the complete collection below.
-  }
 
   visitTopic(rootTopic, '$.sheet.rootTopic', 1, defaultStyleSetId);
 
