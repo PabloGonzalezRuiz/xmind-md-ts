@@ -160,6 +160,35 @@ describe('IR semantic validator', () => {
     );
   });
 
+  it('checks relative asset paths against an optional allowed root', () => {
+    const ir = validIr();
+    ir.document.source = '/workspace/maps/map.md';
+    ir.assets.push({ id: 'asset:safe', uri: '../images/map.png' });
+    ir.assets.push({ id: 'asset:unsafe', uri: '%2e%2e/%2e%2e/private/secret.png' });
+
+    const result = validateIrDocument(ir, { assetRootDirectory: '/workspace' });
+
+    expect(codes(result)).toContain('IR_ASSET_PATH_ESCAPE');
+    expect(result.diagnostics.find((item) => item.code === 'IR_ASSET_PATH_ESCAPE')?.path).toBe(
+      '$.assets[1].uri',
+    );
+  });
+
+  it('checks nested content depth limits', () => {
+    const ir = validIr();
+    ir.sheet.rootTopic.content.push({
+      type: 'quote',
+      blocks: [
+        {
+          type: 'quote',
+          blocks: [{ type: 'paragraph', runs: [{ text: 'Deep' }] }],
+        },
+      ],
+    });
+
+    expect(codes(validateIrDocument(ir, { maxDepth: 1 }))).toContain('IR_CONTENT_DEPTH');
+  });
+
   it('enforces configurable topic-depth limits', () => {
     const ir = validIr();
     ir.sheet.rootTopic.children.push({
