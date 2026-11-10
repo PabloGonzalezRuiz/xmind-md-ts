@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { IrDocument } from '../spec/ir-v1.types.js';
+import { parseMarkdown } from '../src/markdown/parser.js';
 import { validateIrDocument } from '../src/validation/semantic-validator.js';
 
 function validIr(): IrDocument {
@@ -38,6 +39,12 @@ describe('IR semantic validator', () => {
 
     expect(result).toEqual({ valid: true, diagnostics: [] });
     expect(JSON.stringify(ir)).toBe(before);
+  });
+
+  it('accepts IR produced by the Markdown parser', () => {
+    const ir = parseMarkdown('# Root\\n\\n## Child {#child}\\n\\n![Diagram](images/map.png)');
+
+    expect(validateIrDocument(ir).valid).toBe(true);
   });
 
   it('accepts the document ID in its separate namespace', () => {
