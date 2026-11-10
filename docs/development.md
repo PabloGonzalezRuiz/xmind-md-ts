@@ -53,23 +53,27 @@ Límites predeterminados: 100 niveles de temas/contenido, 100.000 temas, 250.000
 
 Esta API valida invariantes semánticas; no sustituye todavía la validación completa contra `spec/ir-v1.schema.json`.
 
-## 5. Ejecución de la CLI
+## 5. Motor de estilos
+
+`resolveIrStyles(ir)` devuelve los estilos efectivos del mapa, temas, relaciones, boundaries, summaries y runs, junto con la procedencia de cada propiedad y diagnósticos de valores desconocidos o incompatibles. No modifica el IR. El catálogo v1, los tipos, rangos y precedencia están definidos en `docs/style-system.md` y `src/styles/catalog.ts`. Los defaults de mapa se declaran en `sheet.settings.styleDefaults`, agrupados por tipo de elemento.
+
+## 6. Ejecución de la CLI
 
 La CLI se diseñará para invocarse desde PowerShell y terminales compatibles. Debe ofrecer ayuda, validación sin exportar, selección de adaptador, rutas de entrada/salida, modo estricto/compatible y diagnóstico detallado. La CLI aún no está implementada.
 
-## 6. Depuración
+## 7. Depuración
 
 VS Code puede depurar Node.js/TypeScript mediante source maps. Los errores deben conservar stack trace en modo debug y ofrecer mensajes concisos en modo normal.
 
-## 7. GitHub Actions
+## 8. GitHub Actions
 
 El workflow `.github/workflows/ci.yml` se activa en push, pull_request y workflow_dispatch. Configura Node.js 24 e instala dependencias para ejecutar formato, lint, typecheck, pruebas y build.
 
-## 8. Contribución asistida por IA
+## 9. Contribución asistida por IA
 
 Antes de pedir a la IA un cambio, indicar objetivo y criterio de aceptación. Mantener tareas pequeñas, exigir pruebas, revisar diff y comprobar que la documentación coincide con el comportamiento.
 
-## 9. Reproducibilidad y seguridad
+## 10. Reproducibilidad y seguridad
 
 - Versiones directas de desarrollo fijadas en `package.json`.
 - Versionar `package-lock.json` y mantener las instalaciones reproducibles con `npm ci`.
