@@ -29,7 +29,7 @@ No se serializan valores calculados de forma que sustituyan los valores de orige
 
 ## 3. Hoja y árbol de temas
 
-La hoja contiene un único `rootTopic`. La raíz es obligatoria y no tiene padre. `defaultStyleSetId` selecciona el conjunto de estilos predeterminado de la hoja; si no se declara, se aplican los defaults del sistema. Cada `Topic` contiene:
+La hoja contiene un único `rootTopic`. La raíz es obligatoria y no tiene padre. `defaultStyleSetId` selecciona el conjunto de estilos predeterminado de la hoja; si no se declara, se aplican los defaults del sistema. `settings.styleDefaults` puede declarar defaults de mapa agrupados por tipo de elemento (`map`, `topic`, `relationship`, `boundary`, `summary`, `textRun`); su forma y catálogo se especifican en `docs/style-system.md`. Cada `Topic` contiene:
 
 - `id`: identidad única dentro del documento.
 - `title`: texto del encabezado, sin formato Markdown estructural.
@@ -89,7 +89,7 @@ Las tablas tienen filas y celdas explícitas. La alineación, cuando se declara,
 
 Una referencia de estilo puede declarar `setId`, `role`, `styleId` y `overrides`. Un `StyleSet` contiene `id`, herencia opcional mediante un único `extends`, `defaults`, perfiles `roles` y estilos con nombre `styles`.
 
-En v1, el esquema valida la forma de las propiedades de estilo como valores JSON, pero el catálogo tipado de propiedades, unidades, rangos y compatibilidad por tipo de elemento se valida semánticamente en el motor de estilos. No se aceptan ciclos ni referencias inexistentes en `extends` o en referencias de estilo.
+En v1, el esquema valida la forma de las propiedades de estilo como valores JSON, pero el catálogo tipado de propiedades, unidades, rangos y compatibilidad por tipo de elemento se valida en el motor de estilos (`src/styles/catalog.ts`). La resolución es una vista derivada y nunca sobrescribe las declaraciones del IR. No se aceptan ciclos ni referencias inexistentes en `extends` o en referencias de estilo.
 
 La precedencia normativa (de menor a mayor) es: defaults del sistema, defaults de mapa, defaults del conjunto efectivo, perfil del rol, estilo con nombre, overrides locales y formato inline de runs. El valor `null` reinicia la propiedad al default de esa propiedad; no significa borrar la clave. Las listas se reemplazan completas; los objetos se fusionan recursivamente; los escalares usan el valor de mayor prioridad. Se conserva procedencia por propiedad.
 
