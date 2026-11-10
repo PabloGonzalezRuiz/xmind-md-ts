@@ -108,6 +108,17 @@ describe('style resolution engine', () => {
     expect(child.provenance.color).toEqual({ layer: 'styleSet', sourceId: 'theme:child' });
   });
 
+  it('allows a topic to switch the inherited style-set context for its descendants', () => {
+    const ir = createIr();
+    ir.styleSets.push({ id: 'theme:alternate', defaults: { color: '#ABCDEF' } });
+    ir.sheet.rootTopic.style = { setId: 'theme:alternate' };
+
+    const result = resolveIrStyles(ir);
+
+    expect(styleFor(result, 'topic:root').values.color).toBe('#ABCDEF');
+    expect(styleFor(result, 'topic:child').values.color).toBe('#ABCDEF');
+  });
+
   it('resolves text runs after topic styles and preserves inline provenance', () => {
     const result = resolveIrStyles(createIr());
     const run = styleFor(result, 'topic:root:run:0');
