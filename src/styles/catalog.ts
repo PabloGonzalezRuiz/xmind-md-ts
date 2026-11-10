@@ -170,31 +170,48 @@ function isValidCssColor(value: string): boolean {
     return true;
   }
 
-  const rgb = color.match(/^rgba?\(\s*([+-]?[\d.]+%?)\s*,\s*([+-]?[\d.]+%?)\s*,\s*([+-]?[\d.]+%?)(?:\s*,\s*([+-]?[\d.]+%?))?\s*\)$/i);
+  const rgb = color.match(
+    /^rgba?\(\s*([+-]?(?:\d+(?:\.\d+)?|\.\d+)%?)\s*,\s*([+-]?(?:\d+(?:\.\d+)?|\.\d+)%?)\s*,\s*([+-]?(?:\d+(?:\.\d+)?|\.\d+)%?)(?:\s*,\s*([+-]?(?:\d+(?:\.\d+)?|\.\d+)%?))?\s*\)$/i,
+  );
   if (rgb) {
     const channels = rgb.slice(1, 4);
     const percent = channels.every((channel) => channel.endsWith('%'));
     const mixedUnits = channels.some((channel) => channel.endsWith('%')) && !percent;
     if (mixedUnits) return false;
     const max = percent ? 100 : 255;
-    if (channels.some((channel) => !Number.isFinite(Number.parseFloat(channel)) || Number.parseFloat(channel) < 0 || Number.parseFloat(channel) > max)) return false;
+    if (
+      channels.some((channel) => {
+        const parsed = Number.parseFloat(channel);
+        return !Number.isFinite(parsed) || parsed < 0 || parsed > max;
+      })
+    ) {
+      return false;
+    }
     const alpha = rgb[4];
     return alpha === undefined || isValidAlpha(alpha);
   }
 
-  const hsl = color.match(/^hsla?\(\s*([+-]?[\d.]+)(?:deg)?\s*,\s*([+-]?[\d.]+)%\s*,\s*([+-]?[\d.]+)%(?:\s*,\s*([+-]?[\d.]+%?))?\s*\)$/i);
+  const hsl = color.match(
+    /^hsla?\(\s*([+-]?(?:\d+(?:\.\d+)?|\.\d+))(?:deg)?\s*,\s*([+-]?(?:\d+(?:\.\d+)?|\.\d+))%\s*,\s*([+-]?(?:\d+(?:\.\d+)?|\.\d+))%(?:\s*,\s*([+-]?(?:\d+(?:\.\d+)?|\.\d+)%?))?\s*\)$/i,
+  );
   if (hsl) {
     const hue = Number.parseFloat(hsl[1]!);
     const saturation = Number.parseFloat(hsl[2]!);
     const lightness = Number.parseFloat(hsl[3]!);
-    return Number.isFinite(hue) && saturation >= 0 && saturation <= 100 &&
-      lightness >= 0 && lightness <= 100 &&
-      (hsl[4] === undefined || isValidAlpha(hsl[4]));
+    return (
+      Number.isFinite(hue) &&
+      saturation >= 0 &&
+      saturation <= 100 &&
+      lightness >= 0 &&
+      lightness <= 100 &&
+      (hsl[4] === undefined || isValidAlpha(hsl[4]))
+    );
   }
   return false;
 }
 
 function isValidAlpha(value: string): boolean {
+  if (!/^[+-]?(?:\d+(?:\.\d+)?|\.\d+)%?$/.test(value)) return false;
   const percentage = value.endsWith('%');
   const alpha = Number.parseFloat(value);
   return Number.isFinite(alpha) && alpha >= 0 && alpha <= (percentage ? 100 : 1);
@@ -207,14 +224,20 @@ function validateShadow(value: unknown): string | undefined {
   const shadow = value as Record<string, unknown>;
   const allowed = new Set(['enabled', 'color', 'offset', 'blur']);
   const unknown = Object.keys(shadow).find((key) => !allowed.has(key));
-  if (unknown) return `La clave de shadow "${unknown}" no está admitida.`;
+  if (unknown) return \`La clave de shadow "\${unknown}" no está admitida.\`;
   if (shadow.enabled !== undefined && typeof shadow.enabled !== 'boolean') {
     return 'shadow.enabled debe ser booleano.';
   }
-  if (shadow.color !== undefined && (typeof shadow.color !== 'string' || !isValidCssColor(shadow.color))) {
+  if (
+    shadow.color !== undefined &&
+    (typeof shadow.color !== 'string' || !isValidCssColor(shadow.color))
+  ) {
     return 'shadow.color debe ser un color CSS válido.';
   }
-  if (shadow.blur !== undefined && (typeof shadow.blur !== 'number' || !Number.isFinite(shadow.blur) || shadow.blur < 0)) {
+  if (
+    shadow.blur !== undefined &&
+    (typeof shadow.blur !== 'number' || !Number.isFinite(shadow.blur) || shadow.blur < 0)
+  ) {
     return 'shadow.blur debe ser un número no negativo.';
   }
   if (shadow.offset !== undefined) {
@@ -225,14 +248,18 @@ function validateShadow(value: unknown): string | undefined {
     if (Object.keys(offset).some((key) => key !== 'x' && key !== 'y')) {
       return 'shadow.offset solo admite las claves x e y.';
     }
-    if (['x', 'y'].some((key) => offset[key] !== undefined &&
-      (typeof offset[key] !== 'number' || !Number.isFinite(offset[key])))) {
+    if (
+      ['x', 'y'].some(
+        (key) =>
+          offset[key] !== undefined &&
+          (typeof offset[key] !== 'number' || !Number.isFinite(offset[key])),
+      )
+    ) {
       return 'shadow.offset.x e shadow.offset.y deben ser números finitos.';
     }
   }
   return undefined;
 }
-
 export function isStylePropertyApplicable(name: string, elementType: StyleElementType): boolean {
   const definition = STYLE_PROPERTY_CATALOG[name as StylePropertyName] as
     StylePropertyDefinition | undefined;
