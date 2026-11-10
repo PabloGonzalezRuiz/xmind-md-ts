@@ -24,7 +24,7 @@ El trabajo está distribuido en ramas de características. No hay pull requests 
 | Fase 4: parser Markdown → IR | Completada y CI verde | Rama `feature/phase-4-markdown-parser`; CI run [42820998921](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42820998921) |
 | Fase 5: validación semántica e identidad | Completada y CI verde | Commit `954216e99a13106d88ba72652460047d826b9c55`; CI run [42823341031](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42823341031) |
 | Fase 6: motor de estilos | Motor implementado; robustez AUD-002 verificada | Rama `feature/phase-6-style-engine`; CI completo verde sobre el HEAD registrado. La fase aún requiere integración/exportadores y validación real XMind/SVG |
-| JSON Schema en ejecución | En desarrollo | Ajv 8 Draft 2020-12 integrado; 15 casos SC definidos y pipeline estructural-semántico cubiertos por tests; CI verde. Pendiente decidir e implementar equivalencia/generación de tipos |
+| JSON Schema en ejecución | En desarrollo avanzado | Ajv 8 Draft 2020-12; 15 casos SC definidos; pipeline estructural-semántico; tipos generados desde el schema y comprobación de sincronización incorporada a CI. Pendiente verificar CI final sobre el HEAD definitivo |
 | Adaptador JSON y CLI | Pendientes | No existen módulos ejecutables de exportación ni comandos CLI |
 | Adaptador XMind | Pendiente | SDK oficial aún no evaluado; no se genera paquete XMind |
 | Adaptador SVG | Pendiente | No existe renderizador |
@@ -48,12 +48,12 @@ Las ramas de fase están encadenadas por orden de desarrollo y contienen cambios
 ### 3.1 Contrato y especificación
 
 - `spec/ir-v1.schema.json`: JSON Schema Draft 2020-12.
-- `spec/ir-v1.types.ts`: tipos TypeScript escritos manualmente.
+- `spec/ir-v1.types.ts`: tipos TypeScript generados desde `spec/ir-v1.schema.json` mediante `scripts/generate-ir-types.js`.
 - `spec/fixtures/ir-v1-minimal.json`: fixture mínimo.
 - `spec/conformance/README.md`: matriz SC y SEM.
 - `docs/ir-specification.md`, `docs/grammar.md`, `docs/style-system.md`: especificaciones funcionales.
 
-**Deuda:** la matriz SC-001…SC-110 no se ejecuta contra JSON Schema. Los tipos y el schema tampoco tienen todavía una prueba automática de equivalencia. No está instalada una dependencia de validación JSON Schema runtime.
+**Estado AUD-003:** los quince casos SC realmente definidos se ejecutan; Ajv valida el schema en runtime y el generador de tipos convierte `$defs`, referencias locales, objetos, arrays, uniones, constantes y enumeraciones a TypeScript. `npm run check:generated-types` comprueba la sincronización y se ha añadido a CI. Las restricciones no representables en TypeScript continúan protegidas por Ajv.
 
 ### 3.2 Código implementado
 
@@ -112,7 +112,7 @@ Los IDs de tarea son permanentes. Cambiar el orden o el alcance exige actualizar
 |---|---:|---|---|---|
 | AUD-001 | P0 | Estabilizar CI y recuperar la puerta de calidad de la fase 6 | Test de procedencia corregido; workflow read-only sin auto-push; format, lint, typecheck, tests y build verdes sobre el commit de código | Completada y verificada |
 | AUD-002 | P1 | Completar revisión de robustez del motor de estilos | Validadores de color/objetos robustos; procedencia coherente; referencias y ciclos diagnosticados; contrato de IDs y límites de compatibilidad documentados; pruebas y CI verdes | Completada y verificada |
-| AUD-003 | P1 | Integrar validación JSON Schema runtime | Ajv 2020; todos los casos SC definidos automatizados; equivalencia schema/tipos o generación; integración estructural-semántica; CI verde | En curso (falta equivalencia/generación de tipos) |
+| AUD-003 | P1 | Integrar validación JSON Schema runtime | Ajv 2020; todos los casos SC definidos automatizados; tipos generados desde el schema y sincronización comprobada; integración estructural-semántica; CI verde | En curso (pendiente CI final) |
 | AUD-004 | P1 | Completar corpus de conformidad parser/IR | Fixtures positivos y negativos de cada bloque/directiva, diagnósticos y posiciones de origen; regresión reproducible | Pendiente |
 | AUD-005 | P1 | Implementar adaptador JSON y CLI | Comandos de parse, validate y export JSON; códigos de salida; rutas Windows; ejecución local y CI | Pendiente |
 | AUD-006 | P1 | Evaluar SDK oficial XMind y decidir estrategia | Informe de API, formatos, Node, licencia, actividad, cobertura, dependencias y prueba mínima | Pendiente |
@@ -170,3 +170,5 @@ Al iniciar una sesión de trabajo:
 | 2026-11-10 | AUD-003: integración inicial de JSON Schema runtime | Rama `feature/aud-003-runtime-schema`; Ajv 8 Draft 2020-12 y `ajv-formats`; validador estructural sin coerciones ni mutaciones; pipeline estructural→semántico; tests de los 15 casos SC actualmente definidos; decisión técnica documentada. Aún sin CI verificada ni prueba automatizada de equivalencia de tipos | Completar equivalencia schema/tipos, ejecutar CI y corregir incidencias |
 
 | 2026-11-10 | AUD-003: validador estructural y pipeline completo | Ajv 8 Draft 2020-12; alias `ajv2020` para coexistir con Ajv 6 de ESLint; formatos URI; diagnósticos con rutas/keyword/params; 15 casos SC definidos más pruebas de parser tipado, URI, paths, no mutación y pipeline semántico. CI verde: [42842076938](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42842076938), SHA `f27022a82a6e87bbab328ce105469a89a0cf4a68`. Pendiente: decidir e implementar comprobación completa o generación de tipos desde schema | Resolver fuente de verdad para los tipos TypeScript y completar CI final |
+
+| 2026-11-10 | AUD-003: generación de tipos desde el contrato | Añadido `scripts/generate-ir-types.js`; `spec/ir-v1.types.ts` regenerado; `npm run generate:types` y `npm run check:generated-types`; comprobación incluida en `verify` y workflow CI. El generador falla ante keywords estructurales no soportadas y deja las restricciones no representables a Ajv. Pendiente CI final sobre el HEAD con documentación actualizada | Verificar CI final y cerrar AUD-003 |
