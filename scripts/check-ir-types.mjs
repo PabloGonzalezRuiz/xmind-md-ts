@@ -83,7 +83,7 @@ function toType(schema) {
     return "Schema_" + match[1];
   }
   if (Object.hasOwn(schema, "const")) return JSON.stringify(schema.const);
-  if (schema.enum) return schema.enum.map(JSON.stringify).join(" | ");
+  if (schema.enum) return schema.enum.map((value) => JSON.stringify(value)).join(" | ");
   if (schema.anyOf || schema.oneOf) {
     const branches = schema.anyOf ?? schema.oneOf;
     return branches.map(toType).join(" | ");
