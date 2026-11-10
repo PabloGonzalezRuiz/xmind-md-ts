@@ -8,7 +8,7 @@ export type StyleElementType =
   | 'summary'
   | 'textRun';
 
-export type StylePropertyKind = 'color' | 'length' | 'number' | 'string' | 'boolean' | 'enum';
+export type StylePropertyKind = 'color' | 'length' | 'number' | 'string' | 'boolean' | 'enum' | 'object';
 
 export interface StylePropertyDefinition {
   kind: StylePropertyKind;
@@ -120,6 +120,16 @@ export const STYLE_PROPERTY_CATALOG = {
     min: 0,
     max: 256,
   },
+  shadow: {
+    kind: 'object',
+    elements: ['topic', 'boundary'],
+    defaultValue: {
+      enabled: false,
+      color: '#00000033',
+      offset: { x: 0, y: 2 },
+      blur: 4,
+    },
+  },
 } as const satisfies Record<string, StylePropertyDefinition>;
 
 export type StylePropertyName = keyof typeof STYLE_PROPERTY_CATALOG;
@@ -178,6 +188,10 @@ export function validateStyleProperty(
         : 'Se esperaba una cadena no vacía.';
     case 'boolean':
       return typeof value === 'boolean' ? undefined : 'Se esperaba un booleano.';
+    case 'object':
+      return typeof value === 'object' && value !== null && !Array.isArray(value)
+        ? undefined
+        : 'Se esperaba un objeto JSON.';
     case 'enum':
       return (typeof value === 'string' || typeof value === 'number') &&
         definition.enumValues?.includes(String(value))
