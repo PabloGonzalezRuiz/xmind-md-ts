@@ -47,7 +47,7 @@ Cada cambio incorpora pruebas proporcionadas al riesgo: unitarias, integración,
 
 ## Estado de implementación
 
-El esqueleto de proyecto está implementado en la rama `feature/phase-3-project-scaffold`. Incluye scripts de build, typecheck, lint, formato, tests y CI con `npm ci`; el workflow ha pasado. No confundas este esqueleto con la implementación del parser, IR runtime, validadores, estilos o adaptadores.
+La fase 3 creó la base TypeScript y tooling en `feature/phase-3-project-scaffold`. La fase 4 está en desarrollo en `feature/phase-4-markdown-parser`: parser Markdown → IR v1 y pruebas. No confundas el parser con la validación semántica, el motor de estilos ni los adaptadores, que son fases posteriores.
 
 ## Protocolo de trabajo
 
