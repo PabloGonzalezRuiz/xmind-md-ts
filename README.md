@@ -17,7 +17,7 @@ El proyecto no es una traducción mecánica del código Python de `xmind-md`. Re
 
 ## Estado
 
-**Fase 3 — Esqueleto creado y lockfile versionado; falta verificar la instalación reproducible con `npm ci`.**
+**Fase 3 — Completada y verificada mediante GitHub Actions.**
 
 Se ha creado la estructura de proyecto, configuración estricta de TypeScript, scripts npm, ESLint, Prettier, Vitest y workflow de GitHub Actions. No se ha implementado todavía el parser, la validación IR, el motor de estilos ni los adaptadores.
 
@@ -47,7 +47,7 @@ Se ha creado la estructura de proyecto, configuración estricta de TypeScript, s
 - Prettier 3.9.10.
 - GitHub Actions.
 
-Las versiones directas están fijadas en `package.json`. El primer workflow de push genera y versiona `package-lock.json` mediante npm; los siguientes CI usan `npm ci`.
+Las versiones directas están fijadas en `package.json`, `package-lock.json` está versionado y CI instala con `npm ci`.
 
 ## Principio de desarrollo
 
