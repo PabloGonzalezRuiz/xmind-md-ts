@@ -201,6 +201,7 @@ interface ParseState {
 }
 
 function warn(state: ParseState, code: string, message: string, node: AstNode): void {
+  if (state.mode === 'strict') throw new MarkdownParseError(code, message, node);
   state.diagnostics.push({
     code,
     message,
