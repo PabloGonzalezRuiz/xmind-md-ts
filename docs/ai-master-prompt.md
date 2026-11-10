@@ -152,7 +152,7 @@ Debe producir SVG válido y determinista, con geometría, tipografía, estilos y
 La configuración actual del proyecto utiliza:
 - Node.js 24 y npm con `package-lock.json`.
 - TypeScript 6 con configuración estricta.
-- Vitest 5.
+- Vitest 5.\n- Ajv 8 con Draft 2020-12 y `ajv-formats` para validación estructural runtime.
 - ESLint 10 y typescript-eslint.
 - Prettier 3.
 - GitHub Actions.
@@ -180,12 +180,12 @@ El estado vivo no se mantiene duplicado aquí: se registra en `docs/project-audi
 A fecha de la última actualización de este prompt:
 - Fases 1–5: completadas y verificadas.
 - Fase 6 (motor de estilos): implementación y robustez AUD-001/AUD-002 completadas y verificadas en `feature/phase-6-style-engine`.
-- AUD-003: validación JSON Schema runtime en implementación; Ajv 8 Draft 2020-12, formatos URI, API `validateIrSchema`, pipeline `validateIr` y casos SC añadidos; pendiente de CI y revisión final de coherencia schema/tipos.
+- AUD-003: validación JSON Schema runtime completada y verificada con Ajv 8 Draft 2020-12, formatos URI, API `validateIrSchema`, pipeline `validateIr` y casos SC automatizados.
 - No hay exportadores JSON/XMind/SVG ni CLI terminados.
 - No existe todavía visor web.
 - El desarrollo de las ramas de características no se considera integrado en `main` por el mero hecho de superar CI.
 
-La tarea autorizada en curso es **AUD-003: integrar validación JSON Schema runtime**. Consultar el registro de continuidad para su estado exacto y no darla por cerrada hasta que el CI del HEAD final sea verde y los criterios de aceptación estén cubiertos.
+AUD-003 está completada y verificada. La siguiente tarea priorizada es **AUD-012: automatizar la coherencia entre JSON Schema y tipos TypeScript**. No iniciarla hasta recibir autorización expresa.
 
 ## 9. Protocolo obligatorio de trabajo con el repositorio
 
