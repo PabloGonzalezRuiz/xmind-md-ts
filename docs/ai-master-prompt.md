@@ -47,7 +47,7 @@ Cada cambio incorpora pruebas proporcionadas al riesgo: unitarias, integración,
 
 ## Estado de implementación
 
-La fase 3 creó la base TypeScript y tooling en `feature/phase-3-project-scaffold`. La fase 4 está en desarrollo en `feature/phase-4-markdown-parser`: parser Markdown → IR v1 y pruebas. No confundas el parser con la validación semántica, el motor de estilos ni los adaptadores, que son fases posteriores.
+La fase 3 creó la base TypeScript y tooling en `feature/phase-3-project-scaffold`. La fase 4 implementó el parser Markdown → IR v1 y su corpus de pruebas en `feature/phase-4-markdown-parser`. La validación semántica, el motor de estilos y los adaptadores siguen siendo fases posteriores.
 
 ## Protocolo de trabajo
 
