@@ -64,12 +64,50 @@ function assertSupportedKeywords(schema, location = "$") {
   if (schema.items && typeof schema.items === "object") {
     assertSupportedKeywords(schema.items, location + "/items");
   }
+  if (schema.propertyNames && typeof schema.propertyNames === "object") {
+    assertSupportedKeywords(schema.propertyNames, location + "/propertyNames");
+  }
   if (schema.additionalProperties && typeof schema.additionalProperties === "object") {
     assertSupportedKeywords(schema.additionalProperties, location + "/additionalProperties");
   }
   for (const keyword of ["anyOf", "oneOf"]) {
     for (const [index, value] of (schema[keyword] ?? []).entries()) {
       assertSupportedKeywords(value, location + "/" + keyword + "/" + index);
+    }
+  }
+}
+
+function assertDiscriminatedOneOf(schema, definitions, location = "$") {
+  if (!schema || typeof schema !== "object" || Array.isArray(schema)) return;
+  if (schema.oneOf) {
+    const discriminants = schema.oneOf.map((branch) => {
+      const match = branch.$ref?.match(/^#\/\$defs\/([^/]+)$/);
+      const definition = match ? definitions[match[1]] : undefined;
+      const value = definition?.properties?.type?.const;
+      if (value === undefined) {
+        throw new Error("oneOf must reference definitions with a literal type discriminator at " + location + ".");
+      }
+      return value;
+    });
+    if (new Set(discriminants).size !== discriminants.length) {
+      throw new Error("oneOf branches must have unique type discriminators at " + location + ".");
+    }
+  }
+  for (const [key, value] of Object.entries(schema.properties ?? {})) {
+    assertDiscriminatedOneOf(value, definitions, location + "/properties/" + key);
+  }
+  for (const [key, value] of Object.entries(schema.$defs ?? {})) {
+    assertDiscriminatedOneOf(value, definitions, location + "/$defs/" + key);
+  }
+  if (schema.items && typeof schema.items === "object") {
+    assertDiscriminatedOneOf(schema.items, definitions, location + "/items");
+  }
+  if (schema.additionalProperties && typeof schema.additionalProperties === "object") {
+    assertDiscriminatedOneOf(schema.additionalProperties, definitions, location + "/additionalProperties");
+  }
+  for (const keyword of ["anyOf", "oneOf"]) {
+    for (const [index, value] of (schema[keyword] ?? []).entries()) {
+      assertDiscriminatedOneOf(value, definitions, location + "/" + keyword + "/" + index);
     }
   }
 }
@@ -126,6 +164,7 @@ function toType(schema) {
 const schema = JSON.parse(await readFile(schemaPath, "utf8"));
 assertSupportedKeywords(schema);
 const definitions = schema.$defs ?? {};
+assertDiscriminatedOneOf(schema, definitions);
 const schemaNames = Object.keys(definitions).sort();
 const mappedNames = Object.keys(typeMap).sort();
 if (JSON.stringify(schemaNames) !== JSON.stringify(mappedNames)) {
