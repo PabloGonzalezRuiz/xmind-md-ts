@@ -174,6 +174,17 @@ describe('Markdown parser', () => {
     );
   });
 
+  it('rejects unknown directive configuration keys', () => {
+    const source = [
+      '# Root',
+      '',
+      ':::xmind',
+      'unexpected: true',
+      ':::',
+    ].join('\\n');
+    expect(() => parseMarkdown(source)).toThrowError(/Clave desconocida en directiva/);
+  });
+
   it('reports unsupported inline HTML and rejects it in strict mode', () => {
     const source = '# Root\n\nText <span>inline</span>.';
     const result = parseMarkdownWithDiagnostics(source);
