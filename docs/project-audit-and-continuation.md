@@ -5,7 +5,8 @@
 > **Última auditoría:** 2026-11-10  
 > **Repositorio:** https://github.com/PabloGonzalezRuiz/xmind-md-ts  
 > **Rama de trabajo auditada:** `feature/phase-6-style-engine`  
-> **Commit auditado:** `2c594eaadd3a3bb794c73d5607ef39bb5b15a9ac`  
+> **Commit de código validado en AUD-001:** `2c594eaadd3a3bb794c73d5607ef39bb5b15a9ac`  
+**Rama de trabajo:** actualizada durante AUD-002; consultar el último commit en GitHub antes de continuar  
 > **Rama principal:** `main` — `6aca81b59dbfcfc13034e7e1115c70f7691c5035`
 
 ## 1. Resumen ejecutivo
@@ -38,7 +39,7 @@ El trabajo está distribuido en ramas de características. No hay pull requests 
 | `feature/phase-3-project-scaffold` | `43a006096aa65f72c73b5ec20ab3d457fe698019` | Scaffold, configuración, dependencias, tests y CI |
 | `feature/phase-4-markdown-parser` | `d31892ba0895f513b8b19a284de929623d10af6b` | Parser Markdown y pruebas |
 | `feature/phase-5-semantic-validation` | `954216e99a13106d88ba72652460047d826b9c55` | Validador semántico, IDs deterministas y pruebas |
-| `feature/phase-6-style-engine` | `0fc17e933531245f700bf04ea5661d0601a48c56` | Catálogo y motor de estilos; requiere corrección y verificación |
+| `feature/phase-6-style-engine` | Rama de trabajo activa | Catálogo y motor de estilos; AUD-001 verificada y AUD-002 en revisión/CI |
 
 Las ramas de fase están encadenadas por orden de desarrollo y contienen cambios acumulados. No hay PRs abiertos ni issues registrados en el repositorio en el momento de esta auditoría. **No fusionar ni reescribir `main` sin autorización expresa.**
 
@@ -112,7 +113,7 @@ Los IDs de tarea son permanentes. Cambiar el orden o el alcance exige actualizar
 | ID | Prioridad | Tarea | Criterio de aceptación | Estado |
 |---|---:|---|---|---|
 | AUD-001 | P0 | Estabilizar CI y recuperar la puerta de calidad de la fase 6 | Test de procedencia corregido; workflow read-only sin auto-push; format, lint, typecheck, tests y build verdes sobre el commit de código | Completada y verificada |
-| AUD-002 | P1 | Completar revisión de robustez del motor de estilos | Resolver los puntos 3–9 del apartado 4.3 con pruebas y documentación; API determinista y sin mutaciones | Pendiente |
+| AUD-002 | P1 | Completar revisión de robustez del motor de estilos | Validadores de color/objetos robustos; procedencia coherente; referencias y ciclos diagnosticados; contrato de IDs y límites de compatibilidad documentados; pruebas y CI verdes | En curso |
 | AUD-003 | P1 | Integrar validación JSON Schema runtime | Dependencia seleccionada; SC-001…SC-110 automatizados; prueba de equivalencia schema/tipos o generación de tipos; integración con validación semántica | Pendiente |
 | AUD-004 | P1 | Completar corpus de conformidad parser/IR | Fixtures positivos y negativos de cada bloque/directiva, diagnósticos y posiciones de origen; regresión reproducible | Pendiente |
 | AUD-005 | P1 | Implementar adaptador JSON y CLI | Comandos de parse, validate y export JSON; códigos de salida; rutas Windows; ejecución local y CI | Pendiente |
@@ -165,4 +166,4 @@ Al iniciar una sesión de trabajo:
 
 | Fecha | Trabajo | Resultado / commit | Próxima acción |
 |---|---|---|---|
-| 2026-11-10 | Auditoría inicial completa y AUD-001 | Auditoría registrada; commit `2c594eaadd3a3bb794c73d5607ef39bb5b15a9ac`; CI [42826867694](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42826867694) verde con 46/46 pruebas, lint, typecheck, formato y build | Solicitar autorización para AUD-002 |
+| 2026-11-10 | Auditoría inicial completa y AUD-001 | Auditoría registrada; commit `2c594eaadd3a3bb794c73d5607ef39bb5b15a9ac`; CI [42826867694](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42826867694) verde con 46/46 pruebas, lint, typecheck, formato y build | AUD-002 |\n| 2026-11-10 | AUD-002: revisión y endurecimiento del motor | Corregidos catálogo de color, `shadow`, procedencia de reinicios, referencias inexistentes y cadenas de herencia incompletas; añadidas pruebas de regresión y actualizado `docs/style-system.md`. Pendiente verificar format/lint/typecheck/tests/build y CI sobre el HEAD final | Completar verificación AUD-002 y registrar SHA/CI |
