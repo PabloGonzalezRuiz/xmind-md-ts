@@ -10,7 +10,7 @@ Las fases se ejecutan secuencialmente. Al terminar cada fase se presenta el resu
 | 4 | Parser Markdown | Gramática implementada y corpus de parser | Completada |
 | 5 | Validación semántica e identidad | IDs deterministas, unicidad, referencias, ciclos, límites y diagnósticos probados | Completada y verificada |
 | 6 | Motor de estilos | Catálogo tipado, conjuntos heredados, roles, estilos, precedencia, fusión y procedencia | Implementación en rama de trabajo; AUD-001/002 verificadas |
-| 7 | Adaptador JSON y CLI | Ejecución local reproducible | Pendiente |
+| 7 | Adaptador JSON y CLI | Comandos parse, validate y export JSON; códigos de salida y rutas Windows; ejecución local y CI | En curso (AUD-005) |
 | 8 | Evaluación e integración XMind | Matriz de capacidades, SDK evaluado y exportación inicial | Pendiente |
 | 9 | Adaptador SVG | Renderizado y metadatos semánticos | Pendiente |
 | 10 | Corpus XMind y validación Desktop | Pruebas estructurales y visuales documentadas | Pendiente |
@@ -19,7 +19,7 @@ Las fases se ejecutan secuencialmente. Al terminar cada fase se presenta el resu
 
 ## Verificación transversal del contrato IR
 
-Las auditorías AUD-001, AUD-002, AUD-003 y AUD-004 están completadas y verificadas en ramas de trabajo. AUD-003 incorpora validación JSON Schema Draft 2020-12 en runtime y generación sincronizada de tipos TypeScript. AUD-004 añade un corpus reproducible de fixtures Markdown positivos, negativos y de diagnóstico, con verificación estructural/semántica de IR y posiciones de origen. El siguiente elemento del backlog es AUD-005 (adaptador JSON y CLI), pendiente de autorización. `main` permanece sin cambios.
+Las auditorías AUD-001, AUD-002, AUD-003 y AUD-004 están completadas y verificadas en la rama de trabajo. AUD-003 incorpora validación JSON Schema Draft 2020-12 en runtime y generación sincronizada de tipos TypeScript. AUD-004 añade un corpus reproducible de fixtures Markdown positivos, negativos y de diagnóstico. AUD-005 está en curso: se ha implementado la CLI inicial y se está verificando su comportamiento en CI. `main` permanece sin cambios.
 
 ## Registro operativo
 
