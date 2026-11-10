@@ -139,6 +139,21 @@ function asRecord(value: unknown, code: string, node: AstNode): Record<string, u
   return value as Record<string, unknown>;
 }
 
+function assertAllowedKeys(
+  record: Record<string, unknown>,
+  allowed: string[],
+  node: AstNode,
+): void {
+  const unknown = Object.keys(record).find((key) => !allowed.includes(key));
+  if (unknown) {
+    throw new MarkdownParseError(
+      'MD_DIRECTIVE_UNKNOWN_KEY',
+      `Clave desconocida en directiva: ${unknown}`,
+      node,
+    );
+  }
+}
+
 function requiredString(record: Record<string, unknown>, key: string, node: AstNode): string {
   const value = record[key];
   if (typeof value !== 'string' || value.trim() === '') {
@@ -396,6 +411,7 @@ function parseDirective(node: AstNode, topic: Topic | undefined, state: ParseSta
   }
   const record = asRecord(yamlBody(node, state), 'MD_DIRECTIVE_OBJECT', node);
   if (name === 'xmind') {
+    assertAllowedKeys(record, ['role', 'style', 'style_set', 'overrides'], node);
     if (!topic)
       throw new MarkdownParseError(
         'MD_DIRECTIVE_CONTEXT',
@@ -407,6 +423,7 @@ function parseDirective(node: AstNode, topic: Topic | undefined, state: ParseSta
     return;
   }
   if (name === 'xmind-relationship') {
+    assertAllowedKeys(record, ['id', 'from', 'to', 'label', 'kind', 'role', 'style', 'style_set', 'overrides'], node);
     const style = optionalStyle(record);
     const sourcePosition = position(node, state.sourcePath);
     state.relationships.push({
@@ -421,6 +438,7 @@ function parseDirective(node: AstNode, topic: Topic | undefined, state: ParseSta
     return;
   }
   if (name === 'xmind-boundary' || name === 'xmind-summary') {
+    assertAllowedKeys(record, ['id', 'topics', 'label', 'role', 'style', 'style_set', 'overrides'], node);
     const rawTopics = record.topics;
     if (!Array.isArray(rawTopics) || rawTopics.some((value) => typeof value !== 'string')) {
       throw new MarkdownParseError(
