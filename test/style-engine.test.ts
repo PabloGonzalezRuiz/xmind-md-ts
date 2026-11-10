@@ -27,6 +27,7 @@ function createIr(): IrDocument {
             type: 'paragraph',
             runs: [{ text: 'Styled text', style: { color: '#999999' } }],
           },
+          { type: 'paragraph', runs: [{ text: 'Second paragraph' }] },
         ],
         children: [
           {
@@ -121,12 +122,15 @@ describe('style resolution engine', () => {
 
   it('resolves text runs after topic styles and preserves inline provenance', () => {
     const result = resolveIrStyles(createIr());
-    const run = styleFor(result, 'topic:root:run:0');
+    const run = styleFor(result, 'topic:root:run:$.sheet.rootTopic.content[0].runs[0]');
 
     expect(run.values.color).toBe('#999999');
     expect(run.values.fontSize).toBe(16);
     expect(run.provenance.color).toEqual({ layer: 'inline', sourceId: 'topic:root:run:0' });
     expect(run.provenance.fontSize).toEqual({ layer: 'styleSet', sourceId: 'theme:base' });
+    expect(
+      styleFor(result, 'topic:root:run:$.sheet.rootTopic.content[1].runs[0]').elementId,
+    ).not.toBe(run.elementId);
   });
 
   it('resolves relationship, boundary and map styles', () => {
