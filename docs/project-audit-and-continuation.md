@@ -54,12 +54,14 @@ Las ramas de fase están encadenadas por orden de desarrollo y contienen cambios
 - `spec/conformance/README.md`: matriz SC y SEM.
 - `docs/ir-specification.md`, `docs/grammar.md`, `docs/style-system.md`: especificaciones funcionales.
 
-**Deuda:** la matriz SC-001…SC-110 no se ejecuta contra JSON Schema. Los tipos y el schema tampoco tienen todavía una prueba automática de equivalencia. No está instalada una dependencia de validación JSON Schema runtime.
+**Deuda pendiente:** la matriz SC ya se ejecuta automáticamente contra JSON Schema. La equivalencia completa entre los tipos TypeScript manuales y el schema queda pendiente en AUD-012.
 
 ### 3.2 Código implementado
 
 - `src/markdown/parser.ts`: parser basado en Unified/Remark (CommonMark, GFM, front matter y directivas); genera IR v1 y diagnósticos compatibles.
-- `src/validation/schema-validator.ts`: validación estructural runtime con Ajv 8 y schema Draft 2020-12; formatos URI registrados.\n- `src/validation/validate-ir.ts`: pipeline estructural → semántico, fail-fast si el schema falla.\n- `src/validation/semantic-validator.ts`: validación semántica sobre `unknown`, IDs, referencias, ciclos, tablas, URI, límites y contención léxica de assets.
+- `src/validation/schema-validator.ts`: validación estructural runtime con Ajv 8 y schema Draft 2020-12; formatos URI registrados.
+- `src/validation/validate-ir.ts`: pipeline estructural → semántico, fail-fast si el schema falla.
+- `src/validation/semantic-validator.ts`: validación semántica sobre `unknown`, IDs, referencias, ciclos, tablas, URI, límites y contención léxica de assets.
 - `src/styles/catalog.ts`: catálogo de propiedades, tipos, compatibilidad, defaults y validadores.
 - `src/styles/style-engine.ts`: resolución por capas, herencia de StyleSets, roles, estilos con nombre, overrides, runs y procedencia.
 - `src/index.ts`: exporta parser, validador y motor de estilos.
@@ -96,7 +98,19 @@ No existen todavía `src/adapters/`, `src/cli/` ni aplicación `viewer/`.
 - La ejecución final corresponde al workflow normal y confirma la cadena de calidad sobre el HEAD final: formato, lint, typecheck, tests y build.
 - El run diagnóstico [42832932075](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42832932075) también fue verde, pero no se utiliza como evidencia de cierre porque ejecutaba Prettier antes de comprobar el formato.
 
-#### 4.4 AUD-003 — validación JSON Schema runtime\n\n- Dependencias directas: Ajv `8.20.0` y `ajv-formats` `3.0.1`; lockfile regenerado con `npm install --package-lock-only`.\n- `src/validation/schema-validator.ts`: Ajv 2020-12, `allErrors`, formatos URI, diagnósticos estructurados y rutas de instancia.\n- `src/validation/validate-ir.ts`: pipeline fail-fast; valida estructura y solo después ejecuta `validateIrDocument`.\n- `src/index.ts` exporta `validateIrSchema`, `validateIr` y sus tipos.\n- `test/ir-schema-validator.test.ts` automatiza SC-001…SC-005 y SC-101…SC-110, además de la integración estructural/semántica.\n- CI normal [42844634106](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42844634106), SHA `3720239503da81d950a9f83a2ebaa392302258fe`: formato, lint, typecheck, 75/75 tests y build correctos.\n- El workflow temporal usado para generar lockfile/formatear se eliminó; `.github/workflows/` contiene únicamente `ci.yml`.\n\n**Límite separado:** `spec/ir-v1.types.ts` continúa mantenido manualmente. TypeScript no expresa todas las restricciones JSON Schema de cadenas y formatos; automatizar la coherencia schema/tipos se registra como AUD-012.\n\n## 4.3 Deuda técnica restante
+### 4.3 AUD-003 — validación JSON Schema runtime
+
+- Dependencias directas: Ajv `8.20.0` y `ajv-formats` `3.0.1`; lockfile regenerado con `npm install --package-lock-only`.
+- `src/validation/schema-validator.ts`: Ajv 2020-12, `allErrors`, formatos URI, diagnósticos estructurados y rutas de instancia.
+- `src/validation/validate-ir.ts`: pipeline fail-fast; valida estructura y solo después ejecuta `validateIrDocument`.
+- `src/index.ts` exporta `validateIrSchema`, `validateIr` y sus tipos.
+- `test/ir-schema-validator.test.ts` automatiza SC-001…SC-005 y SC-101…SC-110, además de la integración estructural/semántica.
+- CI normal [42844634106](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42844634106), SHA `3720239503da81d950a9f83a2ebaa392302258fe`: formato, lint, typecheck, 75/75 tests y build correctos.
+- El workflow temporal usado para generar lockfile/formatear se eliminó; `.github/workflows/` contiene únicamente `ci.yml`.
+
+**Límite separado:** `spec/ir-v1.types.ts` continúa mantenido manualmente. TypeScript no expresa todas las restricciones JSON Schema de cadenas y formatos; automatizar la coherencia schema/tipos se registra como AUD-012.
+
+### 4.4 Deuda técnica restante
 
 1. El catálogo de estilos sigue siendo neutral: sus propiedades y compatibilidad no están contrastadas todavía con las capacidades reales de XMind ni con las del exportador SVG.
 2. Los IDs de runs son deterministas para un mismo IR, pero pueden variar si se insertan o reordenan elementos antes de rutas basadas en índices. Esta limitación está documentada.
@@ -121,12 +135,14 @@ Los IDs de tarea son permanentes. Cambiar el orden o el alcance exige actualizar
 | AUD-008 | P2 | Implementar adaptador SVG | SVG válido, renderizado determinista, metadatos semánticos y pruebas visuales/estructurales | Pendiente |
 | AUD-009 | P2 | Crear corpus real y validar con XMind Desktop | Fixtures de referencia abiertos y guardados en versión Desktop identificada; informe de fidelidad | Pendiente |
 | AUD-010 | P2 | Documentación de usuario y publicación | Instalación, gramática, ejemplos, CLI, limitaciones, releases y artefactos | Pendiente |
-| AUD-011 | P3 | Diseñar e implementar visor web | Arquitectura aprobada, IR consumido sin duplicar semántica, accesibilidad y pruebas Playwright | Pendiente |\n| AUD-012 | P1 | Automatizar coherencia entre JSON Schema y tipos TypeScript | Generación de tipos desde schema o prueba automática de equivalencia estructural; documentar restricciones no expresables en TS; CI verde | Pendiente |
+| AUD-011 | P3 | Diseñar e implementar visor web | Arquitectura aprobada, IR consumido sin duplicar semántica, accesibilidad y pruebas Playwright | Pendiente |
+| AUD-012 | P1 | Automatizar coherencia entre JSON Schema y tipos TypeScript | Generación de tipos desde schema o prueba automática de equivalencia estructural; documentar restricciones no expresables en TS; CI verde | Pendiente |
 
 ### Dependencias
 
 - AUD-001 desbloquea el cierre formal de la fase 6.
-- AUD-002 y AUD-003 deben estar resueltas antes de considerar estable el pipeline de compilación.\n- AUD-012 depende de AUD-003: el runtime schema ya es operativo; la tarea separada automatizará la coherencia entre contrato y tipos estáticos.
+- AUD-002 y AUD-003 deben estar resueltas antes de considerar estable el pipeline de compilación.
+- AUD-012 depende de AUD-003: el runtime schema ya es operativo; la tarea separada automatizará la coherencia entre contrato y tipos estáticos.
 - AUD-005 consume parser, validador, schema y serialización JSON.
 - AUD-006 precede a AUD-007: no elegir SDK ni formato de salida antes de evaluar.
 - AUD-008 puede avanzar tras estabilizar el IR y el motor de estilos.
@@ -159,7 +175,7 @@ Al iniciar una sesión de trabajo:
 
 ### Primera acción de continuación
 
-**AUD-001 y AUD-002 están completadas y verificadas.** La siguiente tarea es AUD-003 (validación JSON Schema runtime), pero no iniciarla sin autorización expresa.
+**AUD-001, AUD-002 y AUD-003 están completadas y verificadas.** La siguiente tarea priorizada es AUD-012 (coherencia automática entre schema y tipos TypeScript); no iniciarla sin autorización expresa.
 
 ## 8. Registro de sesiones
 
