@@ -15,7 +15,7 @@ Los comandos efectivos están definidos en `package.json`:
 
 ## 2. Contrato IR v1
 
-La fuente normativa se materializa en `spec/ir-v1.schema.json` y `spec/ir-v1.types.ts`. El JSON Schema es la autoridad para la validación estructural en ejecución. Los tipos TypeScript siguen siendo una representación mantenida en código; cualquier modificación del contrato debe revisar ambos artefactos y sus pruebas para evitar divergencias.
+La fuente normativa se materializa en `spec/ir-v1.schema.json` y `spec/ir-v1.types.ts`. El JSON Schema es la autoridad para la validación estructural en ejecución. Los tipos TypeScript siguen siendo una representación mantenida manualmente y no expresan por sí solos restricciones de longitud, patrones o formatos. La automatización de su equivalencia/generación queda registrada como AUD-012; hasta entonces, el JSON Schema es la autoridad de validación runtime.
 
 Los fixtures de `spec/fixtures/` y los casos de `spec/conformance/` son independientes de la implementación. La matriz normativa de conformidad está en `spec/conformance/README.md`.
 
@@ -31,7 +31,7 @@ La API `validateIrSchema(input)`:
 - acumula todos los errores estructurales;
 - no aplica defaults, coerción ni mutaciones al documento.
 
-Los casos SC-001…SC-005 y SC-101…SC-110 se ejecutan en `test/ir-schema-validator.test.ts`. SC-104, SC-108 y SC-109 cubren las variantes individuales indicadas en la matriz.
+Los casos SC-001…SC-005 y SC-101…SC-110 se ejecutan en `test/ir-schema-validator.test.ts`. SC-104, SC-108 y SC-109 cubren las variantes individuales indicadas en la matriz. La ejecución CI [42844634106](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42844634106) verificó 75 tests en 5 suites, además de formato, lint, typecheck y build.
 
 ### 3.2 Validación semántica
 
