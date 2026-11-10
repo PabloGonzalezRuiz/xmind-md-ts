@@ -50,7 +50,7 @@ function sourcePosition(value: unknown): SourcePosition | undefined {
 }
 
 function validUriReference(value: string): boolean {
-  if (!value || /[\u0000-\u0020\\]/.test(value) || /%(?![0-9a-f]{2})/i.test(value)) {
+  if (!value || /\\s|\\\\/.test(value) || /%(?![0-9a-f]{2})/i.test(value)) {
     return false;
   }
   try {
