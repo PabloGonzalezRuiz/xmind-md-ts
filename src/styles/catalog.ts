@@ -224,7 +224,7 @@ function validateShadow(value: unknown): string | undefined {
   const shadow = value as Record<string, unknown>;
   const allowed = new Set(['enabled', 'color', 'offset', 'blur']);
   const unknown = Object.keys(shadow).find((key) => !allowed.has(key));
-  if (unknown) return \`La clave de shadow "\${unknown}" no está admitida.\`;
+  if (unknown) return `La clave de shadow "${unknown}" no está admitida.`;
   if (shadow.enabled !== undefined && typeof shadow.enabled !== 'boolean') {
     return 'shadow.enabled debe ser booleano.';
   }
