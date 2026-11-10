@@ -224,11 +224,13 @@ function addAsset(node: AstNode, state: ParseState): ContentBlock {
       ...(node.title === null || node.title === undefined ? {} : { title: node.title }),
     });
   }
+  const sourcePosition = position(node, state.sourcePath);
   return {
     type: 'image',
     assetId,
     alt: node.alt ?? '',
     ...(node.title ? { title: node.title } : {}),
+    ...(sourcePosition ? { sourcePosition } : {}),
   };
 }
 
@@ -471,6 +473,11 @@ export function parseMarkdownWithDiagnostics(
   }
 
   const diagnostics: ParserDiagnostic[] = [];
+  for (const key of ['id', 'title', 'style_set']) {
+    if (frontMatter[key] !== undefined && typeof frontMatter[key] !== 'string') {
+      throw new MarkdownParseError('MD_FRONTMATTER_TYPE', `${key} debe ser texto.`);
+    }
+  }
   const allowedKeys = new Set(['id', 'title', 'style_set', 'settings']);
   for (const key of Object.keys(frontMatter)) {
     if (!allowedKeys.has(key)) {
