@@ -111,7 +111,7 @@ Los IDs de tarea son permanentes. Cambiar el orden o el alcance exige actualizar
 
 | ID | Prioridad | Tarea | Criterio de aceptación | Estado |
 |---|---:|---|---|---|
-| AUD-001 | P0 | Estabilizar CI y cerrar la fase 6 | Test de procedencia corregido; workflow read-only sin auto-push; format, lint, typecheck, tests y build verdes sobre el HEAD final | Completada y verificada |
+| AUD-001 | P0 | Estabilizar CI y recuperar la puerta de calidad de la fase 6 | Test de procedencia corregido; workflow read-only sin auto-push; format, lint, typecheck, tests y build verdes sobre el commit de código | Completada y verificada |
 | AUD-002 | P1 | Completar revisión de robustez del motor de estilos | Resolver los puntos 3–9 del apartado 4.3 con pruebas y documentación; API determinista y sin mutaciones | Pendiente |
 | AUD-003 | P1 | Integrar validación JSON Schema runtime | Dependencia seleccionada; SC-001…SC-110 automatizados; prueba de equivalencia schema/tipos o generación de tipos; integración con validación semántica | Pendiente |
 | AUD-004 | P1 | Completar corpus de conformidad parser/IR | Fixtures positivos y negativos de cada bloque/directiva, diagnósticos y posiciones de origen; regresión reproducible | Pendiente |
