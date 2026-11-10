@@ -400,9 +400,7 @@ function parseDirective(node: AstNode, topic: Topic | undefined, state: ParseSta
       ...(typeof record.label === 'string' ? { label: record.label } : {}),
       ...(typeof record.kind === 'string' ? { kind: record.kind } : {}),
       ...(style ? { style } : {}),
-      ...(position(node, state.sourcePath)
-        ? { sourcePosition: position(node, state.sourcePath) }
-        : {}),
+      ...(sourcePosition ? { sourcePosition } : {}),
     });
     return;
   }
