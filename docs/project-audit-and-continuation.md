@@ -6,12 +6,12 @@
 > **Repositorio:** https://github.com/PabloGonzalezRuiz/xmind-md-ts  
 > **Rama de trabajo auditada:** `feature/phase-6-style-engine`  
 > **Commit de código validado en AUD-001:** `2c594eaadd3a3bb794c73d5607ef39bb5b15a9ac`  
-**Rama de trabajo:** `21dae3248be2963ccc77b00b79dffd1afd92a98d` (cierre de AUD-002)  
+> **HEAD de la rama de trabajo (cierre de AUD-002):** `21dae3248be2963ccc77b00b79dffd1afd92a98d`  
 > **Rama principal:** `main` — `6aca81b59dbfcfc13034e7e1115c70f7691c5035`
 
 ## 1. Resumen ejecutivo
 
-El proyecto tiene definido el contrato IR v1.0.0 y ya dispone de una base TypeScript, parser Markdown, validador semántico y un motor de estilos en desarrollo. Todavía **no es una aplicación funcional de extremo a extremo**: no exporta XMind, JSON ni SVG, no dispone de CLI y no tiene visor.
+El proyecto tiene definido el contrato IR v1.0.0 y dispone de una base TypeScript, parser Markdown, validador semántico y motor de estilos implementados y verificados en sus respectivas ramas. Todavía **no es una aplicación funcional de extremo a extremo**: no exporta XMind, JSON ni SVG, no dispone de CLI y no tiene visor.
 
 El trabajo está distribuido en ramas de características. No hay pull requests abiertos y no se ha integrado el desarrollo de las fases 3–6 en `main`. No se debe confundir que una fase esté implementada y verificada en su rama con que esté integrada en la rama principal.
 
@@ -23,7 +23,7 @@ El trabajo está distribuido en ramas de características. No hay pull requests 
 | Fase 3: base TypeScript | Completada y CI verde | Rama `feature/phase-3-project-scaffold`; CI run [42818879886](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42818879886) |
 | Fase 4: parser Markdown → IR | Completada y CI verde | Rama `feature/phase-4-markdown-parser`; CI run [42820998921](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42820998921) |
 | Fase 5: validación semántica e identidad | Completada y CI verde | Commit `954216e99a13106d88ba72652460047d826b9c55`; CI run [42823341031](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42823341031) |
-| Fase 6: motor de estilos | Motor implementado; robustez AUD-002 verificada | Rama `feature/phase-6-style-engine`; CI completo verde sobre el HEAD registrado. La fase aún requiere integración/exportadores y validación real XMind/SVG |
+| Fase 6: motor de estilos | Implementada y verificada en su alcance actual | Rama `feature/phase-6-style-engine`; CI normal verde sobre el HEAD `21dae3248be2963ccc77b00b79dffd1afd92a98d`. Quedan integración/exportadores y validación real XMind/SVG como tareas posteriores |
 | JSON Schema en ejecución | Pendiente | El esquema existe, pero no hay validador runtime conectado ni pruebas SC automáticas |
 | Adaptador JSON y CLI | Pendientes | No existen módulos ejecutables de exportación ni comandos CLI |
 | Adaptador XMind | Pendiente | SDK oficial aún no evaluado; no se genera paquete XMind |
@@ -162,7 +162,13 @@ Al iniciar una sesión de trabajo:
 
 ## 8. Registro de sesiones
 
+### 8.1 Prompt maestro y continuidad
+
+El documento rector es `docs/ai-master-prompt.md`. Se ha reescrito como especificación de producto greenfield: define misión, requisitos, arquitectura objetivo, contrato IR, estrategia de exportación, calidad, fuentes de verdad y protocolo de trabajo. No debe describir implementaciones ajenas ni depender de conversaciones anteriores. El estado dinámico (fase, tareas, ramas, commits, pruebas y siguiente paso) se mantiene en este registro y en `docs/roadmap.md`.
+
+
 | Fecha | Trabajo | Resultado / commit | Próxima acción |
 |---|---|---|---|
 | 2026-11-10 | Auditoría inicial completa y AUD-001 | Auditoría registrada; commit `2c594eaadd3a3bb794c73d5607ef39bb5b15a9ac`; CI [42826867694](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42826867694) verde con 46/46 pruebas, lint, typecheck, formato y build | AUD-002 |
 | 2026-11-10 | AUD-002: revisión, endurecimiento y verificación del motor | Corregidos catálogo de color, `shadow`, procedencia de reinicios, referencias inexistentes y cadenas de herencia incompletas; añadidas pruebas de regresión y actualizado `docs/style-system.md`. CI normal verde: [42833075950](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42833075950), SHA `21dae3248be2963ccc77b00b79dffd1afd92a98d` | Solicitar autorización para AUD-003 |
+| 2026-11-10 | Reescritura del prompt maestro y sincronización documental | `docs/ai-master-prompt.md` reescrito desde cero como especificación greenfield; auditoría corregida para reflejar AUD-002 verificada y el HEAD real; hoja de ruta y README sincronizados. Cambios documentales en curso de CI | Esperar autorización expresa para AUD-003 |
