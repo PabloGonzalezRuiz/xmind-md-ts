@@ -158,10 +158,10 @@ function cloneJsonValue(value: JsonValue): JsonValue {
 const CSS_NAMED_COLORS = new Set(
   (
     'aliceblue antiquewhite aqua aquamarine azure beige bisque black blanchedalmond blue blueviolet brown burlywood cadetblue chartreuse chocolate coral cornflowerblue cornsilk crimson cyan darkblue darkcyan darkgoldenrod darkgray darkgreen darkgrey darkkhaki darkmagenta darkolivegreen darkorange darkorchid darkred darksalmon darkseagreen darkslateblue darkslategray darkslategrey darkturquoise darkviolet deeppink deepskyblue dimgray dimgrey dodgerblue firebrick floralwhite forestgreen fuchsia gainsboro ghostwhite gold goldenrod gray green greenyellow grey honeydew hotpink indianred indigo ivory khaki lavender lavenderblush lawngreen lemonchiffon lightblue lightcoral lightcyan lightgoldenrodyellow lightgray lightgreen lightgrey lightpink lightsalmon lightseagreen lightskyblue lightslategray lightslategrey lightsteelblue lightyellow lime limegreen linen magenta maroon mediumaquamarine mediumblue mediumorchid mediumpurple mediumseagreen mediumslateblue mediumspringgreen mediumturquoise mediumvioletred midnightblue mintcream mistyrose moccasin navajowhite navy oldlace olive olivedrab orange orangered orchid palegoldenrod palegreen paleturquoise palevioletred papayawhip peachpuff peru pink plum powderblue purple rebeccapurple red rosybrown royalblue saddlebrown salmon sandybrown seagreen seashell sienna silver skyblue slateblue slategray slategrey snow springgreen steelblue tan teal thistle tomato turquoise violet wheat white whitesmoke yellow yellowgreen'
-  ).split(/\\s+/),
+  ).split(/\s+/),
 );
 const HEX_COLOR_PATTERN = /^#(?:[0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
-const LENGTH_PATTERN = /^-?(?:[0-9]+\\.?[0-9]*|\\.[0-9]+)(?:px|pt|em|rem|%)?$/i;
+const LENGTH_PATTERN = /^-?(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:px|pt|em|rem|%)?$/i;
 
 function isValidCssColor(value: string): boolean {
   const color = value.trim();
@@ -170,7 +170,7 @@ function isValidCssColor(value: string): boolean {
     return true;
   }
 
-  const rgb = color.match(/^rgba?\\(\\s*([+-]?[\\d.]+%?)\\s*,\\s*([+-]?[\\d.]+%?)\\s*,\\s*([+-]?[\\d.]+%?)(?:\\s*,\\s*([+-]?[\\d.]+%?))?\\s*\\)$/i);
+  const rgb = color.match(/^rgba?\(\s*([+-]?[\d.]+%?)\s*,\s*([+-]?[\d.]+%?)\s*,\s*([+-]?[\d.]+%?)(?:\s*,\s*([+-]?[\d.]+%?))?\s*\)$/i);
   if (rgb) {
     const channels = rgb.slice(1, 4);
     const percent = channels.every((channel) => channel.endsWith('%'));
@@ -182,7 +182,7 @@ function isValidCssColor(value: string): boolean {
     return alpha === undefined || isValidAlpha(alpha);
   }
 
-  const hsl = color.match(/^hsla?\\(\\s*([+-]?[\\d.]+)(?:deg)?\\s*,\\s*([+-]?[\\d.]+)%\\s*,\\s*([+-]?[\\d.]+)%(?:\\s*,\\s*([+-]?[\\d.]+%?))?\\s*\\)$/i);
+  const hsl = color.match(/^hsla?\(\s*([+-]?[\d.]+)(?:deg)?\s*,\s*([+-]?[\d.]+)%\s*,\s*([+-]?[\d.]+)%(?:\s*,\s*([+-]?[\d.]+%?))?\s*\)$/i);
   if (hsl) {
     const hue = Number.parseFloat(hsl[1]!);
     const saturation = Number.parseFloat(hsl[2]!);
