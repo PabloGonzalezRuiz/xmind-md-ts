@@ -271,17 +271,14 @@ describe('style resolution engine', () => {
     );
   });
 
-  it(
-    'does not report properties that are valid only for other element types in shared defaults',
-    () => {
-      const ir = createIr();
-      ir.styleSets[1]!.defaults = { fill: '#DDDDDD', color: '#123456' };
+  it('does not report properties that are valid only for other element types in shared defaults', () => {
+    const ir = createIr();
+    ir.styleSets[1]!.defaults = { fill: '#DDDDDD', color: '#123456' };
 
-      const result = resolveIrStyles(ir);
+    const result = resolveIrStyles(ir);
 
-      expect(result.diagnostics).toEqual([]);
-    },
-  );
+    expect(result.diagnostics).toEqual([]);
+  });
 
   it('rejects unknown CSS color names and out-of-range RGB channels', () => {
     const ir = createIr();
@@ -363,9 +360,7 @@ describe('style resolution engine', () => {
       offset: { x: 0, y: 2 },
       blur: 4,
     });
-    expect(
-      Object.keys(root.provenance).filter((key) => key.startsWith('shadow.')),
-    ).toEqual([
+    expect(Object.keys(root.provenance).filter((key) => key.startsWith('shadow.'))).toEqual([
       'shadow.enabled',
       'shadow.color',
       'shadow.offset.x',
@@ -388,9 +383,7 @@ describe('style resolution engine', () => {
     const result = resolveIrStyles(ir);
 
     expect(result.diagnostics.map((item) => item.code)).toContain('STYLE_ROLE_NOT_FOUND');
-    expect(result.diagnostics.map((item) => item.code)).toContain(
-      'STYLE_NAMED_STYLE_NOT_FOUND',
-    );
+    expect(result.diagnostics.map((item) => item.code)).toContain('STYLE_NAMED_STYLE_NOT_FOUND');
   });
 
   it('does not apply a partial style-set chain after detecting a cycle', () => {
@@ -419,9 +412,7 @@ describe('style resolution engine', () => {
     const result = resolveIrStyles(ir);
     const root = styleFor(result, 'topic:root');
 
-    expect(result.diagnostics.map((item) => item.code)).toContain(
-      'STYLE_SET_PARENT_NOT_FOUND',
-    );
+    expect(result.diagnostics.map((item) => item.code)).toContain('STYLE_SET_PARENT_NOT_FOUND');
     expect(root.values.color).toBe('#111111');
   });
 
