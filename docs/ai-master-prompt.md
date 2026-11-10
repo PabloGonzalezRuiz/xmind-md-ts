@@ -41,11 +41,15 @@ Evalúa el SDK oficial JavaScript/TypeScript antes de adoptarlo: API real, forma
 
 ## Stack y calidad
 
-TypeScript estricto, Node.js 22, npm con lockfile versionado, Vitest, ESLint 9 + typescript-eslint, Prettier, JSON Schema, validación runtime y GitHub Actions. La configuración inicial está en `package.json`, `tsconfig.json`, `tsconfig.build.json`, `eslint.config.js`, `vitest.config.ts` y `.github/workflows/ci.yml`. Mientras no exista lockfile, no afirmes reproducibilidad completa ni sustituyas `npm install` por `npm ci`. Configura `strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `noImplicitOverride` y `useUnknownInCatchVariables`, comprobando compatibilidad real. Evita `any`; valida fronteras externas como `unknown`.
+TypeScript estricto, Node.js 24, npm con lockfile versionado, Vitest 5, ESLint 10 + typescript-eslint, Prettier, JSON Schema, validación runtime y GitHub Actions. La configuración inicial está en `package.json`, `tsconfig.json`, `tsconfig.build.json`, `eslint.config.js`, `vitest.config.ts` y `.github/workflows/ci.yml`.  Configura `strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `noImplicitOverride` y `useUnknownInCatchVariables`, comprobando compatibilidad real. Evita `any`; valida fronteras externas como `unknown`.
 
 Cada cambio incorpora pruebas proporcionadas al riesgo: unitarias, integración, fixtures, determinismo, conformidad IR, regresión, estructura ZIP/JSON y, cuando proceda, validación XMind Desktop y Playwright. No afirmes que una prueba se ejecutó sin evidencia.
 
-## Estado de implementación\n\nEl esqueleto de proyecto se encuentra en la rama `feature/phase-3-project-scaffold`. Incluye scripts de build, typecheck, lint, formato, tests y verificación. No confundas este esqueleto con la implementación del parser, IR runtime, validadores, estilos o adaptadores. La fase 3 solo se completa cuando `package-lock.json` esté versionado y el workflow CI haya pasado.\n\n## Protocolo de trabajo
+## Estado de implementación
+
+El esqueleto de proyecto está implementado en la rama `feature/phase-3-project-scaffold`. Incluye scripts de build, typecheck, lint, formato, tests y CI con `npm ci`; el workflow ha pasado. No confundas este esqueleto con la implementación del parser, IR runtime, validadores, estilos o adaptadores.
+
+## Protocolo de trabajo
 
 Antes de modificar: inspecciona rama/estado, lee documentación afectada, revisa código y pruebas presentes, identifica contratos y propone una unidad pequeña con criterios de aceptación.
 
