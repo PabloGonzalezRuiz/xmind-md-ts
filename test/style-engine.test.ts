@@ -192,7 +192,7 @@ describe('style resolution engine', () => {
     ir.sheet.rootTopic.style = {
       overrides: {
         imaginaryProperty: 'x',
-        stroke: 'red',
+        lineStyle: 'solid',
         fontSize: -10,
         shape: 'star',
       },
