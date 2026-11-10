@@ -117,8 +117,8 @@ function filterApplicable(
 ): StyleProperties {
   const result: StyleProperties = {};
   for (const [key, value] of Object.entries(properties)) {
-    if (isJsonValue(value) && isStylePropertyApplicable(key, elementType)) {
-      result[key] = value;
+    if (isStylePropertyApplicable(key, elementType)) {
+      result[key] = value as JsonValue;
     }
   }
   return result;
@@ -132,6 +132,20 @@ export function resolveIrStyles(ir: IrDocument): StyleResolutionResult {
   const mapDefaults = isRecord(mapDefaultsRoot) ? mapDefaultsRoot : {};
   const systemStyleDefaults = (elementType: StyleElementType): StyleProperties =>
     getSystemStyleDefaults(elementType);
+
+  ir.styleSets.forEach((styleSet) => {
+    for (const key of Object.keys(styleSet.defaults ?? {})) {
+      if (!Object.hasOwn(STYLE_PROPERTY_CATALOG, key)) {
+        addDiagnostic(
+          'STYLE_PROPERTY_UNKNOWN',
+          `La propiedad "${key}" no pertenece al catálogo de estilos v1.`,
+          `$.styleSets[${styleSet.id}].defaults.${key}`,
+          styleSet.id,
+          key,
+        );
+      }
+    }
+  });
 
   const addDiagnostic = (
     code: string,
