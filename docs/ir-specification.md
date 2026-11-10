@@ -124,7 +124,7 @@ El esquema no pretende sustituir estas reglas semánticas. La validación estruc
 
 La versión `1.0.0` identifica este contrato. Cambios aditivos compatibles incrementan minor; correcciones sin cambio semántico incrementan patch; cambios incompatibles incrementan major. Un consumidor debe rechazar versiones major desconocidas. Las migraciones entre major serán funciones explícitas y probadas; nunca se reinterpreta un documento silenciosamente.
 
-El archivo Schema lleva su propio `$id` y `$schema`. La versión del contrato y la versión del paquete npm son independientes. Los tipos TypeScript se derivarán del esquema o se comprobarán automáticamente contra él; no se mantendrán dos definiciones divergentes a mano.
+El archivo Schema lleva su propio `$id` y `$schema`. La versión del contrato y la versión del paquete npm son independientes. El schema es la autoridad para validar datos externos en runtime. Los tipos TypeScript actuales se mantienen manualmente y no codifican todas las restricciones de JSON Schema (por ejemplo, patrones y formatos); la generación o comprobación automática de equivalencia queda como AUD-012.
 
 ## 12. Exclusiones explícitas de v1
 
