@@ -116,9 +116,13 @@ function yamlBody(node: AstNode, state: ParseState): unknown {
   const lines = state.source.split(/\r?\n/);
   const startLine = node.position?.start?.line;
   const endLine = node.position?.end?.line;
-  const source = startLine !== undefined && endLine !== undefined
-    ? lines.slice(startLine, Math.max(startLine, endLine - 1)).join('\n').trim()
-    : children(node).map(plainText).join('\n').trim();
+  const source =
+    startLine !== undefined && endLine !== undefined
+      ? lines
+          .slice(startLine, Math.max(startLine, endLine - 1))
+          .join('\n')
+          .trim()
+      : children(node).map(plainText).join('\n').trim();
   if (!source) return {};
   try {
     return parseYaml(source);
