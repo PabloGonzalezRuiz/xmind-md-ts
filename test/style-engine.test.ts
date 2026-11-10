@@ -91,6 +91,15 @@ describe('style resolution engine', () => {
     expect(result.diagnostics).toEqual([]);
   });
 
+  it('applies named styles after roles and keeps defaults below both', () => {
+    const ir = createIr();
+    ir.sheet.rootTopic.style = { role: 'primary', styleId: 'focus' };
+
+    const result = resolveIrStyles(ir);
+
+    expect(styleFor(result, 'topic:root').values.color).toBe('#BBBBBB');
+  });
+
   it('propagates the effective style-set context to child topics', () => {
     const result = resolveIrStyles(createIr());
     const child = styleFor(result, 'topic:child');
@@ -115,6 +124,17 @@ describe('style resolution engine', () => {
     expect(styleFor(result, 'rel:one').values.stroke).toBe('#555555');
     expect(styleFor(result, 'boundary:one').values.fill).toBe('#EEEEEE');
     expect(styleFor(result, 'sheet:styles').values.backgroundColor).toBe('#F8FAFC');
+  });
+
+  it('uses the default relationship arrowhead and accepts boolean overrides', () => {
+    const ir = createIr();
+    ir.sheet.relationships[0]!.style = { overrides: { arrowStart: true, arrowEnd: false } };
+
+    const result = resolveIrStyles(ir);
+    const relationship = styleFor(result, 'rel:one');
+
+    expect(relationship.values.arrowStart).toBe(true);
+    expect(relationship.values.arrowEnd).toBe(false);
   });
 
   it('resets null values to system defaults', () => {
@@ -172,6 +192,21 @@ describe('style resolution engine', () => {
       'STYLE_PROPERTY_INVALID',
       'STYLE_PROPERTY_INVALID',
     ]);
+  });
+
+  it('reports unknown properties in shared style-set defaults', () => {
+    const ir = createIr();
+    ir.styleSets[0]!.defaults = { unsupportedToken: 'value' };
+
+    const result = resolveIrStyles(ir);
+
+    expect(result.diagnostics).toContainEqual(
+      expect.objectContaining({
+        code: 'STYLE_PROPERTY_UNKNOWN',
+        elementId: 'theme:base',
+        property: 'unsupportedToken',
+      }),
+    );
   });
 
   it('does not report properties that are valid only for other element types in shared defaults', () => {
