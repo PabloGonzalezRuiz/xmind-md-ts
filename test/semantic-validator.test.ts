@@ -54,6 +54,18 @@ describe('IR semantic validator', () => {
     expect(validateIrDocument(ir).valid).toBe(true);
   });
 
+  it('detects duplicate IDs between two topics', () => {
+    const ir = validIr();
+    ir.sheet.rootTopic.children.push({
+      id: 'topic:root',
+      title: 'Duplicate',
+      children: [],
+      content: [],
+    });
+
+    expect(codes(validateIrDocument(ir))).toContain('IR_ID_DUPLICATE');
+  });
+
   it('detects duplicate IDs across topics and other document entities', () => {
     const ir = validIr();
     ir.sheet.rootTopic.children.push({
