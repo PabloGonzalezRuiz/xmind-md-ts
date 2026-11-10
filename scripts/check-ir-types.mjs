@@ -170,7 +170,7 @@ try {
     process.stderr.write(result.stderr ?? "");
     process.exitCode = result.status ?? 1;
   } else {
-    process.stdout.write("IR JSON Schema and public TypeScript types are structurally equivalent.\\n");
+    process.stdout.write("IR JSON Schema and public TypeScript types are structurally equivalent.\n");
     console.log(\`Checked root IR and \${Object.keys(typeMap).length} schema definitions.\`);
   }
 } finally {
