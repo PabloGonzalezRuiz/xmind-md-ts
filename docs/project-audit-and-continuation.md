@@ -6,7 +6,7 @@
 > **Repositorio:** https://github.com/PabloGonzalezRuiz/xmind-md-ts  
 > **Rama de trabajo auditada:** `feature/phase-6-style-engine`  
 > **Commit de código validado en AUD-001:** `2c594eaadd3a3bb794c73d5607ef39bb5b15a9ac`  
-**Rama de trabajo:** actualizada durante AUD-002; consultar el último commit en GitHub antes de continuar  
+**Rama de trabajo:** `21dae3248be2963ccc77b00b79dffd1afd92a98d` (cierre de AUD-002)  
 > **Rama principal:** `main` — `6aca81b59dbfcfc13034e7e1115c70f7691c5035`
 
 ## 1. Resumen ejecutivo
@@ -23,7 +23,7 @@ El trabajo está distribuido en ramas de características. No hay pull requests 
 | Fase 3: base TypeScript | Completada y CI verde | Rama `feature/phase-3-project-scaffold`; CI run [42818879886](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42818879886) |
 | Fase 4: parser Markdown → IR | Completada y CI verde | Rama `feature/phase-4-markdown-parser`; CI run [42820998921](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42820998921) |
 | Fase 5: validación semántica e identidad | Completada y CI verde | Commit `954216e99a13106d88ba72652460047d826b9c55`; CI run [42823341031](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42823341031) |
-| Fase 6: motor de estilos | Implementada parcialmente; no cerrada | Rama actual. AUD-001 ya está verificada; quedan pendientes las tareas de robustez AUD-002 |
+| Fase 6: motor de estilos | Motor implementado; robustez AUD-002 verificada | Rama `feature/phase-6-style-engine`; CI completo verde sobre el HEAD registrado. La fase aún requiere integración/exportadores y validación real XMind/SVG |
 | JSON Schema en ejecución | Pendiente | El esquema existe, pero no hay validador runtime conectado ni pruebas SC automáticas |
 | Adaptador JSON y CLI | Pendientes | No existen módulos ejecutables de exportación ni comandos CLI |
 | Adaptador XMind | Pendiente | SDK oficial aún no evaluado; no se genera paquete XMind |
@@ -39,7 +39,7 @@ El trabajo está distribuido en ramas de características. No hay pull requests 
 | `feature/phase-3-project-scaffold` | `43a006096aa65f72c73b5ec20ab3d457fe698019` | Scaffold, configuración, dependencias, tests y CI |
 | `feature/phase-4-markdown-parser` | `d31892ba0895f513b8b19a284de929623d10af6b` | Parser Markdown y pruebas |
 | `feature/phase-5-semantic-validation` | `954216e99a13106d88ba72652460047d826b9c55` | Validador semántico, IDs deterministas y pruebas |
-| `feature/phase-6-style-engine` | Rama de trabajo activa | Catálogo y motor de estilos; AUD-001 verificada y AUD-002 en revisión/CI |
+| `feature/phase-6-style-engine` | `21dae3248be2963ccc77b00b79dffd1afd92a98d` | Catálogo y motor de estilos; AUD-001 y AUD-002 verificadas |
 
 Las ramas de fase están encadenadas por orden de desarrollo y contienen cambios acumulados. No hay PRs abiertos ni issues registrados en el repositorio en el momento de esta auditoría. **No fusionar ni reescribir `main` sin autorización expresa.**
 
@@ -89,22 +89,20 @@ No existen todavía `src/adapters/`, `src/cli/` ni aplicación `viewer/`.
 
 ### 4.2 Resultado de CI observado
 
-- Run anterior [42824922887](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42824922887): verde, 42 pruebas; corresponde al commit `a39c4c9...`, anterior a las últimas modificaciones.
-- Run más reciente [42825929592](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42825929592): fallido.
-- En el último run: formato, lint y typecheck pasaron; 45 de 46 pruebas pasaron; falló una aserción que aún esperaba el antiguo `sourceId: topic:root:run:0`, mientras que el motor ya devuelve un identificador basado en la ruta del run. El build quedó omitido al fallar los tests.
-- El run de formato generó además un commit automático de CI, motivo por el que el HEAD de la rama avanzó a `0fc17e933531245f700bf04ea5661d0601a48c56`.
+- La incidencia inicial de formato se corrigió aplicando el formato exacto de Prettier a `src/styles/catalog.ts` y `test/style-engine.test.ts`.
+- Se retiró el paso temporal de diagnóstico y se restauró el workflow normal, de solo lectura.
+- Verificación final limpia: [CI run 42833075950](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42833075950), commit `21dae3248be2963ccc77b00b79dffd1afd92a98d`; conclusión **success**.
+- La ejecución final corresponde al workflow normal y confirma la cadena de calidad sobre el HEAD final: formato, lint, typecheck, tests y build.
+- El run diagnóstico [42832932075](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42832932075) también fue verde, pero no se utiliza como evidencia de cierre porque ejecutaba Prettier antes de comprobar el formato.
 
-### 4.3 Deuda técnica identificada en el motor
+### 4.3 Deuda técnica restante
 
-1. Corregir la aserción obsoleta del test de procedencia de runs.
-2. El workflow debe ser de solo lectura y no debe hacer commits ni push automáticos.
-3. La validación de color usa una expresión que acepta cualquier palabra alfabética; valores que no sean nombres CSS válidos podrían pasar.
-4. `shadow` solo comprueba que el valor sea un objeto; no valida sus claves ni tipos internos.
-5. El reinicio de una propiedad objeto con `null` actualiza la procedencia de la clave raíz, pero puede dejar procedencias antiguas de subclaves.
-6. El resolutor no informa de forma explícita cuando un rol o estilo con nombre no existe; la validación semántica sí comprueba referencias, pero el motor debe tener un comportamiento documentado y probado al invocarse por separado.
-7. Al detectar un ciclo de StyleSets, el motor genera diagnóstico, pero puede continuar resolviendo con una cadena parcial. Debe definirse si la resolución parcial es admisible.
-8. Los IDs de runs se derivan de la ruta JSON de origen. Son únicos para la estructura actual, pero conviene formalizar su estabilidad y contrato.
-9. El catálogo y las reglas de mapeo son neutrales; no están contrastados aún con capacidades reales de XMind/SVG.
+1. El catálogo de estilos sigue siendo neutral: sus propiedades y compatibilidad no están contrastadas todavía con las capacidades reales de XMind ni con las del exportador SVG.
+2. Los IDs de runs son deterministas para un mismo IR, pero pueden variar si se insertan o reordenan elementos antes de rutas basadas en índices. Esta limitación está documentada.
+3. La validación de color cubre los formatos CSS admitidos por el contrato actual, no toda la especificación CSS Color 4.
+4. El contrato de sombras y la reinicialización de procedencia de objetos están validados en el motor, pero necesitarán pruebas de integración cuando existan adaptadores.
+
+`AUD-002` se considera cerrada respecto de la robustez interna definida en sus criterios. Estos puntos quedan como deuda explícita para las tareas de adaptadores y validación de interoperabilidad.
 
 ## 5. Backlog maestro ordenado
 
@@ -113,7 +111,7 @@ Los IDs de tarea son permanentes. Cambiar el orden o el alcance exige actualizar
 | ID | Prioridad | Tarea | Criterio de aceptación | Estado |
 |---|---:|---|---|---|
 | AUD-001 | P0 | Estabilizar CI y recuperar la puerta de calidad de la fase 6 | Test de procedencia corregido; workflow read-only sin auto-push; format, lint, typecheck, tests y build verdes sobre el commit de código | Completada y verificada |
-| AUD-002 | P1 | Completar revisión de robustez del motor de estilos | Validadores de color/objetos robustos; procedencia coherente; referencias y ciclos diagnosticados; contrato de IDs y límites de compatibilidad documentados; pruebas y CI verdes | En curso |
+| AUD-002 | P1 | Completar revisión de robustez del motor de estilos | Validadores de color/objetos robustos; procedencia coherente; referencias y ciclos diagnosticados; contrato de IDs y límites de compatibilidad documentados; pruebas y CI verdes | Completada y verificada |
 | AUD-003 | P1 | Integrar validación JSON Schema runtime | Dependencia seleccionada; SC-001…SC-110 automatizados; prueba de equivalencia schema/tipos o generación de tipos; integración con validación semántica | Pendiente |
 | AUD-004 | P1 | Completar corpus de conformidad parser/IR | Fixtures positivos y negativos de cada bloque/directiva, diagnósticos y posiciones de origen; regresión reproducible | Pendiente |
 | AUD-005 | P1 | Implementar adaptador JSON y CLI | Comandos de parse, validate y export JSON; códigos de salida; rutas Windows; ejecución local y CI | Pendiente |
@@ -160,11 +158,11 @@ Al iniciar una sesión de trabajo:
 
 ### Primera acción de continuación
 
-**AUD-001 está completada y verificada.** **AUD-002 está en curso** en `feature/phase-6-style-engine`; no iniciar AUD-003 hasta cerrar esta tarea y recibir autorización expresa.
+**AUD-001 y AUD-002 están completadas y verificadas.** La siguiente tarea es AUD-003 (validación JSON Schema runtime), pero no iniciarla sin autorización expresa.
 
 ## 8. Registro de sesiones
 
 | Fecha | Trabajo | Resultado / commit | Próxima acción |
 |---|---|---|---|
 | 2026-11-10 | Auditoría inicial completa y AUD-001 | Auditoría registrada; commit `2c594eaadd3a3bb794c73d5607ef39bb5b15a9ac`; CI [42826867694](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42826867694) verde con 46/46 pruebas, lint, typecheck, formato y build | AUD-002 |
-| 2026-11-10 | AUD-002: revisión y endurecimiento del motor | Corregidos catálogo de color, `shadow`, procedencia de reinicios, referencias inexistentes y cadenas de herencia incompletas; añadidas pruebas de regresión y actualizado `docs/style-system.md`. Pendiente verificar format/lint/typecheck/tests/build y CI sobre el HEAD final | Completar verificación AUD-002 y registrar SHA/CI |
+| 2026-11-10 | AUD-002: revisión, endurecimiento y verificación del motor | Corregidos catálogo de color, `shadow`, procedencia de reinicios, referencias inexistentes y cadenas de herencia incompletas; añadidas pruebas de regresión y actualizado `docs/style-system.md`. CI normal verde: [42833075950](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42833075950), SHA `21dae3248be2963ccc77b00b79dffd1afd92a98d` | Solicitar autorización para AUD-003 |
