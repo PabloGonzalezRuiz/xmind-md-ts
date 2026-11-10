@@ -230,6 +230,7 @@ function parseParagraph(node: AstNode, state: ParseState): ContentBlock[] {
   let inline: AstNode[] = [];
   const flush = (): void => {
     if (!inline.length) return;
+    const sourcePosition = position(node, state.sourcePath);
     blocks.push({
       type: 'paragraph',
       runs: inlineRuns(inline),
@@ -355,14 +356,13 @@ function parseTopicHeading(
   if (state.topicIds.has(id))
     throw new MarkdownParseError('MD_DUPLICATE_TOPIC_ID', `ID de tema duplicado: ${id}`, node);
   state.topicIds.add(id);
+  const sourcePosition = position(node, state.sourcePath);
   return {
     id,
     title,
     children: [],
     content: [],
-    ...(position(node, state.sourcePath)
-      ? { sourcePosition: position(node, state.sourcePath) }
-      : {}),
+    ...(sourcePosition ? { sourcePosition } : {}),
   };
 }
 
