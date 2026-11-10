@@ -7,6 +7,7 @@
 > **Rama de trabajo auditada:** `feature/phase-6-style-engine`  
 > **Commit de código validado en AUD-001:** `2c594eaadd3a3bb794c73d5607ef39bb5b15a9ac`  
 > **HEAD de código validado para AUD-002:** `21dae3248be2963ccc77b00b79dffd1afd92a98d`  
+> **HEAD de implementación AUD-012:** `0f75bf70400ab665b6a33fb5ba0d2e45effed9c3` (CI aún por verificar)  
 > **HEAD actual:** consultar GitHub al reanudar; no reutilizar un SHA histórico como referencia de rama.  
 > **Rama principal:** `main` — `6aca81b59dbfcfc13034e7e1115c70f7691c5035`
 
@@ -26,6 +27,7 @@ El trabajo está distribuido en ramas de características. No hay pull requests 
 | Fase 5: validación semántica e identidad | Completada y CI verde | Commit `954216e99a13106d88ba72652460047d826b9c55`; CI run [42823341031](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42823341031) |
 | Fase 6: motor de estilos | Implementada y verificada en su alcance actual | Rama `feature/phase-6-style-engine`; CI normal verde sobre el HEAD `21dae3248be2963ccc77b00b79dffd1afd92a98d`. Quedan integración/exportadores y validación real XMind/SVG como tareas posteriores |
 | JSON Schema en ejecución | Completada y verificada | Ajv 8 Draft 2020-12, `ajv-formats`, API estructural y pipeline compuesto; casos SC automatizados; CI normal verde en el HEAD `3720239503da81d950a9f83a2ebaa392302258fe` (run `42844634106`) |
+| Coherencia schema/TypeScript | En curso (AUD-012) | Checker de proyección de tipos y equivalencia bidireccional añadido; CI de los nuevos cambios pendiente de comprobar |
 | Adaptador JSON y CLI | Pendientes | No existen módulos ejecutables de exportación ni comandos CLI |
 | Adaptador XMind | Pendiente | SDK oficial aún no evaluado; no se genera paquete XMind |
 | Adaptador SVG | Pendiente | No existe renderizador |
@@ -49,12 +51,12 @@ Las ramas de fase están encadenadas por orden de desarrollo y contienen cambios
 ### 3.1 Contrato y especificación
 
 - `spec/ir-v1.schema.json`: JSON Schema Draft 2020-12.
-- `spec/ir-v1.types.ts`: tipos TypeScript escritos manualmente.
+- `spec/ir-v1.types.ts`: tipos TypeScript públicos mantenidos manualmente; su estructura se contrasta con el schema mediante `scripts/check-ir-types.mjs`.
 - `spec/fixtures/ir-v1-minimal.json`: fixture mínimo.
 - `spec/conformance/README.md`: matriz SC y SEM.
 - `docs/ir-specification.md`, `docs/grammar.md`, `docs/style-system.md`: especificaciones funcionales.
 
-**Deuda pendiente:** la matriz SC ya se ejecuta automáticamente contra JSON Schema. La equivalencia completa entre los tipos TypeScript manuales y el schema queda pendiente en AUD-012.
+**Estado AUD-012:** el checker genera una proyección TypeScript temporal desde el schema y exige equivalencia estructural bidireccional con cada tipo público y con el IR raíz. Falla si aparece una definición o keyword estructural no contemplada, y exige discriminadores `type` únicos para proyectar `oneOf` como unión TypeScript. Las restricciones no representables en TypeScript (longitudes, patrones y formatos) siguen cubiertas por Ajv.
 
 ### 3.2 Código implementado
 
@@ -71,7 +73,7 @@ No existen todavía `src/adapters/`, `src/cli/` ni aplicación `viewer/`.
 ### 3.3 Toolchain y CI
 
 - Node.js 24, npm, TypeScript 6, Vitest 5, ESLint 10, Prettier 3, Ajv 8 y `ajv-formats`.
-- `npm ci`, `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`.
+- `npm ci`, `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm run check:ir-types`, `npm test`, `npm run build`.
 - `npm run verify` agrupa las puertas locales de calidad.
 - `package-lock.json` está versionado.
 
@@ -108,9 +110,18 @@ No existen todavía `src/adapters/`, `src/cli/` ni aplicación `viewer/`.
 - CI normal [42844634106](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42844634106), SHA `3720239503da81d950a9f83a2ebaa392302258fe`: formato, lint, typecheck, 75/75 tests y build correctos.
 - El workflow temporal usado para generar lockfile/formatear se eliminó; `.github/workflows/` contiene únicamente `ci.yml`.
 
-**Límite separado:** `spec/ir-v1.types.ts` continúa mantenido manualmente. TypeScript no expresa todas las restricciones JSON Schema de cadenas y formatos; automatizar la coherencia schema/tipos se registra como AUD-012.
+**Límite separado:** `spec/ir-v1.types.ts` continúa mantenido manualmente, pero la estructura se contrasta ahora mediante AUD-012. TypeScript no expresa restricciones como `minLength`, `pattern` o `format`; Ajv sigue siendo la autoridad runtime para ellas.
 
-### 4.4 Deuda técnica restante
+### 4.4 AUD-012 — coherencia automática entre JSON Schema y tipos TypeScript (en curso)
+
+- Añadido `scripts/check-ir-types.mjs`, sin dependencias nuevas: lee `spec/ir-v1.schema.json`, proyecta sus construcciones estructurales admitidas a tipos TypeScript temporales y compara ambos sentidos con los tipos exportados en `spec/ir-v1.types.ts` mediante el compilador TypeScript.
+- Comprueba todas las definiciones de `$defs` y el objeto raíz `IrDocument`; una tabla de correspondencias explícita evita que se omitan definiciones.
+- El checker falla ante keywords estructurales desconocidas o referencias no mapeadas. Para `oneOf`, exige ramas referenciadas con discriminadores `type` literales y únicos, condición necesaria para que la unión TypeScript represente el contrato actual.
+- Se ha añadido `npm run check:ir-types` a `npm run verify` y como paso obligatorio de `.github/workflows/ci.yml`.
+- No se han añadido dependencias ni se ha modificado `package-lock.json`.
+- **Pendiente de verificación:** ejecutar y corregir el checker, comprobar la puerta completa de CI sobre el HEAD final y probar que una divergencia deliberada entre schema y tipos hace fallar el control.
+
+### 4.5 Deuda técnica restante
 
 1. El catálogo de estilos sigue siendo neutral: sus propiedades y compatibilidad no están contrastadas todavía con las capacidades reales de XMind ni con las del exportador SVG.
 2. Los IDs de runs son deterministas para un mismo IR, pero pueden variar si se insertan o reordenan elementos antes de rutas basadas en índices. Esta limitación está documentada.
@@ -136,13 +147,13 @@ Los IDs de tarea son permanentes. Cambiar el orden o el alcance exige actualizar
 | AUD-009 | P2 | Crear corpus real y validar con XMind Desktop | Fixtures de referencia abiertos y guardados en versión Desktop identificada; informe de fidelidad | Pendiente |
 | AUD-010 | P2 | Documentación de usuario y publicación | Instalación, gramática, ejemplos, CLI, limitaciones, releases y artefactos | Pendiente |
 | AUD-011 | P3 | Diseñar e implementar visor web | Arquitectura aprobada, IR consumido sin duplicar semántica, accesibilidad y pruebas Playwright | Pendiente |
-| AUD-012 | P1 | Automatizar coherencia entre JSON Schema y tipos TypeScript | Generación de tipos desde schema o prueba automática de equivalencia estructural; documentar restricciones no expresables en TS; CI verde | Pendiente |
+| AUD-012 | P1 | Automatizar coherencia entre JSON Schema y tipos TypeScript | Checker estructural bidireccional de todas las definiciones y del IR raíz; rechazo de keywords no soportadas; prueba negativa de drift; documentar restricciones no expresables en TS; CI verde | En curso |
 
 ### Dependencias
 
 - AUD-001 desbloquea el cierre formal de la fase 6.
 - AUD-002 y AUD-003 deben estar resueltas antes de considerar estable el pipeline de compilación.
-- AUD-012 depende de AUD-003: el runtime schema ya es operativo; la tarea separada automatizará la coherencia entre contrato y tipos estáticos.
+- AUD-012 depende de AUD-003: el runtime schema ya es operativo; el checker estructural está implementado inicialmente y necesita verificación positiva, prueba negativa de drift y CI verde.
 - AUD-005 consume parser, validador, schema y serialización JSON.
 - AUD-006 precede a AUD-007: no elegir SDK ni formato de salida antes de evaluar.
 - AUD-008 puede avanzar tras estabilizar el IR y el motor de estilos.
@@ -175,7 +186,7 @@ Al iniciar una sesión de trabajo:
 
 ### Primera acción de continuación
 
-**AUD-001, AUD-002 y AUD-003 están completadas y verificadas.** La siguiente tarea priorizada es AUD-012 (coherencia automática entre schema y tipos TypeScript); no iniciarla sin autorización expresa.
+**AUD-001, AUD-002 y AUD-003 están completadas y verificadas. AUD-012 está en curso en `feature/phase-6-style-engine`.** No iniciar AUD-004 ni otra tarea hasta cerrar y verificar AUD-012.
 
 ## 8. Registro de sesiones
 
@@ -189,4 +200,5 @@ El documento rector es `docs/ai-master-prompt.md`. Se ha reescrito como especifi
 | 2026-11-10 | Auditoría inicial completa y AUD-001 | Auditoría registrada; commit `2c594eaadd3a3bb794c73d5607ef39bb5b15a9ac`; CI [42826867694](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42826867694) verde con 46/46 pruebas, lint, typecheck, formato y build | AUD-002 |
 | 2026-11-10 | AUD-002: revisión, endurecimiento y verificación del motor | Corregidos catálogo de color, `shadow`, procedencia de reinicios, referencias inexistentes y cadenas de herencia incompletas; añadidas pruebas de regresión y actualizado `docs/style-system.md`. CI normal verde: [42833075950](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42833075950), SHA `21dae3248be2963ccc77b00b79dffd1afd92a98d` | Solicitar autorización para AUD-003 |
 | 2026-11-10 | Reescritura del prompt maestro y sincronización documental | `docs/ai-master-prompt.md` reescrito desde cero como especificación greenfield; auditoría corregida para reflejar AUD-002 verificada y el HEAD real; hoja de ruta y README sincronizados | AUD-003 |
-| 2026-11-10 | AUD-003: integración runtime JSON Schema | Ajv 8.20.0 + `ajv-formats` 3.0.1; `validateIrSchema`, pipeline `validateIr` y casos SC automatizados. CI normal verde: [42844634106](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42844634106), HEAD `3720239503da81d950a9f83a2ebaa392302258fe`, 75/75 tests; formato, lint, typecheck y build verdes. | Solicitar autorización para AUD-012 |
+| 2026-11-10 | AUD-003: integración runtime JSON Schema | Ajv 8.20.0 + `ajv-formats` 3.0.1; `validateIrSchema`, pipeline `validateIr` y casos SC automatizados. CI normal verde: [42844634106](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42844634106), HEAD `3720239503da81d950a9f83a2ebaa392302258fe`, 75/75 tests; formato, lint, typecheck y build verdes. | AUD-012 |
+| 2026-11-10 | AUD-012: implementación inicial del control schema/TypeScript | Añadido `scripts/check-ir-types.mjs`, comprobación de equivalencia estructural del IR raíz y todas las definiciones `$defs`, comando `check:ir-types` y paso CI. Commits de implementación hasta `0f75bf70400ab665b6a33fb5ba0d2e45effed9c3`; verificación de CI y prueba negativa aún pendientes. | Corregir y ejecutar el checker; después completar verificación |
