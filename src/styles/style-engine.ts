@@ -19,14 +19,7 @@ import {
 } from './catalog.js';
 
 export type StyleLayer =
-  | 'system'
-  | 'map'
-  | 'styleSet'
-  | 'role'
-  | 'namedStyle'
-  | 'override'
-  | 'topic'
-  | 'inline';
+  'system' | 'map' | 'styleSet' | 'role' | 'namedStyle' | 'override' | 'topic' | 'inline';
 
 export interface StyleProvenance {
   layer: StyleLayer;
@@ -173,17 +166,35 @@ export function resolveIrStyles(ir: IrDocument): StyleResolutionResult {
       for (const [key, value] of Object.entries(input.properties)) {
         const propertyPath = input.path ? `${input.path}.${key}` : key;
         if (!isJsonValue(value)) {
-          addDiagnostic('STYLE_VALUE_NOT_JSON', 'El valor de estilo no es JSON válido.', propertyPath, elementId, key);
+          addDiagnostic(
+            'STYLE_VALUE_NOT_JSON',
+            'El valor de estilo no es JSON válido.',
+            propertyPath,
+            elementId,
+            key,
+          );
           continue;
         }
         if (value === null) {
           const definition = STYLE_PROPERTY_CATALOG[key as keyof typeof STYLE_PROPERTY_CATALOG];
           if (!definition) {
-            addDiagnostic('STYLE_PROPERTY_UNKNOWN', 'La propiedad no pertenece al catálogo v1.', propertyPath, elementId, key);
+            addDiagnostic(
+              'STYLE_PROPERTY_UNKNOWN',
+              'La propiedad no pertenece al catálogo v1.',
+              propertyPath,
+              elementId,
+              key,
+            );
             continue;
           }
           if (!isStylePropertyApplicable(key, elementType)) {
-            addDiagnostic('STYLE_PROPERTY_NOT_APPLICABLE', `La propiedad no es aplicable a "${elementType}".`, propertyPath, elementId, key);
+            addDiagnostic(
+              'STYLE_PROPERTY_NOT_APPLICABLE',
+              `La propiedad no es aplicable a "${elementType}".`,
+              propertyPath,
+              elementId,
+              key,
+            );
             continue;
           }
           values[key] = cloneValue(definition.defaultValue);
@@ -252,7 +263,9 @@ export function resolveIrStyles(ir: IrDocument): StyleResolutionResult {
       layers.push({
         layer: 'styleSet',
         sourceId: inherited.id,
-        properties: inherited.defaults ? filterApplicable(inherited.defaults, elementType) : undefined,
+        properties: inherited.defaults
+          ? filterApplicable(inherited.defaults, elementType)
+          : undefined,
         path: `$.styleSets[${inherited.id}].defaults`,
       });
     }
@@ -295,7 +308,12 @@ export function resolveIrStyles(ir: IrDocument): StyleResolutionResult {
     const effectiveSetId = reference?.setId ?? inheritedSetId ?? ir.sheet.defaultStyleSetId;
     const layers = resolveSetLayers(elementId, elementType, effectiveSetId, reference, path);
     if (reference?.overrides) {
-      layers.push({ layer: 'override', sourceId: elementId, properties: reference.overrides, path: `${path}.overrides` });
+      layers.push({
+        layer: 'override',
+        sourceId: elementId,
+        properties: reference.overrides,
+        path: `${path}.overrides`,
+      });
     }
     return { style: applyLayers(elementId, elementType, layers), effectiveSetId };
   };
@@ -340,25 +358,55 @@ export function resolveIrStyles(ir: IrDocument): StyleResolutionResult {
           applyLayers(`${topic.id}:run:${index}`, 'textRun', runLayers);
         });
       } else if (block.type === 'list') {
-        block.items.forEach((item, itemIndex) => item.blocks.forEach((child, childIndex) => visitBlock(child, `${blockPath}.items[${itemIndex}].blocks[${childIndex}]`)));
+        block.items.forEach((item, itemIndex) =>
+          item.blocks.forEach((child, childIndex) =>
+            visitBlock(child, `${blockPath}.items[${itemIndex}].blocks[${childIndex}]`),
+          ),
+        );
       } else if (block.type === 'table') {
-        block.rows.forEach((row, rowIndex) => row.cells.forEach((cell, cellIndex) => cell.blocks.forEach((child, childIndex) => visitBlock(child, `${blockPath}.rows[${rowIndex}].cells[${cellIndex}].blocks[${childIndex}]`))));
+        block.rows.forEach((row, rowIndex) =>
+          row.cells.forEach((cell, cellIndex) =>
+            cell.blocks.forEach((child, childIndex) =>
+              visitBlock(
+                child,
+                `${blockPath}.rows[${rowIndex}].cells[${cellIndex}].blocks[${childIndex}]`,
+              ),
+            ),
+          ),
+        );
       } else if (block.type === 'quote') {
-        block.blocks.forEach((child, childIndex) => visitBlock(child, `${blockPath}.blocks[${childIndex}]`));
+        block.blocks.forEach((child, childIndex) =>
+          visitBlock(child, `${blockPath}.blocks[${childIndex}]`),
+        );
       }
     };
     blocks.forEach((block, index) => visitBlock(block, `${path}[${index}]`));
   };
 
   const visitTopic = (topic: Topic, path: string, inheritedSetId: string | undefined): void => {
-    const { style, effectiveSetId } = resolveElement(topic.id, 'topic', topic.style, inheritedSetId, `${path}.style`);
+    const { style, effectiveSetId } = resolveElement(
+      topic.id,
+      'topic',
+      topic.style,
+      inheritedSetId,
+      `${path}.style`,
+    );
     resolveTopicContent(topic, style, effectiveSetId, topic.content, `${path}.content`);
-    if (topic.notes) resolveTopicContent(topic, style, effectiveSetId, topic.notes, `${path}.notes`);
-    topic.children.forEach((child, index) => visitTopic(child, `${path}.children[${index}]`, effectiveSetId));
+    if (topic.notes)
+      resolveTopicContent(topic, style, effectiveSetId, topic.notes, `${path}.notes`);
+    topic.children.forEach((child, index) =>
+      visitTopic(child, `${path}.children[${index}]`, effectiveSetId),
+    );
   };
 
   const rootSetId = ir.sheet.defaultStyleSetId;
-  const mapSetLayers = resolveSetLayers(ir.sheet.id, 'map', rootSetId, undefined, '$.sheet.defaultStyleSetId');
+  const mapSetLayers = resolveSetLayers(
+    ir.sheet.id,
+    'map',
+    rootSetId,
+    undefined,
+    '$.sheet.defaultStyleSetId',
+  );
   applyLayers(ir.sheet.id, 'map', mapSetLayers);
   visitTopic(ir.sheet.rootTopic, '$.sheet.rootTopic', rootSetId);
 

@@ -1,14 +1,10 @@
 import type { JsonValue } from '../../spec/ir-v1.types.js';
 
 export type StyleElementType =
-  | 'map'
-  | 'topic'
-  | 'relationship'
-  | 'boundary'
-  | 'summary'
-  | 'textRun';
+  'map' | 'topic' | 'relationship' | 'boundary' | 'summary' | 'textRun';
 
-export type StylePropertyKind = 'color' | 'length' | 'number' | 'string' | 'boolean' | 'enum' | 'object';
+export type StylePropertyKind =
+  'color' | 'length' | 'number' | 'string' | 'boolean' | 'enum' | 'object';
 
 export interface StylePropertyDefinition {
   kind: StylePropertyKind;
@@ -148,19 +144,13 @@ const COLOR_PATTERN =
   /^(#[0-9a-f]{3,4}|#[0-9a-f]{6}|#[0-9a-f]{8}|transparent|currentColor|[a-z]+|rgba?\([0-9\s.,%]+\)|hsla?\([0-9\s.,%deg]+\))$/i;
 const LENGTH_PATTERN = /^-?(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:px|pt|em|rem|%)?$/i;
 
-export function isStylePropertyApplicable(
-  name: string,
-  elementType: StyleElementType,
-): boolean {
+export function isStylePropertyApplicable(name: string, elementType: StyleElementType): boolean {
   const definition = STYLE_PROPERTY_CATALOG[name as StylePropertyName] as
-    | StylePropertyDefinition
-    | undefined;
+    StylePropertyDefinition | undefined;
   return definition?.elements.includes(elementType) ?? false;
 }
 
-export function getSystemStyleDefaults(
-  elementType: StyleElementType,
-): Record<string, JsonValue> {
+export function getSystemStyleDefaults(elementType: StyleElementType): Record<string, JsonValue> {
   return Object.fromEntries(
     (Object.entries(STYLE_PROPERTY_CATALOG) as Array<[string, StylePropertyDefinition]>)
       .filter(([, definition]) => definition.elements.includes(elementType))
@@ -174,8 +164,7 @@ export function validateStyleProperty(
   value: JsonValue,
 ): string | undefined {
   const definition = STYLE_PROPERTY_CATALOG[name as StylePropertyName] as
-    | StylePropertyDefinition
-    | undefined;
+    StylePropertyDefinition | undefined;
   if (!definition) return 'La propiedad no pertenece al catálogo de estilos v1.';
   if (!definition.elements.includes(elementType)) {
     return `La propiedad no es aplicable al elemento "${elementType}".`;
@@ -189,7 +178,9 @@ export function validateStyleProperty(
     case 'length': {
       const valid =
         typeof value === 'number'
-          ? Number.isFinite(value) && value >= (definition.min ?? -Infinity) && value <= (definition.max ?? Infinity)
+          ? Number.isFinite(value) &&
+            value >= (definition.min ?? -Infinity) &&
+            value <= (definition.max ?? Infinity)
           : typeof value === 'string' &&
             LENGTH_PATTERN.test(value) &&
             Number.isFinite(Number.parseFloat(value)) &&

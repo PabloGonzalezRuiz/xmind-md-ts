@@ -172,7 +172,11 @@ describe('style resolution engine', () => {
 
     const result = resolveIrStyles(ir);
     const root = styleFor(result, 'topic:root');
-    const shadow = root.values.shadow as { enabled: boolean; offset: { x: number; y: number }; blur: number };
+    const shadow = root.values.shadow as {
+      enabled: boolean;
+      offset: { x: number; y: number };
+      blur: number;
+    };
 
     expect(shadow).toEqual({
       enabled: true,
