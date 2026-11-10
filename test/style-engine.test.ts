@@ -274,10 +274,10 @@ describe('style resolution engine', () => {
   it(
     'does not report properties that are valid only for other element types in shared defaults',
     () => {
-    const ir = createIr();
-    ir.styleSets[1]!.defaults = { fill: '#DDDDDD', color: '#123456' };
+      const ir = createIr();
+      ir.styleSets[1]!.defaults = { fill: '#DDDDDD', color: '#123456' };
 
-    const result = resolveIrStyles(ir);
+      const result = resolveIrStyles(ir);
 
       expect(result.diagnostics).toEqual([]);
     },
