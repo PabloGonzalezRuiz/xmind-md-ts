@@ -91,13 +91,19 @@ describe('CLI', () => {
     });
   });
 
-  it('devuelve código 1 y diagnóstico ante Markdown no válido', () => {
-    const result = execute(['parse', markdownPath, '--mode', 'strict']);
-    expect(result.status).toBe(0);
+  it('devuelve código 1 y diagnóstico ante Markdown no válido', async () => {
+    const invalidMarkdownPath = join(directory, 'sin raiz.md');
+    await writeFile(invalidMarkdownPath, 'Texto sin encabezado raíz.\\n', 'utf8');
+    const invalid = execute(['parse', invalidMarkdownPath]);
 
-    const invalid = execute(['validate', '-']);
-    expect(invalid.status).toBe(2);
-    expect(invalid.stderr).toContain('--input-format');
+    expect(invalid.status).toBe(1);
+    expect(invalid.stderr).toContain('MD_ROOT_HEADING');
+  });
+
+  it('exige declarar el formato de stdin', () => {
+    const result = execute(['validate', '-']);
+    expect(result.status).toBe(2);
+    expect(result.stderr).toContain('--input-format');
   });
 
   it('distingue errores de uso y errores de entrada', async () => {
