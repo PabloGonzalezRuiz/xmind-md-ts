@@ -17,7 +17,7 @@ El proyecto no es una traducción mecánica del código Python de `xmind-md`. Re
 
 ## Estado
 
-<badge>Fase 1 — Documentación y especificación</badge>
+**Fase 1 — Documentación y especificación**
 
 El repositorio comienza como proyecto nuevo. La documentación inicial definirá el alcance, el prompt maestro, la arquitectura, la gramática prevista, el IR, la estrategia de pruebas y las fases de implementación. No se afirmará que existen funcionalidades hasta que estén implementadas y verificadas.
 
