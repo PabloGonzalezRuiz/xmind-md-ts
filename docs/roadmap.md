@@ -5,7 +5,7 @@ Las fases se ejecutan secuencialmente. Al terminar cada fase se presenta el resu
 | Fase | Alcance | Resultado verificable | Estado |
 |---|---|---|---|
 | 1 | Prompt maestro y documentación funcional/técnica | Documentación base y plan | Completada |
-| 2 | Contrato IR y JSON Schema | IR v1, schema, fixture y plan de conformidad | En revisión |
+| 2 | Contrato IR y JSON Schema | IR v1, tipos TS, schema, fixture y matriz de conformidad | En revisión |
 | 3 | Esqueleto TypeScript y tooling | package.json, tsconfig estricto, lint, formato, Vitest y CI | Pendiente |
 | 4 | Parser Markdown | Gramática implementada y corpus de parser | Pendiente |
 | 5 | Validación semántica e identidad | IDs, referencias, jerarquía y diagnósticos | Pendiente |
