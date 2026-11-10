@@ -1,6 +1,6 @@
 # Casos de conformidad IR v1.0.0
 
-Estos casos forman la matriz normativa de conformidad IR v1.0.0. Los casos semánticos implementados se ejercitan mediante Vitest en `test/semantic-validator.test.ts`; los casos estructurales SC requieren integrar un validador JSON Schema. El fixture válido de referencia es `../fixtures/ir-v1-minimal.json`.
+Estos casos forman la matriz normativa de conformidad IR v1.0.0. Los casos semánticos implementados se ejercitan mediante Vitest en `test/semantic-validator.test.ts`; los casos estructurales definidos se ejecutan contra JSON Schema Draft 2020-12 mediante `test/schema-validator.test.ts`. La matriz actual define quince casos estructurales: SC-001…SC-005 y SC-101…SC-110; no define SC-006…SC-100. El fixture válido de referencia es `../fixtures/ir-v1-minimal.json`.
 
 ## A. Casos que debe aceptar JSON Schema
 
