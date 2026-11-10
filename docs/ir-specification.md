@@ -105,7 +105,7 @@ Las extensiones son objetos bajo namespaces en minúsculas, por ejemplo `xmind`.
 
 ## 10. Validación
 
-JSON Schema valida tipos, campos obligatorios, uniones discriminadas y restricciones locales. Un validador semántico adicional debe comprobar:
+El JSON Schema Draft 2020-12 se ejecuta en runtime mediante Ajv 8 y `ajv-formats` (`src/validation/schema-validator.ts`). La API `validateIrSchema(input)` recibe `unknown` y devuelve diagnósticos estructurales. La API compuesta `validateIr(input, options)` ejecuta primero el schema y solo si pasa llama al validador semántico `validateIrDocument`. Un validador semántico adicional comprueba:
 
 - unicidad global de IDs de entidades dentro del ámbito del documento;
 - IDs explícitos no vacíos y sin espacios;
@@ -118,7 +118,7 @@ JSON Schema valida tipos, campos obligatorios, uniones discriminadas y restricci
 - validez de URI y restricciones de rutas de assets;
 - límites de profundidad/tamaño configurables para entradas no confiables.
 
-El esquema no pretende sustituir estas reglas semánticas.
+El esquema no pretende sustituir estas reglas semánticas. La validación estructural se ejecuta antes de la semántica para no recorrer entradas cuya forma no cumple el contrato. Los casos SC de `spec/conformance/README.md` se automatizan con Vitest.
 
 ## 11. Versionado y compatibilidad
 
