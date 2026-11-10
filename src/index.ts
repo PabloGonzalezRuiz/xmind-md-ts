@@ -16,3 +16,10 @@ export type {
   MarkdownParseResult,
   ParserDiagnostic,
 } from './markdown/parser.js';
+
+export { validateIrDocument } from './validation/semantic-validator.js';
+export type {
+  IrValidationDiagnostic,
+  IrValidationOptions,
+  IrValidationResult,
+} from './validation/semantic-validator.js';
