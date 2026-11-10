@@ -14,7 +14,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"scripts/**/*.js\" \"spec/**/*.ts\" \"vitest.config.ts\" \"eslint.config.js\" \"package.json\" \"tsconfig*.json\" \".prettierrc.json\" \".github/workflows/*.yml\"",
     "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\" \"scripts/**/*.js\" \"spec/**/*.ts\" \"vitest.config.ts\" \"eslint.config.js\" \"package.json\" \"tsconfig*.json\" \".prettierrc.json\" \".github/workflows/*.yml\"",
     "lint": "eslint .",
-    "start": "node dist/src/index.js",
+    "start": "node dist/src/cli/main.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit -p tsconfig.json",
@@ -41,5 +41,8 @@
     "yaml": "2.8.1",
     "ajv2020": "npm:ajv@8.17.1",
     "ajv-formats": "3.0.1"
+  },
+  "bin": {
+    "xmind-md": "./dist/src/cli/main.js"
   }
 }
