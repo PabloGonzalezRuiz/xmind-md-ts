@@ -181,7 +181,7 @@ describe('Markdown parser', () => {
       ':::xmind',
       'unexpected: true',
       ':::',
-    ].join('\\n');
+    ].join('\n');
     expect(() => parseMarkdown(source)).toThrowError(/Clave desconocida en directiva/);
   });
 
