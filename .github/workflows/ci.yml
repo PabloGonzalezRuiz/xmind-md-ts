@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -29,17 +29,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
-
-      - name: Format and commit generated formatting
-        run: |
-          npm run format
-          if ! git diff --quiet -- src/validation/semantic-validator.ts test/semantic-validator.test.ts; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add src/validation/semantic-validator.ts test/semantic-validator.test.ts
-            git commit -m "chore: format semantic validator"
-            git push
-          fi
 
       - name: Check formatting
         run: npm run format:check
