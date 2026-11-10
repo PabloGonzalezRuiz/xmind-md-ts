@@ -1,8 +1,11 @@
-import Ajv2020 from 'ajv/dist/2020.js';
-import addFormats from 'ajv-formats';
-import type { AnySchema } from 'ajv';
+import Ajv2020Module from 'ajv/dist/2020.js';
+import addFormatsModule from 'ajv-formats';
+import type { AnySchema, ErrorObject } from 'ajv';
 
 import irSchema from '../../spec/ir-v1.schema.json' with { type: 'json' };
+
+const Ajv2020 = Ajv2020Module.default;
+const addFormats = addFormatsModule.default;
 
 export interface IrSchemaValidationDiagnostic {
   code: 'IR_SCHEMA_INVALID';
@@ -49,7 +52,7 @@ export function validateIrSchema(input: unknown): IrSchemaValidationResult {
     return { valid: true, diagnostics: [] };
   }
 
-  const diagnostics = (validateSchema.errors ?? []).map((error) => ({
+  const diagnostics = (validateSchema.errors ?? []).map((error: ErrorObject) => ({
     code: 'IR_SCHEMA_INVALID' as const,
     severity: 'error' as const,
     message: error.message ?? 'El documento no cumple el JSON Schema IR v1.',
