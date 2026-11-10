@@ -167,8 +167,16 @@ const check = process.argv.includes("--check");
 if (check) {
   const current = await readFile(outputPath, "utf8");
   const normalize = (value) => `${value.replace(/\r\n/g, "\n").trimEnd()}\n`;
-  if (normalize(current) !== normalize(formatted)) {
+  const normalizedCurrent = normalize(current);
+  const normalizedFormatted = normalize(formatted);
+  if (normalizedCurrent !== normalizedFormatted) {
+    let index = 0;
+    while (index < normalizedCurrent.length && normalizedCurrent[index] === normalizedFormatted[index]) index += 1;
     console.error("spec/ir-v1.types.ts no está actualizado. Ejecuta npm run generate:types.");
+    console.error("Diferencia en índice:", index);
+    console.error("Longitudes:", normalizedCurrent.length, normalizedFormatted.length);
+    console.error("Actual:", JSON.stringify(normalizedCurrent.slice(index, index + 80)));
+    console.error("Generado:", JSON.stringify(normalizedFormatted.slice(index, index + 80)));
     process.exitCode = 1;
   }
 } else {
