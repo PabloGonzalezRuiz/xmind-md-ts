@@ -20,7 +20,7 @@ IrDocument
 
 - `irVersion`: versión semántica exacta del contrato, inicialmente `1.0.0`.
 - `document`: identidad y metadatos de la fuente.
-- `sheet`: hoja única, raíz del árbol y elementos asociados.
+- `sheet`: hoja única, raíz del árbol y elementos asociados; incluye `defaultStyleSetId` opcional y `settings`.
 - `assets`: recursos referenciados por ID.
 - `styleSets`: conjuntos reutilizables incluidos en el documento.
 - `extensions`: datos namespaced de adaptadores.
