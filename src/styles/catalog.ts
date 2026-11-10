@@ -241,7 +241,11 @@ function validateShadow(value: unknown): string | undefined {
     return 'shadow.blur debe ser un número no negativo.';
   }
   if (shadow.offset !== undefined) {
-    if (typeof shadow.offset !== 'object' || shadow.offset === null || Array.isArray(shadow.offset)) {
+    if (
+      typeof shadow.offset !== 'object' ||
+      shadow.offset === null ||
+      Array.isArray(shadow.offset)
+    ) {
       return 'shadow.offset debe ser un objeto con coordenadas x e y.';
     }
     const offset = shadow.offset as Record<string, unknown>;
@@ -260,6 +264,7 @@ function validateShadow(value: unknown): string | undefined {
   }
   return undefined;
 }
+
 export function isStylePropertyApplicable(name: string, elementType: StyleElementType): boolean {
   const definition = STYLE_PROPERTY_CATALOG[name as StylePropertyName] as
     StylePropertyDefinition | undefined;
