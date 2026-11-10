@@ -29,7 +29,7 @@ No se serializan valores calculados de forma que sustituyan los valores de orige
 
 ## 3. Hoja y árbol de temas
 
-La hoja contiene un único `rootTopic`. La raíz es obligatoria y no tiene padre. Cada `Topic` contiene:
+La hoja contiene un único `rootTopic`. La raíz es obligatoria y no tiene padre. `defaultStyleSetId` selecciona el conjunto de estilos predeterminado de la hoja; si no se declara, se aplican los defaults del sistema. Cada `Topic` contiene:
 
 - `id`: identidad única dentro del documento.
 - `title`: texto del encabezado, sin formato Markdown estructural.
