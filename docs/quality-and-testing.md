@@ -1,77 +1,47 @@
 # Calidad, pruebas y diagnóstico
 
-## 1. Objetivo
+## 1. Puertas de calidad
 
-El sistema debe ser verificable por personas y por herramientas de IA. El compilador TypeScript, el linter, las pruebas y los fixtures actúan como controles independientes; ninguno sustituye a los demás.
+Cada cambio debe superar, según el alcance: Prettier, ESLint, typecheck, pruebas unitarias, integración, build, validación JSON Schema y validación semántica. Los comandos se establecerán en package.json durante la fase 3.
 
-## 2. Puertas de calidad
+## 2. Contrato IR v1
 
-Cada cambio debe superar, según el alcance:
-1. Formato Prettier.
-2. ESLint.
-3. Comprobación TypeScript sin emitir archivos.
-4. Pruebas unitarias.
-5. Pruebas de integración.
-6. Build.
-7. Validación de JSON Schema y reglas semánticas.
-8. Pruebas de adaptador y fixtures.
-9. Pruebas de navegador si afecta al visor.
+La fuente normativa es `spec/ir-v1.schema.json`. Los fixtures de `spec/fixtures/` son ejemplos independientes de la implementación. Los tipos TypeScript deben derivarse del esquema o comprobar su equivalencia automáticamente; nunca se mantienen dos contratos manuales divergentes.
 
-Los comandos definitivos se establecerán en package.json durante la implementación.
+Pruebas de conformidad obligatorias:
+- Fixture mínimo válido.
+- Rechazo de versión IR desconocida.
+- Rechazo de propiedades desconocidas en objetos del núcleo.
+- Aceptación y conservación de extensiones namespaced.
+- Detección semántica de IDs duplicados.
+- Detección de referencias a topics/assets inexistentes.
+- Rechazo de relaciones autorreferentes.
+- Detección de ciclos en conjuntos de estilos.
+- Verificación de orden y determinismo de serialización.
+- Validación de alineaciones de tabla y número de columnas.
 
-## 3. Tipado estricto
+JSON Schema no sustituye al validador semántico: las referencias cruzadas y la unicidad global requieren recorrido del documento.
 
-Configurar TypeScript en modo estricto y evaluar además:
-- noUncheckedIndexedAccess
-- exactOptionalPropertyTypes
-- noImplicitOverride
-- useUnknownInCatchVariables
-
-Evitar any. Los datos externos se reciben como unknown, se validan en runtime y después se estrechan a tipos internos.
-
-## 4. Pruebas por capas
+## 3. Pruebas por capas
 
 - Parser: gramática válida, inválida, ubicación y escapes.
-- IR: invariantes, serialización, esquema y versionado.
+- IR: schema, tipos, serialización y versionado.
 - Validación: IDs, referencias, jerarquía y ciclos.
 - Estilos: cascada, herencia, overrides y procedencia.
 - Adaptadores: salida, capacidades, pérdidas y errores.
-- CLI: códigos de salida, rutas, opciones y ejecución en Windows/Linux.
-- Visor: interacción, accesibilidad, navegación y mapas grandes.
+- CLI: códigos de salida, rutas, opciones y Windows/Linux.
+- Visor: interacción, accesibilidad y mapas grandes.
 
-## 5. Corpus de referencia
+## 4. Corpus de referencia
 
-Mantener fixtures pequeños, independientes y legibles:
-- mapa mínimo.
-- jerarquía profunda.
-- contenido estructurado.
-- estilos y conjuntos.
-- notas, etiquetas y marcadores.
-- relaciones.
-- boundaries y summaries.
-- recursos e imágenes.
-- mapa de características combinadas.
-- entradas inválidas.
+Mantener fixtures pequeños, independientes y legibles: mapa mínimo, jerarquía profunda, contenido estructurado, estilos, notas, relaciones, boundaries, summaries, assets, mapa combinado e inputs inválidos.
 
-Conservar mapas creados manualmente en XMind como corpus de referencia cuando sea posible. Comparar estructura semántica y propiedades, no bytes completos del ZIP, ya que pueden variar metadatos y orden de empaquetado.
+Comparar semántica y propiedades, no bytes completos del ZIP XMind, ya que metadatos y empaquetado pueden variar.
 
-## 6. Pruebas de conformidad entre lenguajes
+## 5. Conformidad entre implementaciones
 
-Los casos de entrada y resultados esperados deben ser independientes de la implementación. Si se compara con el proyecto Python, ambos motores deben consumir los mismos fixtures y producir IR equivalentes conforme a la especificación; no se debe tomar automáticamente la salida de uno como verdad del otro.
+Si se compara con el proyecto Python, ambos motores consumen los mismos fixtures y producen IR equivalentes conforme al contrato. Ninguna implementación se toma automáticamente como verdad de la otra.
 
-## 7. Diagnóstico
+## 6. Diagnóstico y afirmaciones
 
-Cada diagnóstico tendrá código estable, severidad, mensaje, archivo/ubicación si existe y contexto útil. Los logs de CLI serán legibles y podrán ofrecer modo detallado. Los artefactos de CI deben incluir informes y salidas de prueba cuando ayuden a reproducir fallos.
-
-## 8. Política de afirmaciones
-
-Distinguir siempre:
-- typecheck correcto;
-- lint correcto;
-- tests ejecutados;
-- build generado;
-- paquete XMind estructuralmente válido;
-- archivo abierto en XMind Desktop;
-- fidelidad visual verificada.
-
-No afirmar un nivel a partir de otro.
+Los diagnósticos tienen código estable, severidad, mensaje, archivo/ubicación y contexto. Distinguir typecheck, lint, tests ejecutados, build, validación estructural, apertura en XMind Desktop y fidelidad visual. No afirmar un nivel a partir de otro.
