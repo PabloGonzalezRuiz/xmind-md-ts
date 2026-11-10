@@ -271,14 +271,17 @@ describe('style resolution engine', () => {
     );
   });
 
-  it('does not report properties that are valid only for other element types in shared defaults', () => {
+  it(
+    'does not report properties that are valid only for other element types in shared defaults',
+    () => {
     const ir = createIr();
     ir.styleSets[1]!.defaults = { fill: '#DDDDDD', color: '#123456' };
 
     const result = resolveIrStyles(ir);
 
-    expect(result.diagnostics).toEqual([]);
-  });
+      expect(result.diagnostics).toEqual([]);
+    },
+  );
 
   it('rejects unknown CSS color names and out-of-range RGB channels', () => {
     const ir = createIr();
