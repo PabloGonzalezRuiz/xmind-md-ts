@@ -194,20 +194,41 @@ const source = [
   "",
 ].join("\n");
 
+const tsc = path.join(root, "node_modules/typescript/bin/tsc");
+const compilerArgs = [
+  tsc, "--noEmit", "--strict", "--skipLibCheck", "--target", "ES2022",
+  "--module", "NodeNext", "--moduleResolution", "NodeNext", tempPath,
+];
+function runTypeCheck() {
+  return spawnSync(process.execPath, compilerArgs, { cwd: root, encoding: "utf8" });
+}
+
 try {
   await writeFile(tempPath, source, "utf8");
-  const tsc = path.join(root, "node_modules/typescript/bin/tsc");
-  const result = spawnSync(process.execPath, [
-    tsc, "--noEmit", "--strict", "--skipLibCheck", "--target", "ES2022",
-    "--module", "NodeNext", "--moduleResolution", "NodeNext", tempPath,
-  ], { cwd: root, encoding: "utf8" });
-  if (result.status !== 0) {
-    process.stderr.write(result.stdout ?? "");
-    process.stderr.write(result.stderr ?? "");
-    process.exitCode = result.status ?? 1;
+  const positive = runTypeCheck();
+  if (positive.status !== 0) {
+    process.stderr.write(positive.stdout ?? "");
+    process.stderr.write(positive.stderr ?? "");
+    process.exitCode = positive.status ?? 1;
   } else {
+    const driftSchema = structuredClone(schema);
+    driftSchema.properties.document = { type: "number" };
+    const driftRootType = toType(driftSchema);
+    const driftSource = source.replace(
+      "type Check_IrDocument = Assert<Equal<Existing.IrDocument, " + rootType + ">>;",
+      "type Check_IrDocument = Assert<Equal<Existing.IrDocument, " + driftRootType + ">>;",
+    );
+    if (driftSource === source) {
+      throw new Error("Could not construct the negative drift test.");
+    }
+    await writeFile(tempPath, driftSource, "utf8");
+    const negative = runTypeCheck();
+    if (negative.status === 0) {
+      throw new Error("The negative drift test unexpectedly passed.");
+    }
     process.stdout.write("IR JSON Schema and public TypeScript types are structurally equivalent.\n");
     process.stdout.write("Checked root IR and " + Object.keys(typeMap).length + " schema definitions.\n");
+    process.stdout.write("Negative drift test correctly rejected a mismatched root property.\n");
   }
 } finally {
   await rm(tempPath, { force: true });
