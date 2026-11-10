@@ -2,22 +2,21 @@
 
 ## 1. Estado
 
-Esta gramática implementa la superficie de autoría que alimenta el IR v1.0.0. El IR es normativo para la estructura resultante; este documento define cómo se expresa en Markdown. Los ejemplos ilustran sintaxis, pero no sustituyen las pruebas de conformidad.
+Esta gramática implementa la superficie de autoría que alimenta el IR v1.0.0. El IR es normativo para la estructura resultante. El parser usa CommonMark + GFM y las extensiones YAML front matter y directivas de contenedor.
 
 ## 2. Archivo y raíz
 
 - Un archivo produce un documento y una hoja.
 - Debe existir exactamente un encabezado H1; es el tema raíz.
 - H2–H6 crean descendientes según el encabezado anterior compatible.
-- No se admiten saltos que dejen un nivel sin padre (por ejemplo H2 seguido directamente de H4). Se emite error con ubicación; no se sintetizan nodos.
-- Un segundo H1 es error. No se fusionan raíces ni se generan hojas adicionales.
-- El contenido Markdown posterior a un encabezado pertenece al tema abierto hasta el siguiente encabezado de nivel igual o superior.
+- No se admiten saltos que dejen un nivel sin padre (por ejemplo H2 seguido directamente de H4).
+- Un segundo H1 es error.
+- El contenido posterior a un encabezado pertenece al tema abierto hasta el siguiente encabezado de nivel igual o superior.
+- No se admite contenido antes del H1, salvo el front matter.
 
 ## 3. IDs explícitos
 
-Se propone la forma `{#identificador}` al final del texto de encabezado. El identificador debe ser único, no vacío y sin espacios. Se elimina del título visible y se conserva como ID. En ausencia de ID, el parser deriva uno determinista de la ruta estructural; véase `docs/ir-specification.md`.
-
-Los IDs de entidades no temáticas (relaciones, límites, resúmenes y assets) se declaran en sus respectivas directivas.
+La forma `{#identificador}` al final del texto de encabezado declara el ID del tema. El identificador debe ser único, no vacío y sin espacios. Se elimina del título visible y se conserva como ID. Sin ID explícito, el parser genera un ID determinista a partir de la ruta estructural y el ordinal entre hermanos. La validación global de identidad corresponde a la fase 5.
 
 ## 4. Front matter YAML
 
@@ -28,44 +27,44 @@ El front matter se sitúa al principio del archivo y solo puede aparecer una vez
 | `id` | string | ID del documento |
 | `title` | string | Título del documento/hoja; por defecto el H1 |
 | `style_set` | string | Conjunto de estilos por defecto |
-| `settings` | object | Ajustes neutrales de hoja definidos por el esquema |
+| `settings` | object | Ajustes neutrales de hoja |
 
-Claves desconocidas producen advertencia en modo compatible y error en modo estricto. Una clave no puede contradecir otra fuente de metadatos sin regla definida: `title` del front matter prevalece sobre el título del H1 para el documento y la hoja, pero no cambia el título del tema raíz. `id` identifica el documento, no el tema raíz. `style_set` se normaliza como `sheet.defaultStyleSetId` y debe referenciar un conjunto incluido en `styleSets`.
+Claves desconocidas producen advertencia en modo compatible y error en modo estricto. `title` prevalece para el documento y la hoja, pero no cambia el título del tema raíz. `id` identifica el documento.
 
 ## 5. Bloques Markdown
 
-El parser conserva semánticamente:
-- párrafos y runs con negrita, cursiva, tachado, código inline y enlaces;
-- listas ordenadas/no ordenadas y anidamiento;
-- tablas y alineación por columna;
-- bloques de código y lenguaje declarado;
-- citas;
-- imágenes mediante assets;
-- separadores temáticos.
+Se conservan párrafos y runs (negrita, cursiva, tachado, código inline y enlaces), listas anidadas, tablas GFM y alineación, bloques de código, citas, imágenes mediante assets y separadores temáticos. Las imágenes repetidas con la misma URI comparten asset.
 
-HTML arbitrario, footnotes, definiciones de referencia no resueltas, matemática y extensiones de terceros quedan fuera de v1: error o advertencia según modo, nunca descarte silencioso. Los bloques de contenido se asignan al tema vigente; listas y citas pueden contener bloques anidados según el IR.
+HTML arbitrario, footnotes y matemática quedan fuera de v1: se emite diagnóstico de advertencia en modo compatible. No se garantiza la conservación de extensiones Markdown no enumeradas. Los bloques de contenido se asignan al tema vigente.
 
 ## 6. Directivas
 
-Las directivas son bloques fenced con nombre y cierre explícito. No se permite anidamiento de directivas v1. Los atributos se expresan como YAML restringido y validado.
+Las directivas son bloques de contenedor con cierre explícito. No se permite anidamiento de directivas v1. El cuerpo de configuración es YAML:
 
-- `:::xmind`: propiedades de mapa o del tema donde aparece.
-- `:::xmind-note`: contenido de nota del tema vigente.
-- `:::xmind-relationship`: relación con `id`, `from`, `to`, y atributos opcionales `label`, `kind`, `style`.
-- `:::xmind-boundary`: boundary con `id`, `topics` (lista de IDs) y opcional `label`, `style`.
-- `:::xmind-summary`: summary con `id`, `topics` (lista de IDs) y opcional `label`, `style`.
+```md
+:::xmind
+role: main
+style: concepto_importante
+style_set: TAI_LEGISLACION
+overrides:
+  fill: "#fff2cc"
+:::
+```
 
-Las directivas de relación, boundary y summary se permiten en el ámbito del documento, fuera del contenido de un tema; deben referenciar IDs existentes. Las directivas de configuración y nota se permiten dentro del ámbito del tema. La forma exacta del bloque se fija mediante parser fixtures en la fase 4.
+- `:::xmind`: configuración del tema vigente. Admite `role`, `style`, `style_set` y `overrides`.
+- `:::xmind-note`: bloques Markdown que se asignan a las notas del tema vigente; no es YAML.
+- `:::xmind-relationship`: objeto YAML con `id`, `from`, `to` y opcionales `label`, `kind`, `role`, `style`, `style_set`, `overrides`.
+- `:::xmind-boundary` y `:::xmind-summary`: objeto YAML con `id`, `topics` (lista de IDs) y opcionales `label`, `role`, `style`, `style_set`, `overrides`.
+
+Las directivas de relación, boundary y summary se almacenan a nivel de hoja. La comprobación de referencias a temas existentes corresponde a la fase 5. Las directivas desconocidas o mal formadas producen error con código y ubicación.
 
 ## 7. Estilos
 
-El front matter `style_set` selecciona el conjunto por defecto. La configuración de tema puede declarar `role`, `style` y `overrides`. Los nombres de propiedades pertenecen al catálogo neutral. Los estilos no se aplican por inferencia del título ni del nivel de encabezado.
+El front matter `style_set` selecciona el conjunto predeterminado. La configuración de tema puede declarar `role`, `style` y `overrides`. El parser conserva declaraciones; no resuelve estilos ni infiere apariencia por título o nivel.
 
-Las notaciones inline `@conjunto(...)` y `@estilo(...)` no se incluyen en la sintaxis v1 inicial: se aplazan hasta que exista una necesidad demostrada y una regla inequívoca de ámbito.
+## 8. Errores y diagnósticos
 
-## 8. Escape y errores
-
-El texto que parezca una directiva se escribe dentro de un bloque de código o se escapa conforme a las reglas Markdown del parser. Una directiva mal formada, desconocida o fuera de ámbito produce diagnóstico con código estable y ubicación. No se ignora silenciosamente.
+Los errores estructurales lanzan `MarkdownParseError`, con código estable y ubicación cuando existe. `parseMarkdownWithDiagnostics` devuelve advertencias compatibles junto al IR. El modo estricto convierte las claves desconocidas del front matter en errores. No se descarta silenciosamente contenido fuera del subconjunto soportado.
 
 ## 9. Ejemplo
 
@@ -94,4 +93,4 @@ Contenido de la nota del tema.
 :::
 ```
 
-La sintaxis de ejemplo queda sujeta a pruebas del parser; el IR resultante debe cumplir íntegramente `spec/ir-v1.schema.json` y las reglas semánticas.
+El IR resultante debe cumplir `spec/ir-v1.schema.json`. La validación semántica completa se realiza en la fase 5.
