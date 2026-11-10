@@ -329,12 +329,13 @@ export function resolveIrStyles(ir: IrDocument): StyleResolutionResult {
       if (block.type === 'paragraph') {
         block.runs.forEach((run: TextRun, index) => {
           const runPath = `${blockPath}.runs[${index}]`;
+          const runElementId = `${topic.id}:run:${runPath}`;
           const inherited = filterApplicable(topicStyle.values, 'textRun');
           const inheritedProvenance = Object.fromEntries(
             Object.entries(topicStyle.provenance).filter(([key]) => Object.hasOwn(inherited, key)),
           );
           const runLayers = resolveSetLayers(
-            `${topic.id}:run:${index}`,
+            runElementId,
             'textRun',
             setId,
             undefined,
@@ -350,12 +351,12 @@ export function resolveIrStyles(ir: IrDocument): StyleResolutionResult {
           if (run.style) {
             runLayers.push({
               layer: 'inline',
-              sourceId: `${topic.id}:run:${index}`,
+              sourceId: runElementId,
               properties: run.style,
               path: `${runPath}.style`,
             });
           }
-          applyLayers(`${topic.id}:run:${index}`, 'textRun', runLayers);
+          applyLayers(runElementId, 'textRun', runLayers);
         });
       } else if (block.type === 'list') {
         block.items.forEach((item, itemIndex) =>
