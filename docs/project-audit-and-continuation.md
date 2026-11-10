@@ -5,7 +5,7 @@
 > **Última auditoría:** 2026-11-10  
 > **Repositorio:** https://github.com/PabloGonzalezRuiz/xmind-md-ts  
 > **Rama de trabajo auditada:** `feature/aud-003-runtime-schema`  
-> **HEAD de trabajo:** `8bd80c1973401d6abaf87141c54c9c8da354930c` (AUD-004 en curso; CI del corpus en ejecución)  
+> **HEAD verificado:** `cc6e0b9222264d93797a9cda74f7f7b1d5c32791` (AUD-004 completada y verificada)  
 > **Rama principal:** `main` — `6aca81b59dbfcfc13034e7e1115c70f7691c5035`
 
 ## 1. Resumen ejecutivo
@@ -112,7 +112,7 @@ Los IDs de tarea son permanentes. Cambiar el orden o el alcance exige actualizar
 | AUD-001 | P0 | Estabilizar CI y recuperar la puerta de calidad de la fase 6 | Test de procedencia corregido; workflow read-only sin auto-push; format, lint, typecheck, tests y build verdes sobre el commit de código | Completada y verificada |
 | AUD-002 | P1 | Completar revisión de robustez del motor de estilos | Validadores de color/objetos robustos; procedencia coherente; referencias y ciclos diagnosticados; contrato de IDs y límites de compatibilidad documentados; pruebas y CI verdes | Completada y verificada |
 | AUD-003 | P1 | Integrar validación JSON Schema runtime | Ajv 2020; todos los casos SC definidos automatizados; tipos generados desde el schema y sincronización comprobada; integración estructural-semántica; CI verde | Completada y verificada |
-| AUD-004 | P1 | Completar corpus de conformidad parser/IR | Fixtures positivos y negativos de bloques/directivas; códigos estables; diagnósticos y posiciones de origen; validez estructural/semántica del IR; regresión reproducible en CI | En curso |
+| AUD-004 | P1 | Completar corpus de conformidad parser/IR | Fixtures positivos y negativos de bloques/directivas; códigos estables; diagnósticos y posiciones de origen; validez estructural/semántica del IR; regresión reproducible en CI | Completada y verificada |
 | AUD-005 | P1 | Implementar adaptador JSON y CLI | Comandos de parse, validate y export JSON; códigos de salida; rutas Windows; ejecución local y CI | Pendiente |
 | AUD-006 | P1 | Evaluar SDK oficial XMind y decidir estrategia | Informe de API, formatos, Node, licencia, actividad, cobertura, dependencias y prueba mínima | Pendiente |
 | AUD-007 | P1 | Implementar exportador XMind inicial | Paquete generado, matriz de capacidades y diagnósticos de pérdidas; estructura ZIP/JSON comprobada | Pendiente |
@@ -157,7 +157,7 @@ Al iniciar una sesión de trabajo:
 
 ### Primera acción de continuación
 
-**AUD-001, AUD-002 y AUD-003 están completadas y verificadas.** AUD-004 está autorizada y en curso en `feature/aud-003-runtime-schema`.
+**AUD-001, AUD-002, AUD-003 y AUD-004 están completadas y verificadas.** La siguiente tarea es AUD-005 (adaptador JSON y CLI), pendiente de autorización.
 
 ## 8. Registro de sesiones
 
@@ -175,3 +175,5 @@ Al iniciar una sesión de trabajo:
 | 2026-11-10 | AUD-003: cierre y verificación final | Generación TypeScript desde JSON Schema; `npm run check:generated-types` integrada en CI; workflow sin pasos de modificación automática y con `contents: read`. CI final verde: [42845837785](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42845837785), SHA `957ae096359cfa9d62ddbe70883bfa2020efe5ed`; formato, lint, generación sincronizada, typecheck, 79 tests y build correctos | Solicitar autorización para AUD-004 |
 
 | 2026-11-10 | AUD-004: corpus inicial de conformidad Markdown | Añadidos fixtures positivos, negativos y de diagnóstico; batería `test/markdown-conformance.test.ts` con comprobación de bloques Markdown, directivas, códigos de error, posiciones y validación IR. Se corrigieron expectativas detectadas por CI (filas GFM, etiquetas HTML separadas e import de fixtures). CI pendiente de verificación final tras actualizar la documentación | Completar matriz de casos, confirmar CI verde y actualizar el estado de auditoría |
+
+| 2026-11-10 | AUD-004: cierre y verificación final del corpus parser/IR | Fixtures versionados para bloques Markdown, front matter y directivas XMind; casos positivos, negativos y diagnósticos; códigos de error estables, líneas/columnas, posiciones de temas/bloques y validación estructural/semántica. Matriz registrada en `spec/conformance/README.md`. CI verde: [42849586241](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42849586241), SHA `cc6e0b9222264d93797a9cda74f7f7b1d5c32791`; 96 tests, format, lint, typecheck y build correctos | Solicitar autorización para AUD-005 |
