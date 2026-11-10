@@ -17,9 +17,11 @@ El proyecto no es una traducción mecánica del código Python de `xmind-md`. Re
 
 ## Estado
 
-**Fase 3 — Completada y verificada mediante GitHub Actions.**
+**Fases 1–5 — Completadas y verificadas mediante GitHub Actions.**
 
-Se ha creado la estructura de proyecto, configuración estricta de TypeScript, scripts npm, ESLint, Prettier, Vitest y workflow de GitHub Actions. No se ha implementado todavía el parser, la validación IR, el motor de estilos ni los adaptadores.
+Ya están implementados el contrato IR v1, la base TypeScript, el parser Markdown y el validador semántico. El validador comprueba IDs, referencias cruzadas, relaciones, límites, herencia de conjuntos de estilos, alineaciones de tablas y rutas de assets cuando se configura un directorio permitido. No muta el IR y devuelve diagnósticos con código y ruta.
+
+La validación completa mediante JSON Schema todavía no está conectada al pipeline. Siguen pendientes el motor de estilos, los adaptadores, la CLI y el visor.
 
 ## Documentación
 
