@@ -31,10 +31,7 @@ jobs:
         run: npm ci --no-audit --no-fund
 
       - name: Check formatting
-        run: |
-          npx prettier --write "test/schema-validator.test.ts"
-          git diff -- "test/schema-validator.test.ts"
-          npm run format:check
+        run: npm run format:check
 
       - name: Lint
         run: npm run lint
