@@ -61,7 +61,7 @@ function toInstancePath(pointer: string): string {
     .slice(1)
     .reduce((path, segment) => {
       const key = segment.replace(/~1/g, '/').replace(/~0/g, '~');
-      return /^\\d+$/.test(key) ? `${path}[${key}]` : `${path}.${key}`;
+      return /^\d+$/.test(key) ? `${path}[${key}]` : `${path}.${key}`;
     }, '$');
 }
 
