@@ -62,7 +62,7 @@ function validUriReference(value: string): boolean {
 }
 
 function isExternalUri(uri: string): boolean {
-  if (/^[a-z]:\\//i.test(uri)) return false;
+  if (/^[a-z]:\//i.test(uri)) return false;
   return /^[a-z][a-z0-9+.-]*:/i.test(uri) || uri.startsWith('//');
 }
 
