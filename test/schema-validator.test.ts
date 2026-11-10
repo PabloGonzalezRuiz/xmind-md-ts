@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import minimalIr from '../spec/fixtures/ir-v1-minimal.json' with { type: 'json' };
 import type { IrDocument } from '../spec/ir-v1.types.js';
+import { parseMarkdown } from '../src/markdown/parser.js';
 import { validateIrSchema } from '../src/validation/schema-validator.js';
 
 function validIr(): IrDocument {
@@ -203,6 +204,35 @@ describe('IR JSON Schema Draft 2020-12 conformance', () => {
     expect(result.diagnostics[0]?.path).toBe('$.sheet');
     expect(result.diagnostics[0]?.schemaPath).toBe('#/required');
     expect(result.diagnostics[0]?.params).toMatchObject({ missingProperty: 'rootTopic' });
+  });
+
+  it('accepts the typed IR returned by the Markdown parser', () => {
+    const parsed: IrDocument = parseMarkdown('# Root\\n\\n## Child');
+
+    expect(validateIrSchema(parsed).valid).toBe(true);
+  });
+
+  it('validates URI formats and maps array indices in instance paths', () => {
+    const ir = validIr();
+    ir.sheet.rootTopic.hyperlink = 'not a valid uri';
+
+    const uriResult = validateIrSchema(ir);
+    expect(uriResult.diagnostics.some((item) => item.path === '$.sheet.rootTopic.hyperlink')).toBe(
+      true,
+    );
+
+    const invalidMarks = validIr() as unknown as Record<string, unknown>;
+    const content = rootTopic(invalidMarks).content as unknown[];
+    const paragraph = record(content[0]);
+    const runs = paragraph.runs as unknown[];
+    record(runs[0]).marks = ['not-a-mark'];
+
+    const marksResult = validateIrSchema(invalidMarks);
+    expect(
+      marksResult.diagnostics.some(
+        (item) => item.path === '$.sheet.rootTopic.content[0].runs[0].marks[0]',
+      ),
+    ).toBe(true);
   });
 
   it('does not mutate the input document', () => {
