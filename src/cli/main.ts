@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { readFile, writeFile } from 'node:fs/promises';
-import { basename, extname, resolve } from 'node:path';
+import { extname, resolve } from 'node:path';
 import process from 'node:process';
 
 import {
@@ -75,7 +75,6 @@ function parseArguments(args: string[]): Options {
   for (let index = 1; index < args.length; index += 1) {
     const arg = args[index];
     const next = args[index + 1];
-    if (arg === '--help' || arg === '-h') return { command, input: '-', mode, format };
     if (arg === '--output' || arg === '-o') {
       if (!next || next.startsWith('--')) throw new UsageError(`Falta el valor de ${arg}.`);
       output = next;
@@ -243,7 +242,7 @@ async function run(options: Options): Promise<void> {
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
-  if (args.length === 0 || args[0] === '--help' || args[0] === '-h') {
+  if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
     process.stdout.write(HELP);
     return;
   }
