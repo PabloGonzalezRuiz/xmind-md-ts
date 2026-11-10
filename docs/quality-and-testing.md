@@ -6,9 +6,9 @@ Cada cambio debe superar, según el alcance: Prettier, ESLint, typecheck, prueba
 
 ## 2. Contrato IR v1
 
-La fuente normativa es `spec/ir-v1.schema.json`. Los fixtures de `spec/fixtures/` son ejemplos independientes de la implementación. Los tipos TypeScript deben derivarse del esquema o comprobar su equivalencia automáticamente; nunca se mantienen dos contratos manuales divergentes.
+La fuente normativa se materializa en `spec/ir-v1.schema.json` y `spec/ir-v1.types.ts`; ambos deben comprobar su equivalencia automáticamente. Los fixtures de `spec/fixtures/` y los casos de `spec/conformance/` son independientes de la implementación. Nunca se mantienen dos contratos manuales divergentes sin pruebas.
 
-Pruebas de conformidad obligatorias:
+La matriz de casos está en `spec/conformance/README.md`. Pruebas de conformidad obligatorias:
 - Fixture mínimo válido.
 - Rechazo de versión IR desconocida.
 - Rechazo de propiedades desconocidas en objetos del núcleo.
