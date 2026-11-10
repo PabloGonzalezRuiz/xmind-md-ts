@@ -145,6 +145,16 @@ export const STYLE_PROPERTY_CATALOG = {
 
 export type StylePropertyName = keyof typeof STYLE_PROPERTY_CATALOG;
 
+function cloneJsonValue(value: JsonValue): JsonValue {
+  if (Array.isArray(value)) return value.map(cloneJsonValue);
+  if (typeof value === 'object' && value !== null) {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, nested]) => [key, cloneJsonValue(nested)]),
+    );
+  }
+  return value;
+}
+
 const COLOR_PATTERN =
   /^(#[0-9a-f]{3,4}|#[0-9a-f]{6}|#[0-9a-f]{8}|transparent|currentColor|[a-z]+|rgba?\([0-9\s.,%]+\)|hsla?\([0-9\s.,%deg]+\))$/i;
 const LENGTH_PATTERN = /^-?(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:px|pt|em|rem|%)?$/i;
@@ -159,7 +169,7 @@ export function getSystemStyleDefaults(elementType: StyleElementType): Record<st
   return Object.fromEntries(
     (Object.entries(STYLE_PROPERTY_CATALOG) as Array<[string, StylePropertyDefinition]>)
       .filter(([, definition]) => definition.elements.includes(elementType))
-      .map(([name, definition]) => [name, definition.defaultValue]),
+      .map(([name, definition]) => [name, cloneJsonValue(definition.defaultValue)]),
   );
 }
 
