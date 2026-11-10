@@ -86,7 +86,10 @@ function plainText(node: AstNode): string {
   return children(node).map(plainText).join('');
 }
 
-function position(node: AstNode, sourcePath: string): NonNullable<Topic['sourcePosition']> | undefined {
+function position(
+  node: AstNode,
+  sourcePath: string,
+): NonNullable<Topic['sourcePosition']> | undefined {
   const start = node.position?.start;
   const end = node.position?.end;
   if (!start && !end) return undefined;
