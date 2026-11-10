@@ -67,10 +67,22 @@ describe('IR semantic validator', () => {
     expect(codes(validateIrDocument(ir))).toContain('IR_ID_DUPLICATE');
   });
 
+  it('detects relationship IDs that collide with topic IDs', () => {
+    const ir = validIr();
+    ir.sheet.relationships.push({
+      id: 'topic:root',
+      sourceTopicId: 'topic:root',
+      targetTopicId: 'topic:root',
+    });
+
+    expect(codes(validateIrDocument(ir))).toContain('IR_ID_DUPLICATE');
+  });
+
   it('checks relationship endpoints and rejects self-relations', () => {
     const ir = validIr();
     ir.sheet.relationships.push(
       { id: 'rel:missing', sourceTopicId: 'unknown', targetTopicId: 'topic:root' },
+      { id: 'rel:target', sourceTopicId: 'topic:root', targetTopicId: 'unknown' },
       { id: 'rel:self', sourceTopicId: 'topic:root', targetTopicId: 'topic:root' },
     );
 
