@@ -169,7 +169,7 @@ function optionalStyle(record: Record<string, unknown>): StyleReference | undefi
   return Object.keys(style).length ? style : undefined;
 }
 
-function inlineRuns(nodes: AstNode[], marks: TextRun['marks'] = []): TextRun[] {
+function inlineRuns(nodes: AstNode[], state: ParseState, marks: TextRun['marks'] = []): TextRun[] {
   const result: TextRun[] = [];
   for (const node of nodes) {
     if (node.type === 'text' || node.type === 'inlineCode') {
@@ -179,9 +179,9 @@ function inlineRuns(nodes: AstNode[], marks: TextRun['marks'] = []): TextRun[] {
     } else if (node.type === 'strong' || node.type === 'emphasis' || node.type === 'delete') {
       const mark =
         node.type === 'strong' ? 'strong' : node.type === 'emphasis' ? 'emphasis' : 'strike';
-      result.push(...inlineRuns(children(node), [...marks, mark]));
+      result.push(...inlineRuns(children(node), state, [...marks, mark]));
     } else if (node.type === 'link') {
-      for (const run of inlineRuns(children(node), marks)) {
+      for (const run of inlineRuns(children(node), state, marks)) {
         result.push({ ...run, ...(node.url ? { link: node.url } : {}) });
       }
     } else if (node.type === 'break') {
@@ -247,7 +247,7 @@ function parseParagraph(node: AstNode, state: ParseState): ContentBlock[] {
     const sourcePosition = position(node, state.sourcePath);
     blocks.push({
       type: 'paragraph',
-      runs: inlineRuns(inline),
+      runs: inlineRuns(inline, state),
       ...(sourcePosition ? { sourcePosition } : {}),
     });
     inline = [];
@@ -312,7 +312,7 @@ function parseBlocks(nodes: AstNode[], state: ParseState): ContentBlock[] {
       case 'table': {
         const rows = children(node).map((row) => ({
           cells: children(row).map((cell) => ({
-            blocks: [{ type: 'paragraph' as const, runs: inlineRuns(children(cell)) }],
+            blocks: [{ type: 'paragraph' as const, runs: inlineRuns(children(cell), state) }],
           })),
         }));
         const table: TableBlock = {
