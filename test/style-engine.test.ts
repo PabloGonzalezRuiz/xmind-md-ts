@@ -120,6 +120,29 @@ describe('style resolution engine', () => {
     expect(styleFor(result, 'topic:child').values.color).toBe('#ABCDEF');
   });
 
+  it('reports role references without an effective style set', () => {
+    const ir = createIr();
+    ir.sheet.defaultStyleSetId = undefined;
+    ir.sheet.rootTopic.style = { role: 'primary' };
+
+    const result = resolveIrStyles(ir);
+
+    expect(result.diagnostics.map((diagnostic) => diagnostic.code)).toContain(
+      'STYLE_SET_REQUIRED',
+    );
+  });
+
+  it('detects a style-set inheritance cycle while resolving', () => {
+    const ir = createIr();
+    ir.styleSets[0]!.extends = 'theme:child';
+
+    const result = resolveIrStyles(ir);
+
+    expect(result.diagnostics.map((diagnostic) => diagnostic.code)).toContain(
+      'STYLE_SET_CYCLE',
+    );
+  });
+
   it('resolves text runs after topic styles and preserves inline provenance', () => {
     const result = resolveIrStyles(createIr());
     const run = styleFor(result, 'topic:root:run:$.sheet.rootTopic.content[0].runs[0]');
