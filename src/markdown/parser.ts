@@ -217,13 +217,37 @@ function addAsset(node: AstNode, state: ParseState): ContentBlock {
   };
 }
 
+function parseParagraph(node: AstNode, state: ParseState): ContentBlock[] {
+  const blocks: ContentBlock[] = [];
+  let inline: AstNode[] = [];
+  const flush = (): void => {
+    if (!inline.length) return;
+    blocks.push({
+      type: 'paragraph',
+      runs: inlineRuns(inline),
+      ...(position(node, state.sourcePath) ? { sourcePosition: position(node, state.sourcePath) } : {}),
+    });
+    inline = [];
+  };
+  for (const child of children(node)) {
+    if (child.type === 'image') {
+      flush();
+      blocks.push(addAsset(child, state));
+    } else {
+      inline.push(child);
+    }
+  }
+  flush();
+  return blocks;
+}
+
 function parseBlocks(nodes: AstNode[], state: ParseState): ContentBlock[] {
   const blocks: ContentBlock[] = [];
   for (const node of nodes) {
     const sourcePosition = position(node, state.sourcePath);
     switch (node.type) {
       case 'paragraph':
-        blocks.push({ type: 'paragraph', runs: inlineRuns(children(node)), ...(sourcePosition ? { sourcePosition } : {}) });
+        blocks.push(...parseParagraph(node, state));
         break;
       case 'code':
         blocks.push({
