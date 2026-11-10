@@ -600,8 +600,8 @@ export function validateIrDocument(
         break;
       }
       visited.add(current);
-      const parent = styleSets.get(current)?.extends;
-      current = isString(parent) ? parent : undefined;
+      const parentId: unknown = styleSets.get(current)?.extends;
+      current = isString(parentId) ? parentId : undefined;
     }
   }
 
