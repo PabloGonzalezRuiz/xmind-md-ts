@@ -19,7 +19,7 @@ El proyecto no es una traducción mecánica del código Python de `xmind-md`. Re
 
 **Fase 2 — Contrato IR v1.0.0 en revisión**
 
-La documentación inicial está completada. Se ha definido el contrato IR v1.0.0, su JSON Schema y un fixture mínimo. Todavía no existe código ejecutable ni se han ejecutado pruebas automatizadas; el contrato está pendiente de revisión antes de iniciar la fase 3.
+La documentación inicial está completada. Se ha definido el contrato IR v1.0.0, su JSON Schema y un fixture mínimo. Todavía no existe una aplicación ejecutable ni se han ejecutado pruebas automatizadas; el contrato está pendiente de revisión antes de iniciar la fase 3.
 
 ## Documentación
 
