@@ -138,11 +138,21 @@ const COLOR_PATTERN =
   /^(#[0-9a-f]{3,4}|#[0-9a-f]{6}|#[0-9a-f]{8}|transparent|currentColor|[a-z]+|rgba?\([0-9\s.,%]+\)|hsla?\([0-9\s.,%deg]+\))$/i;
 const LENGTH_PATTERN = /^-?(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:px|pt|em|rem|%)?$/i;
 
+export function isStylePropertyApplicable(
+  name: string,
+  elementType: StyleElementType,
+): boolean {
+  const definition = STYLE_PROPERTY_CATALOG[name as StylePropertyName] as
+    | StylePropertyDefinition
+    | undefined;
+  return definition?.elements.includes(elementType) ?? false;
+}
+
 export function getSystemStyleDefaults(
   elementType: StyleElementType,
 ): Record<string, JsonValue> {
   return Object.fromEntries(
-    Object.entries(STYLE_PROPERTY_CATALOG)
+    (Object.entries(STYLE_PROPERTY_CATALOG) as Array<[string, StylePropertyDefinition]>)
       .filter(([, definition]) => definition.elements.includes(elementType))
       .map(([name, definition]) => [name, definition.defaultValue]),
   );
@@ -153,7 +163,9 @@ export function validateStyleProperty(
   name: string,
   value: JsonValue,
 ): string | undefined {
-  const definition = STYLE_PROPERTY_CATALOG[name as StylePropertyName];
+  const definition = STYLE_PROPERTY_CATALOG[name as StylePropertyName] as
+    | StylePropertyDefinition
+    | undefined;
   if (!definition) return 'La propiedad no pertenece al catálogo de estilos v1.';
   if (!definition.elements.includes(elementType)) {
     return `La propiedad no es aplicable al elemento "${elementType}".`;
