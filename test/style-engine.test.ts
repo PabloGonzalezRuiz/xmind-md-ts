@@ -152,6 +152,16 @@ describe('style resolution engine', () => {
     expect(relationship.values.arrowEnd).toBe(false);
   });
 
+  it('replaces arrays instead of merging their entries', () => {
+    const ir = createIr();
+    ir.styleSets[0]!.defaults = { dashArray: [6, 2] };
+    ir.styleSets[1]!.defaults = { dashArray: [1, 3] };
+
+    const result = resolveIrStyles(ir);
+
+    expect(styleFor(result, 'rel:one').values.dashArray).toEqual([1, 3]);
+  });
+
   it('resets null values to system defaults', () => {
     const ir = createIr();
     ir.sheet.rootTopic.style = { overrides: { color: null } };
