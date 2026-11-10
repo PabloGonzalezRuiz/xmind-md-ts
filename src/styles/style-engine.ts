@@ -299,10 +299,14 @@ export function resolveIrStyles(ir: IrDocument): StyleResolutionResult {
     if (hasCycle || hasMissingParent) return layers;
 
     const hasRole = reference?.role
-      ? chain.some((styleSet) => Object.hasOwn(styleSet.roles ?? {}, reference.role!))
+      ? chain.some((styleSet) =>
+          Object.hasOwn(styleSet.roles ?? {}, reference.role!),
+        )
       : true;
     const hasNamedStyle = reference?.styleId
-      ? chain.some((styleSet) => Object.hasOwn(styleSet.styles ?? {}, reference.styleId!))
+      ? chain.some((styleSet) =>
+          Object.hasOwn(styleSet.styles ?? {}, reference.styleId!),
+        )
       : true;
     if (reference?.role && !hasRole) {
       addDiagnostic(
