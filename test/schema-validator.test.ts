@@ -178,10 +178,10 @@ describe('IR JSON Schema Draft 2020-12 conformance', () => {
   });
 
   it.each(['', 'contains whitespace', 'x'.repeat(129)])('SC-108 rejects invalid IDs (%s)', (id) => {
-      const ir = validIr();
-      ir.sheet.rootTopic.id = id;
+    const ir = validIr();
+    ir.sheet.rootTopic.id = id;
 
-      expect(validateIrSchema(ir).valid).toBe(false);
+    expect(validateIrSchema(ir).valid).toBe(false);
   });
 
   it.each(invalidCollectionCases)('SC-109 rejects a %s', (_label, mutate) => {
