@@ -40,11 +40,11 @@ Se ha creado la estructura de proyecto, configuración estricta de TypeScript, s
 
 ## Tecnologías configuradas
 
-- TypeScript 5.9.3 y Node.js 22.
+- TypeScript 6.0.3 y Node.js 24.
 - npm como gestor de dependencias.
-- Vitest 3.2.4.
-- ESLint 9.39.1 y typescript-eslint 8.46.2.
-- Prettier 3.6.2.
+- Vitest 5.0.5.
+- ESLint 10.14.0 y typescript-eslint 8.72.2.
+- Prettier 3.9.10.
 - GitHub Actions.
 
 Las versiones directas están fijadas en `package.json`. El archivo `package-lock.json` queda pendiente de generación mediante npm; no se ha fabricado manualmente.
