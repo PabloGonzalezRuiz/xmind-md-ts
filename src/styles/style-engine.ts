@@ -133,6 +133,16 @@ export function resolveIrStyles(ir: IrDocument): StyleResolutionResult {
   const systemStyleDefaults = (elementType: StyleElementType): StyleProperties =>
     getSystemStyleDefaults(elementType);
 
+  const addDiagnostic = (
+    code: string,
+    message: string,
+    path: string,
+    elementId: string,
+    property?: string,
+  ): void => {
+    diagnostics.push({ code, message, path, elementId, ...(property ? { property } : {}) });
+  };
+
   ir.styleSets.forEach((styleSet) => {
     for (const key of Object.keys(styleSet.defaults ?? {})) {
       if (!Object.hasOwn(STYLE_PROPERTY_CATALOG, key)) {
@@ -146,16 +156,6 @@ export function resolveIrStyles(ir: IrDocument): StyleResolutionResult {
       }
     }
   });
-
-  const addDiagnostic = (
-    code: string,
-    message: string,
-    path: string,
-    elementId: string,
-    property?: string,
-  ): void => {
-    diagnostics.push({ code, message, path, elementId, ...(property ? { property } : {}) });
-  };
 
   const applyLayers = (
     elementId: string,
