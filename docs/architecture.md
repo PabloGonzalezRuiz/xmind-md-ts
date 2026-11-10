@@ -34,7 +34,7 @@ Markdown + YAML + directivas
                   Visor web futuro
 ```
 
-El AST del parser puede ser transitorio. El IR es el contrato estable entre las fases del compilador y los adaptadores.
+El AST del parser puede ser transitorio. El IR es el contrato estable entre las fases del compilador y los adaptadores. La versión normativa actual es IR v1.0.0, definida en `docs/ir-specification.md` y validada estructuralmente por `spec/ir-v1.schema.json`.
 
 ## 3. Módulos y responsabilidades
 
@@ -81,7 +81,7 @@ El visor futuro será una aplicación web separada del núcleo de Node. Consumir
 
 ## 6. Determinismo e identidad
 
-La misma fuente y configuración deben producir el mismo IR lógico y los mismos identificadores, salvo campos explícitamente volátiles. Se admiten IDs explícitos para conservar identidad durante renombrados o movimientos. La estrategia para IDs derivados se definirá en la especificación del IR y se probará con fixtures.
+La misma fuente y configuración deben producir el mismo IR lógico y los mismos identificadores, salvo campos explícitamente volátiles. Se admiten IDs explícitos para conservar identidad durante renombrados o movimientos. Los IDs derivados se calculan de forma determinista según namespace y ruta estructural; pueden cambiar al mover/reordenar nodos. Para preservar identidad entre refactorizaciones se requieren IDs explícitos.
 
 ## 7. Errores y diagnósticos
 
