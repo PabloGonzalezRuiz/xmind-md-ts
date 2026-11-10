@@ -67,7 +67,20 @@ describe('Markdown parser', () => {
     expect(blocks[2]).toMatchObject({
       type: 'table',
       alignments: ['left', 'right'],
-      rows: [{ cells: [{ blocks: [{ type: 'paragraph' }] }] }],
+      rows: [
+        {
+          cells: [
+            { blocks: [{ type: 'paragraph' }] },
+            { blocks: [{ type: 'paragraph' }] },
+          ],
+        },
+        {
+          cells: [
+            { blocks: [{ type: 'paragraph' }] },
+            { blocks: [{ type: 'paragraph' }] },
+          ],
+        },
+      ],
     });
     expect(blocks[3]).toMatchObject({ type: 'quote', blocks: [{ type: 'paragraph' }] });
     expect(blocks[4]).toMatchObject({ type: 'code', language: 'ts', value: 'const answer = 42;' });
