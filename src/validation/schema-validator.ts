@@ -11,6 +11,7 @@ export interface IrSchemaDiagnostic {
   path: string;
   schemaPath: string;
   keyword: string;
+  params: Record<string, unknown>;
 }
 
 export interface IrSchemaValidationResult {
