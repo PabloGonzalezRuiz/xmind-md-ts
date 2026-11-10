@@ -12,6 +12,7 @@ import type {
 
 import {
   getSystemStyleDefaults,
+  isStylePropertyApplicable,
   STYLE_PROPERTY_CATALOG,
   type StyleElementType,
   validateStyleProperty,
@@ -116,7 +117,7 @@ function filterApplicable(
 ): StyleProperties {
   const result: StyleProperties = {};
   for (const [key, value] of Object.entries(properties)) {
-    if (isJsonValue(value) && STYLE_PROPERTY_CATALOG[key as keyof typeof STYLE_PROPERTY_CATALOG]?.elements.includes(elementType)) {
+    if (isJsonValue(value) && isStylePropertyApplicable(key, elementType)) {
       result[key] = value;
     }
   }
