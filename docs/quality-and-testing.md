@@ -2,48 +2,65 @@
 
 ## 1. Puertas de calidad
 
-Cada cambio debe superar, según el alcance: Prettier, ESLint, typecheck, pruebas unitarias, integración, build, validación JSON Schema y validación semántica. Los comandos se establecerán en package.json durante la fase 3.
+Cada cambio debe superar, según el alcance: Prettier, ESLint, typecheck, pruebas unitarias, integración, build, validación JSON Schema y validación semántica.
+
+Los comandos efectivos están definidos en `package.json`:
+- `npm ci`
+- `npm run format:check`
+- `npm run lint`
+- `npm run typecheck`
+- `npm test`
+- `npm run build`
+- `npm run verify` (agrupa las puertas principales).
 
 ## 2. Contrato IR v1
 
-La fuente normativa se materializa en `spec/ir-v1.schema.json` y `spec/ir-v1.types.ts`; ambos deben comprobar su equivalencia automáticamente. Los fixtures de `spec/fixtures/` y los casos de `spec/conformance/` son independientes de la implementación. Nunca se mantienen dos contratos manuales divergentes sin pruebas.
+La fuente normativa se materializa en `spec/ir-v1.schema.json` y `spec/ir-v1.types.ts`. El JSON Schema es la autoridad para la validación estructural en ejecución. Los tipos TypeScript siguen siendo una representación mantenida en código; cualquier modificación del contrato debe revisar ambos artefactos y sus pruebas para evitar divergencias.
 
-La matriz de casos está en `spec/conformance/README.md`. La suite Vitest ya cubre los invariantes semánticos implementados; los casos pendientes de validación JSON Schema deberán conectarse a un validador de esquema en una fase específica. Pruebas de conformidad obligatorias:
-- Fixture mínimo válido.
-- Rechazo de versión IR desconocida.
-- Rechazo de propiedades desconocidas en objetos del núcleo.
-- Aceptación y conservación de extensiones namespaced.
-- Detección semántica de IDs duplicados.
-- Detección de referencias a topics/assets inexistentes.
-- Rechazo de relaciones autorreferentes.
-- Detección de ciclos en conjuntos de estilos.
-- Verificación de orden y determinismo de serialización.
-- Validación de alineaciones de tabla y número de columnas.
+Los fixtures de `spec/fixtures/` y los casos de `spec/conformance/` son independientes de la implementación. La matriz normativa de conformidad está en `spec/conformance/README.md`.
 
-JSON Schema no sustituye al validador semántico: las referencias cruzadas y la unicidad global requieren recorrido del documento.
+## 3. Validación en dos capas
 
-## 3. Pruebas por capas
+### 3.1 Validación estructural
+
+`src/validation/schema-validator.ts` usa Ajv 8 con la clase Draft 2020-12 y `ajv-formats`. El schema se carga desde `spec/ir-v1.schema.json`; los formatos declarados, incluidos `uri` y `uri-reference`, se validan explícitamente.
+
+La API `validateIrSchema(input)`:
+- recibe `unknown`;
+- devuelve `valid` y diagnósticos con código, mensaje, ruta de instancia, keyword y ruta del schema;
+- acumula todos los errores estructurales;
+- no aplica defaults, coerción ni mutaciones al documento.
+
+Los casos SC-001…SC-005 y SC-101…SC-110 se ejecutan en `test/ir-schema-validator.test.ts`. SC-104, SC-108 y SC-109 cubren las variantes individuales indicadas en la matriz.
+
+### 3.2 Validación semántica
+
+La API `validateIrDocument(input, options)` comprueba invariantes que requieren recorrer el documento: IDs globales, referencias, ciclos, relaciones, tablas, URI y límites. Recibe `unknown`, no modifica la entrada y devuelve diagnósticos con código, severidad, mensaje, ruta y posición de origen cuando existe.
+
+Los límites por defecto son 100 niveles, 100.000 temas, 250.000 bloques y 10.000 assets; pueden ajustarse. `assetRootDirectory` activa la comprobación de contención de rutas relativas.
+
+### 3.3 Pipeline completo
+
+La API `validateIr(input, options)`, exportada desde `src/index.ts`, ejecuta primero `validateIrSchema`. Solo si el documento supera el schema ejecuta `validateIrDocument`. Este orden evita recorrer estructuras que no cumplen el contrato. Un documento solo es válido si supera ambas capas.
+
+JSON Schema no sustituye al validador semántico: la unicidad global y las referencias cruzadas requieren recorrido del documento.
+
+## 4. Pruebas por capas
 
 - Parser: gramática válida, inválida, ubicación y escapes.
-- IR: schema, tipos, serialización y versionado.
-- Validación: IDs globalmente únicos (excepto el namespace separado del documento), referencias, ciclos de estilos, tablas, URI, límites y rutas de assets configuradas.
-
-La API `validateIrDocument(input, options)` está exportada desde `src/index.ts`. Recibe `unknown`, devuelve `valid` y diagnósticos (`code`, `severity`, `message`, `path` y posición de origen cuando existe), y no modifica la entrada. Los límites por defecto son 100 niveles, 100.000 temas, 250.000 bloques y 10.000 assets; pueden ajustarse. `assetRootDirectory` activa la comprobación de contención de rutas relativas.
+- IR: schema, fixtures positivos/negativos, versionado y no mutación.
+- Validación semántica: IDs, referencias, ciclos de estilos, tablas, URI, límites y rutas de assets configuradas.
 - Estilos: cascada, herencia, overrides y procedencia.
 - Adaptadores: salida, capacidades, pérdidas y errores.
 - CLI: códigos de salida, rutas, opciones y Windows/Linux.
 - Visor: interacción, accesibilidad y mapas grandes.
 
-## 4. Corpus de referencia
+## 5. Corpus de referencia
 
 Mantener fixtures pequeños, independientes y legibles: mapa mínimo, jerarquía profunda, contenido estructurado, estilos, notas, relaciones, boundaries, summaries, assets, mapa combinado e inputs inválidos.
 
 Comparar semántica y propiedades, no bytes completos del ZIP XMind, ya que metadatos y empaquetado pueden variar.
 
-## 5. Conformidad entre implementaciones
-
-Si se compara con el proyecto Python, ambos motores consumen los mismos fixtures y producen IR equivalentes conforme al contrato. Ninguna implementación se toma automáticamente como verdad de la otra.
-
 ## 6. Diagnóstico y afirmaciones
 
-Los diagnósticos tienen código estable, severidad, mensaje, archivo/ubicación y contexto. Distinguir typecheck, lint, tests ejecutados, build, validación estructural, apertura en XMind Desktop y fidelidad visual. No afirmar un nivel a partir de otro.
+Los diagnósticos tienen código estable, severidad, mensaje y ruta; la validación semántica añade posición de origen cuando existe. Distinguir typecheck, lint, tests ejecutados, build, validación estructural, validación semántica, apertura en XMind Desktop y fidelidad visual. No afirmar un nivel a partir de otro.
