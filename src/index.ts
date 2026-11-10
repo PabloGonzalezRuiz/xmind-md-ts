@@ -23,3 +23,24 @@ export type {
   IrValidationOptions,
   IrValidationResult,
 } from './validation/semantic-validator.js';
+
+export { resolveIrStyles } from './styles/style-engine.js';
+export type {
+  ResolvedStyle,
+  StyleLayer,
+  StyleProvenance,
+  StyleResolutionDiagnostic,
+  StyleResolutionResult,
+} from './styles/style-engine.js';
+export {
+  getSystemStyleDefaults,
+  isStylePropertyApplicable,
+  STYLE_PROPERTY_CATALOG,
+  validateStyleProperty,
+} from './styles/catalog.js';
+export type {
+  StyleElementType,
+  StylePropertyDefinition,
+  StylePropertyKind,
+  StylePropertyName,
+} from './styles/catalog.js';
