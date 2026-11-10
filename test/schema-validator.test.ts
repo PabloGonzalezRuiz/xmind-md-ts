@@ -21,14 +21,54 @@ function firstContentBlock(ir: Record<string, unknown>): Record<string, unknown>
 }
 
 const invalidCases: Array<[string, (ir: Record<string, unknown>) => void]> = [
-  ['SC-101', (ir) => { delete ir.irVersion; }],
-  ['SC-102', (ir) => { ir.irVersion = '2.0.0'; }],
-  ['SC-103', (ir) => { delete record(ir.sheet).rootTopic; }],
-  ['SC-104', (ir) => { delete rootTopic(ir).children; }],
-  ['SC-105', (ir) => { delete firstContentBlock(ir).type; }],
-  ['SC-106', (ir) => { firstContentBlock(ir).type = 'unknownBlock'; }],
-  ['SC-107', (ir) => { record(ir.document).unexpected = true; }],
-  ['SC-110', (ir) => { ir.extensions = { 'X-Bad': { value: true } }; }],
+  [
+    'SC-101',
+    (ir) => {
+      delete ir.irVersion;
+    },
+  ],
+  [
+    'SC-102',
+    (ir) => {
+      ir.irVersion = '2.0.0';
+    },
+  ],
+  [
+    'SC-103',
+    (ir) => {
+      delete record(ir.sheet).rootTopic;
+    },
+  ],
+  [
+    'SC-104',
+    (ir) => {
+      delete rootTopic(ir).children;
+    },
+  ],
+  [
+    'SC-105',
+    (ir) => {
+      delete firstContentBlock(ir).type;
+    },
+  ],
+  [
+    'SC-106',
+    (ir) => {
+      firstContentBlock(ir).type = 'unknownBlock';
+    },
+  ],
+  [
+    'SC-107',
+    (ir) => {
+      record(ir.document).unexpected = true;
+    },
+  ],
+  [
+    'SC-110',
+    (ir) => {
+      ir.extensions = { 'X-Bad': { value: true } };
+    },
+  ],
 ];
 
 const invalidCollectionCases: Array<[string, (ir: Record<string, unknown>) => void]> = [
@@ -137,15 +177,12 @@ describe('IR JSON Schema Draft 2020-12 conformance', () => {
     expect(validateIrSchema(ir).valid).toBe(false);
   });
 
-  it.each(['', 'contains whitespace', 'x'.repeat(129)])(
-    'SC-108 rejects invalid IDs (%s)',
-    (id) => {
+  it.each(['', 'contains whitespace', 'x'.repeat(129)])('SC-108 rejects invalid IDs (%s)', (id) => {
       const ir = validIr();
       ir.sheet.rootTopic.id = id;
 
       expect(validateIrSchema(ir).valid).toBe(false);
-    },
-  );
+  });
 
   it.each(invalidCollectionCases)('SC-109 rejects a %s', (_label, mutate) => {
     const ir = validIr() as unknown as Record<string, unknown>;
