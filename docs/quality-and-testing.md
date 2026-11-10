@@ -9,13 +9,14 @@ Los comandos efectivos están definidos en `package.json`:
 - `npm run format:check`
 - `npm run lint`
 - `npm run typecheck`
+- `npm run check:ir-types`
 - `npm test`
 - `npm run build`
 - `npm run verify` (agrupa las puertas principales).
 
 ## 2. Contrato IR v1
 
-La fuente normativa se materializa en `spec/ir-v1.schema.json` y `spec/ir-v1.types.ts`. El JSON Schema es la autoridad para la validación estructural en ejecución. Los tipos TypeScript siguen siendo una representación mantenida manualmente y no expresan por sí solos restricciones de longitud, patrones o formatos. La automatización de su equivalencia/generación queda registrada como AUD-012; hasta entonces, el JSON Schema es la autoridad de validación runtime.
+La fuente normativa se materializa en `spec/ir-v1.schema.json` y `spec/ir-v1.types.ts`. El JSON Schema es la autoridad para la validación estructural en ejecución. Los tipos TypeScript siguen siendo una representación mantenida manualmente y no expresan por sí solos restricciones de longitud, patrones o formatos. `scripts/check-ir-types.mjs` proyecta la estructura del schema a tipos temporales y compara la equivalencia bidireccional con todos los tipos públicos y el IR raíz. La comprobación está en `npm run check:ir-types`, `npm run verify` y CI. Las restricciones no representables en TypeScript siguen siendo responsabilidad de Ajv.
 
 Los fixtures de `spec/fixtures/` y los casos de `spec/conformance/` son independientes de la implementación. La matriz normativa de conformidad está en `spec/conformance/README.md`.
 
