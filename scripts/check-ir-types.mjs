@@ -2,6 +2,7 @@ import { readFile, writeFile, rm } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import process from "node:process";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const schemaPath = path.join(root, "spec/ir-v1.schema.json");
@@ -169,7 +170,7 @@ try {
     process.stderr.write(result.stderr ?? "");
     process.exitCode = result.status ?? 1;
   } else {
-    console.log("IR JSON Schema and public TypeScript types are structurally equivalent.");
+    process.stdout.write("IR JSON Schema and public TypeScript types are structurally equivalent.\\n");
     console.log(\`Checked root IR and \${Object.keys(typeMap).length} schema definitions.\`);
   }
 } finally {
