@@ -25,7 +25,7 @@ El repositorio comienza como proyecto nuevo. La documentación inicial definirá
 
 - [Prompt maestro para IA](docs/ai-master-prompt.md)
 - [Arquitectura](docs/architecture.md)
-- [Especificación del IR](docs/ir-specification.md)
+- [Especificación del IR](docs/ir-specification.md)\n- [JSON Schema IR v1.0.0](spec/ir-v1.schema.json)\n- [Fixture mínimo IR v1.0.0](spec/fixtures/ir-v1-minimal.json)
 - [Gramática Markdown](docs/grammar.md)
 - [Sistema de estilos](docs/style-system.md)
 - [Adaptadores y XMind](docs/adapters.md)
