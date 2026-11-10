@@ -30,7 +30,7 @@ Scripts disponibles:
 - `npm test` / `npm run test:watch`: ejecuta Vitest.
 - `npm run verify`: ejecuta todas las comprobaciones anteriores.
 
-El lockfile npm se incorporará tras generarlo con el resolvedor de npm; no se debe fabricar manualmente ni sustituir por rangos flotantes. Hasta que esté versionado, CI usa `npm install`, no `npm ci`.
+En el primer push, GitHub Actions genera `package-lock.json` mediante npm y lo versiona en la rama. A partir de ese commit, las ejecuciones usan `npm ci`. En local, utiliza siempre `npm ci` cuando el lockfile esté presente; no lo edites manualmente.
 
 ## 3. Ejecución de la CLI
 
@@ -44,7 +44,7 @@ VS Code puede depurar Node.js/TypeScript mediante source maps. Los errores deben
 
 El workflow `.github/workflows/ci.yml` se activa en push, pull_request y workflow_dispatch. Configura Node.js 24 e instala dependencias para ejecutar formato, lint, typecheck, pruebas y build.
 
-Cuando `package-lock.json` esté versionado, el paso de instalación deberá cambiar de `npm install` a `npm ci`.
+El workflow utiliza `npm install` únicamente para generar el lockfile inicial; después utiliza `npm ci`.
 
 ## 6. Contribución asistida por IA
 
@@ -53,7 +53,7 @@ Antes de pedir a la IA un cambio, indicar objetivo y criterio de aceptación. Ma
 ## 7. Reproducibilidad y seguridad
 
 - Versiones directas de desarrollo fijadas en `package.json`.
-- Versionar `package-lock.json` en cuanto pueda generarse mediante npm.
+- Versionar `package-lock.json` y mantener las instalaciones reproducibles con `npm ci`.
 - Revisar licencias de dependencias directas y transitivas.
 - Evitar scripts de instalación innecesarios.
 - No almacenar tokens ni secretos en el repositorio.
