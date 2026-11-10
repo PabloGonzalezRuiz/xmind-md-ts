@@ -113,6 +113,22 @@ describe('IR semantic validator', () => {
     );
   });
 
+  it('resolves role and named-style references through inherited style sets', () => {
+    const ir = validIr();
+    ir.sheet.defaultStyleSetId = 'theme:child';
+    ir.sheet.rootTopic.style = { role: 'main', styleId: 'focus' };
+    ir.styleSets = [
+      {
+        id: 'theme:base',
+        roles: { main: { shape: 'rounded' } },
+        styles: { focus: { color: '#123456' } },
+      },
+      { id: 'theme:child', extends: 'theme:base' },
+    ];
+
+    expect(validateIrDocument(ir).valid).toBe(true);
+  });
+
   it('checks missing style-set parents and inheritance cycles', () => {
     const ir = validIr();
     ir.styleSets = [
