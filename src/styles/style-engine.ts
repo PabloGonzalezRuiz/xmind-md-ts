@@ -242,15 +242,42 @@ export function resolveIrStyles(ir: IrDocument): StyleResolutionResult {
       properties: isRecord(mapProperties) ? (mapProperties as StyleProperties) : undefined,
       path: `$.sheet.settings.styleDefaults.${elementType}`,
     });
-    if (!setId) return layers;
+    if (!setId) {
+      if (reference?.role || reference?.styleId) {
+        addDiagnostic(
+          'STYLE_SET_REQUIRED',
+          'Las referencias a roles o estilos con nombre requieren un conjunto efectivo.',
+          path,
+          elementId,
+        );
+      }
+      return layers;
+    }
 
     const chain: Array<(typeof ir.styleSets)[number]> = [];
     const visited = new Set<string>();
     let current: string | undefined = setId;
-    while (current && !visited.has(current)) {
+    while (current) {
+      if (visited.has(current)) {
+        addDiagnostic(
+          'STYLE_SET_CYCLE',
+          `Se ha detectado un ciclo de herencia en "${current}".`,
+          path,
+          elementId,
+        );
+        break;
+      }
       visited.add(current);
       const currentSet = styleSets.get(current);
-      if (!currentSet) break;
+      if (!currentSet) {
+        addDiagnostic(
+          'STYLE_SET_PARENT_NOT_FOUND',
+          `No existe el conjunto heredado "${current}".`,
+          path,
+          elementId,
+        );
+        break;
+      }
       chain.unshift(currentSet);
       current = currentSet.extends;
     }
