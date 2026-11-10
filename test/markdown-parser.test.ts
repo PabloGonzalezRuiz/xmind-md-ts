@@ -166,11 +166,11 @@ describe('Markdown parser', () => {
   });
 
   it('generates deterministic topic IDs from the document namespace and structural path', () => {
-    const source = '# Root\\n\\n## First\\n\\n### Nested\\n\\n## Second';
+    const source = '# Root\n\n## First\n\n### Nested\n\n## Second';
     const first = parseMarkdown(source, { sourcePath: 'maps/alpha.md' });
     const second = parseMarkdown(source, { sourcePath: 'maps/alpha.md' });
     const otherDocument = parseMarkdown(
-      ['---', 'id: doc:other', '---', '# Root', '', '## First'].join('\\n'),
+      ['---', 'id: doc:other', '---', '# Root', '', '## First'].join('\n'),
       { sourcePath: 'maps/alpha.md' },
     );
 
@@ -184,7 +184,7 @@ describe('Markdown parser', () => {
   });
 
   it('preserves explicit topic IDs unchanged', () => {
-    const ir = parseMarkdown('# Root {#Author-ID_01}\\n\\n## Child {#child.id}');
+    const ir = parseMarkdown('# Root {#Author-ID_01}\n\n## Child {#child.id}');
 
     expect(ir.sheet.rootTopic.id).toBe('Author-ID_01');
     expect(ir.sheet.rootTopic.children[0]?.id).toBe('child.id');
