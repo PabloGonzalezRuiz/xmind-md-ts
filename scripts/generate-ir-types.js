@@ -166,7 +166,7 @@ const check = process.argv.includes("--check");
 
 if (check) {
   const current = await readFile(outputPath, "utf8");
-  const normalize = (value) => `${value.replace(/\\r\\n/g, "\\n").trimEnd()}\\n`;
+  const normalize = (value) => `${value.replace(/\r\n/g, "\n").trimEnd()}\n`;
   if (normalize(current) !== normalize(formatted)) {
     console.error("spec/ir-v1.types.ts no está actualizado. Ejecuta npm run generate:types.");
     process.exitCode = 1;
