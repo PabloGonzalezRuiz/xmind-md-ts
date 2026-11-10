@@ -7,7 +7,7 @@
 > **Rama de trabajo auditada:** `feature/phase-6-style-engine`  
 > **Commit de código validado en AUD-001:** `2c594eaadd3a3bb794c73d5607ef39bb5b15a9ac`  
 > **HEAD de código validado para AUD-002:** `21dae3248be2963ccc77b00b79dffd1afd92a98d`  
-> **HEAD de implementación AUD-012:** `0f75bf70400ab665b6a33fb5ba0d2e45effed9c3` (CI aún por verificar)  
+> **HEAD de implementación AUD-012:** `c559ae159546d9e6872c0d9082dcf53fa3b9ca53` (CI aún por verificar)  
 > **HEAD actual:** consultar GitHub al reanudar; no reutilizar un SHA histórico como referencia de rama.  
 > **Rama principal:** `main` — `6aca81b59dbfcfc13034e7e1115c70f7691c5035`
 
@@ -119,7 +119,8 @@ No existen todavía `src/adapters/`, `src/cli/` ni aplicación `viewer/`.
 - El checker falla ante keywords estructurales desconocidas o referencias no mapeadas. Para `oneOf`, exige ramas referenciadas con discriminadores `type` literales y únicos, condición necesaria para que la unión TypeScript represente el contrato actual.
 - Se ha añadido `npm run check:ir-types` a `npm run verify` y como paso obligatorio de `.github/workflows/ci.yml`.
 - No se han añadido dependencias ni se ha modificado `package-lock.json`.
-- **Pendiente de verificación:** ejecutar y corregir el checker, comprobar la puerta completa de CI sobre el HEAD final y probar que una divergencia deliberada entre schema y tipos hace fallar el control.
+- El checker incorpora una prueba negativa: altera temporalmente el tipo del campo raíz `document` y exige que TypeScript rechace la divergencia.
+- **Pendiente de verificación:** ejecutar el control positivo y negativo, corregir cualquier fallo y comprobar la puerta completa de CI sobre el HEAD final.
 
 ### 4.5 Deuda técnica restante
 
@@ -201,4 +202,4 @@ El documento rector es `docs/ai-master-prompt.md`. Se ha reescrito como especifi
 | 2026-11-10 | AUD-002: revisión, endurecimiento y verificación del motor | Corregidos catálogo de color, `shadow`, procedencia de reinicios, referencias inexistentes y cadenas de herencia incompletas; añadidas pruebas de regresión y actualizado `docs/style-system.md`. CI normal verde: [42833075950](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42833075950), SHA `21dae3248be2963ccc77b00b79dffd1afd92a98d` | Solicitar autorización para AUD-003 |
 | 2026-11-10 | Reescritura del prompt maestro y sincronización documental | `docs/ai-master-prompt.md` reescrito desde cero como especificación greenfield; auditoría corregida para reflejar AUD-002 verificada y el HEAD real; hoja de ruta y README sincronizados | AUD-003 |
 | 2026-11-10 | AUD-003: integración runtime JSON Schema | Ajv 8.20.0 + `ajv-formats` 3.0.1; `validateIrSchema`, pipeline `validateIr` y casos SC automatizados. CI normal verde: [42844634106](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42844634106), HEAD `3720239503da81d950a9f83a2ebaa392302258fe`, 75/75 tests; formato, lint, typecheck y build verdes. | AUD-012 |
-| 2026-11-10 | AUD-012: implementación inicial del control schema/TypeScript | Añadido `scripts/check-ir-types.mjs`, comprobación de equivalencia estructural del IR raíz y todas las definiciones `$defs`, comando `check:ir-types` y paso CI. Commits de implementación hasta `0f75bf70400ab665b6a33fb5ba0d2e45effed9c3`; verificación de CI y prueba negativa aún pendientes. | Corregir y ejecutar el checker; después completar verificación |
+| 2026-11-10 | AUD-012: implementación inicial del control schema/TypeScript | Añadido `scripts/check-ir-types.mjs`, comprobación de equivalencia estructural del IR raíz y todas las definiciones `$defs`, comando `check:ir-types` y paso CI. Commit de implementación `c559ae159546d9e6872c0d9082dcf53fa3b9ca53`; la prueba negativa ya está incorporada, pero la ejecución positiva/negativa y CI siguen pendientes. | Corregir y ejecutar el checker; después completar verificación |
