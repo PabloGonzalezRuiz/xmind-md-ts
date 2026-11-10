@@ -60,4 +60,4 @@ JSON Schema no puede garantizar por sí solo estas invariantes de todo el docume
 - Extensiones desconocidas se conservan en modo compatible.
 - Una versión major desconocida se rechaza antes de interpretar el contenido.
 
-Los casos SEM-001 a SEM-018 tienen cobertura automatizada en Vitest. Los casos SC-001 a SC-005 y SC-101 a SC-110 se ejecutan automáticamente contra el schema. SC-104, SC-108 y SC-109 incluyen subcasos para cada variante documentada.
+Los casos SEM-001 a SEM-018 tienen cobertura automatizada en Vitest. Los casos SC-001 a SC-005 y SC-101 a SC-110 se ejecutan automáticamente contra el schema. SC-104, SC-108 y SC-109 incluyen subcasos para cada variante documentada. La última ejecución CI verificada pasó los 75 tests de las 5 suites.
