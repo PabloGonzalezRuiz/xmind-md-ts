@@ -23,6 +23,7 @@ interface AjvError {
   schemaPath: string;
   keyword: string;
   message?: string;
+  params: Record<string, unknown>;
 }
 
 interface ValidateFunction {
@@ -80,6 +81,7 @@ export function validateIrSchema(input: unknown): IrSchemaValidationResult {
     path: toInstancePath(error.instancePath),
     schemaPath: error.schemaPath,
     keyword: error.keyword,
+    params: error.params,
   }));
 
   return { valid: false, diagnostics };
