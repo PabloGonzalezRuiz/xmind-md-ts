@@ -344,26 +344,24 @@ describe('style resolution engine', () => {
 
   it('clears stale nested provenance when resetting an object property', () => {
     const ir = createIr();
-    ir.sheet.rootTopic.style = {
-      overrides: {
-        shadow: { enabled: true, offset: { x: 9 } },
-      },
+    ir.styleSets[1]!.defaults = {
+      shadow: { enabled: true, offset: { x: 9 } },
     };
-    ir.sheet.rootTopic.children[0]!.style = {
+    ir.sheet.rootTopic.style = {
       overrides: { shadow: null },
     };
 
     const result = resolveIrStyles(ir);
-    const child = styleFor(result, 'topic:child');
+    const root = styleFor(result, 'topic:root');
 
-    expect(child.values.shadow).toEqual({
+    expect(root.values.shadow).toEqual({
       enabled: false,
       color: '#00000033',
       offset: { x: 0, y: 2 },
       blur: 4,
     });
     expect(
-      Object.keys(child.provenance).filter((key) => key.startsWith('shadow.')),
+      Object.keys(root.provenance).filter((key) => key.startsWith('shadow.')),
     ).toEqual([
       'shadow.enabled',
       'shadow.color',
@@ -371,9 +369,9 @@ describe('style resolution engine', () => {
       'shadow.offset.y',
       'shadow.blur',
     ]);
-    expect(child.provenance['shadow.offset.x']).toEqual({
+    expect(root.provenance['shadow.offset.x']).toEqual({
       layer: 'system',
-      sourceId: 'reset-by:topic:child',
+      sourceId: 'reset-by:topic:root',
     });
   });
 
