@@ -166,6 +166,9 @@ if (check) {
   const current = await readFile(outputPath, "utf8");
   if (current !== formatted) {
     console.error("spec/ir-v1.types.ts no está actualizado. Ejecuta npm run generate:types.");
+    console.error("----- INICIO DE TIPOS GENERADOS -----");
+    console.error(formatted);
+    console.error("----- FIN DE TIPOS GENERADOS -----");
     process.exitCode = 1;
   }
 } else {
