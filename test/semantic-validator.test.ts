@@ -69,10 +69,7 @@ describe('IR semantic validator', () => {
 
     const result = validateIrDocument(ir);
     expect(codes(result)).toEqual(
-      expect.arrayContaining([
-        'IR_RELATIONSHIP_SOURCE',
-        'IR_RELATIONSHIP_SELF',
-      ]),
+      expect.arrayContaining(['IR_RELATIONSHIP_SOURCE', 'IR_RELATIONSHIP_SELF']),
     );
   });
 
@@ -194,9 +191,7 @@ describe('IR semantic validator', () => {
     ir.sheet.rootTopic.children.push({
       id: 'topic:child',
       title: 'Child',
-      children: [
-        { id: 'topic:grandchild', title: 'Grandchild', children: [], content: [] },
-      ],
+      children: [{ id: 'topic:grandchild', title: 'Grandchild', children: [], content: [] }],
       content: [],
     });
 
