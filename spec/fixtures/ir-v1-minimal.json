@@ -1,0 +1,76 @@
+{
+  "irVersion": "1.0.0",
+  "document": {
+    "id": "doc:example",
+    "title": "Mapa de ejemplo",
+    "source": "example.md"
+  },
+  "sheet": {
+    "id": "sheet:example",
+    "title": "Mapa de ejemplo",
+    "rootTopic": {
+      "id": "topic:root",
+      "title": "Mapa de ejemplo",
+      "role": "root",
+      "content": [
+        {
+          "type": "paragraph",
+          "runs": [
+            {
+              "text": "Descripción inicial",
+              "marks": [
+                "strong"
+              ]
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "id": "topic:child-1",
+          "title": "Primer tema",
+          "role": "main",
+          "children": [],
+          "content": [
+            {
+              "type": "paragraph",
+              "runs": [
+                {
+                  "text": "Texto de ejemplo."
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "ordered": false,
+              "items": [
+                {
+                  "blocks": [
+                    {
+                      "type": "paragraph",
+                      "runs": [
+                        {
+                          "text": "Elemento de lista"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "language": "text",
+              "value": "ejemplo = true"
+            }
+          ]
+        }
+      ]
+    },
+    "relationships": [],
+    "boundaries": [],
+    "summaries": []
+  },
+  "assets": [],
+  "styleSets": []
+}
