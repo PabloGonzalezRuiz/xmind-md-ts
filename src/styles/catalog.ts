@@ -166,7 +166,10 @@ const LENGTH_PATTERN = /^-?(?:[0-9]+\.?[0-9]*|\.[0-9]+)(?:px|pt|em|rem|%)?$/i;
 function isValidCssColor(value: string): boolean {
   const color = value.trim();
   if (HEX_COLOR_PATTERN.test(color)) return true;
-  if (/^(transparent|currentcolor)$/i.test(color) || CSS_NAMED_COLORS.has(color.toLowerCase())) {
+  if (
+    /^(transparent|currentcolor)$/i.test(color) ||
+    CSS_NAMED_COLORS.has(color.toLowerCase())
+  ) {
     return true;
   }
 
