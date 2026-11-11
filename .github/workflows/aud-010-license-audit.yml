@@ -18,8 +18,12 @@ concurrency:
 
 jobs:
   license-audit:
-    name: Inventory production and development licenses
-    runs-on: ubuntu-latest
+    name: Inventory production and development licenses (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -56,9 +60,12 @@ jobs:
             const counts = new Map();
             const review = [];
             for (const [pkg, data] of Object.entries(report)) {
+              // license-checker labels this private root package UNLICENSED even though
+              // package.json and LICENSE declare MIT; it is not a third-party dependency.
+              if (pkg.startsWith('xmind-md-ts@')) continue;
               const license = String(data.licenses ?? 'UNKNOWN').trim();
               counts.set(license, (counts.get(license) ?? 0) + 1);
-              if (/UNKNOWN|UNLICENSED|SEE LICENSE|GPL|AGPL|SSPL|Commons Clause/i.test(license)) {
+              if (/UNKNOWN|UNLICENSED|SEE LICENSE|GPL|AGPL|SSPL|Commons Clause|\\bOR\\b|\\bAND\\b|MPL/i.test(license)) {
                 review.push({ package: pkg, license, repository: data.repository ?? null, path: data.path ?? null });
               }
             }
@@ -82,7 +89,7 @@ jobs:
       - name: Upload license audit reports
         uses: actions/upload-artifact@v4
         with:
-          name: aud-010-license-inventory
+          name: aud-010-license-inventory-${{ matrix.os }}
           path: |
             license-production.json
             license-all.json
