@@ -44,7 +44,7 @@ La auditoría estática detectó dos defectos de CLI, registrados como AUD-013. 
 | Adaptador XMind | Implementado y validado funcionalmente en Desktop para el fixture AUD-009 | La matriz de capacidades sigue documentando pérdidas y elementos no soportados |
 | Adaptador SVG | Implementado y verificado | AUD-008; limitaciones visuales documentadas |
 | XMind Desktop | Completado y verificado manualmente | AUD-009; apertura, jerarquía visible, guardado de copia y reapertura confirmados por el usuario |
-| Documentación de usuario y publicación | En curso | AUD-010; guía, ejemplos y distribución reproducible en preparación; decisiones legales/canal pendientes |
+| Documentación de usuario y publicación | En curso | AUD-010; guía, ejemplos, CI y artefacto instalable verificados; release pública pendiente de licencia y revisión de vulnerabilidades |
 | Visor web | Pendiente | AUD-011 |
 | Defectos CLI | Corregidos y verificados | AUD-013; CI 43003867274 |
 
@@ -202,7 +202,7 @@ La auditoría inicial no modificó código. La corrección posterior y su verifi
 | AUD-007 | P1 | Exportador XMind inicial | Completada y verificada |
 | AUD-008 | P2 | Exportador SVG | Completada y verificada |
 | AUD-009 | P2 | Validación de apertura/guardado en XMind Desktop | Completada y verificada: apertura, visualización, guardado y reapertura confirmados por el usuario; versión de XMind y SO no registrados |
-| AUD-010 | P2 | Documentación de usuario y publicación | En curso: guía de usuario y ejemplos creados; smoke tests añadidos a verify; pendiente CI y decisiones de licencia/distribución |
+| AUD-010 | P2 | Documentación de usuario y publicación | En curso: guía, ejemplos, empaquetado e instalación limpia verificados en CI Ubuntu/Windows; artefacto generado; release pública pendiente de licencia, auditoría de vulnerabilidades y canal |
 | AUD-011 | P3 | Visor web TypeScript | Pendiente |
 | AUD-013 | P1 | Corregir defectos de derivación de salida y stderr de CLI | Completada y verificada; CI 43003867274, 124/124 pruebas Ubuntu/Windows |
 
@@ -253,7 +253,7 @@ Verificar el HEAD actual y comparar con el código probado fe1d3e510a76719f12d4e
 | 2026-11-11 | AUD-008 | SVG; CI 42989195843, 118 pruebas Ubuntu/Windows; probe 42989195787 |
 | 2026-11-11 | AUD-013 | Corregida derivación de salida XMind/SVG sin --output; corregidos saltos de línea en errores XMind/SVG; añadidas seis regresiones (Markdown/JSON, XMind/SVG y stderr). CI 43003867274: 124/124 pruebas en Ubuntu y Windows; formato, lint, tipos generados, typecheck, build y smoke test correctos. Probe SDK 43003867447 correcto en ambos sistemas. Código probado: fe1d3e510a76719f12d4eeaf0e081304720196b8. | Completada y verificada |
 | 2026-11-11 | AUD-009 | Workflow 43009405102 completado correctamente; artefacto XMind publicado en `artifacts/aud-009/aud-009-desktop-validation.xmind`. El usuario confirmó apertura en XMind Desktop, visualización de la jerarquía (captura), guardado de copia con otro nombre y reapertura correcta tras cerrar la aplicación. Versión exacta de XMind Desktop y sistema operativo no facilitados. | Completada y verificada |
-| 2026-11-11 | AUD-010 | Autorizada. Creada guía `docs/user-guide.md`, ejemplos `examples/quick-start.md` y `examples/with-notes-and-styles.md`, política de distribución `docs/release-readiness.md` y script `scripts/verify-examples.js`. Añadida comprobación de ejemplos a `npm run verify`. La CI de esta nueva puerta está pendiente; publicación npm bloqueada por `private: true` y falta decisión/licencia de proyecto. | En curso |
+| 2026-11-11 | AUD-010 | Guía `docs/user-guide.md`, ejemplos `examples/`, `CHANGELOG.md`, política `docs/release-readiness.md`, verificador de ejemplos y verificador de paquete instalable creados. CI 43012605756: Ubuntu y Windows success, 124/124 pruebas por sistema; formato, lint, tipos, typecheck, build, CLI, validación de ejemplos y empaquetado/instalación limpia correctos. Workflow 43012600819 generó artefacto `xmind-md-ts-distribution` (ID 13851262408), tarball 0.1.0, SHA-256 `8276da05de8d3d2c96781b48c6acd30780152b8d7d34adab4b430cdea89827dd`. La publicación pública sigue bloqueada por `private: true`, ausencia de licencia raíz y revisión pendiente de 15 vulnerabilidades reportadas (14 moderadas, 1 alta). | En curso |
 
 
 ## 12. Seguimiento AUD-009 — validación XMind Desktop completada
