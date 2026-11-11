@@ -1,0 +1,91 @@
+name: AUD-010 · Dependency license audit
+
+on:
+  push:
+    branches: [feature/aud-003-runtime-schema]
+    paths:
+      - '.github/workflows/aud-010-license-audit.yml'
+      - 'package.json'
+      - 'package-lock.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aud-010-license-audit-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  license-audit:
+    name: Inventory production and development licenses
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install locked project dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Generate production dependency license inventory
+        run: npx --yes license-checker@25.0.1 --production --json --out license-production.json
+
+      - name: Generate complete dependency license inventory
+        run: npx --yes license-checker@25.0.1 --json --out license-all.json
+
+      - name: Summarize license expressions and flag manual review
+        shell: bash
+        run: |
+          node --input-type=commonjs <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+
+          const reports = [
+            ['production', 'license-production.json'],
+            ['all', 'license-all.json'],
+          ];
+          const summary = {};
+          for (const [scope, file] of reports) {
+            const report = JSON.parse(fs.readFileSync(file, 'utf8'));
+            const counts = new Map();
+            const review = [];
+            for (const [pkg, data] of Object.entries(report)) {
+              const license = String(data.licenses ?? 'UNKNOWN').trim();
+              counts.set(license, (counts.get(license) ?? 0) + 1);
+              if (/UNKNOWN|UNLICENSED|SEE LICENSE|GPL|AGPL|SSPL|Commons Clause/i.test(license)) {
+                review.push({ package: pkg, license, repository: data.repository ?? null, path: data.path ?? null });
+              }
+            }
+            summary[scope] = {
+              packageCount: Object.keys(report).length,
+              licenseCounts: Object.fromEntries([...counts.entries()].sort(([a], [b]) => a.localeCompare(b))),
+              manualReview: review,
+            };
+          }
+          fs.writeFileSync('license-summary.json', JSON.stringify(summary, null, 2) + '\n');
+          for (const [scope, data] of Object.entries(summary)) {
+            console.log(scope + ': ' + data.packageCount + ' packages');
+            console.log(JSON.stringify(data.licenseCounts, null, 2));
+            console.log('manual review: ' + data.manualReview.length);
+            for (const item of data.manualReview) {
+              console.log(item.package + ' | ' + item.license);
+            }
+          }
+          NODE
+
+      - name: Upload license audit reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: aud-010-license-inventory
+          path: |
+            license-production.json
+            license-all.json
+            license-summary.json
+          if-no-files-found: error
+          retention-days: 30
