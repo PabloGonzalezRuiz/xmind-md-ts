@@ -42,7 +42,7 @@ AUD-012 (generación de tipos TypeScript desde el JSON Schema y control de sincr
 
 - Rama activa de desarrollo: feature/aud-003-runtime-schema.
 - Código probado más reciente: fe1d3e510a76719f12d4eeaf0e081304720196b8.
-- HEAD actual tras preparar AUD-009: 323caef1df653fc569a169acda87a1f6ae088d66. Desde el código probado fe1d3e510a76719f12d4eeaf0e081304720196b8 se han añadido únicamente fixture, documentación y workflow; no se ha modificado el código de aplicación.
+- HEAD observado tras preparar el workflow AUD-009 y antes de la última sincronización documental: c8295b031551a7a421fa3b7f550dceb99b865651. Desde el código probado fe1d3e510a76719f12d4eeaf0e081304720196b8 se han añadido únicamente fixture, documentación y workflow; no se ha modificado el código de aplicación.
 - CI general AUD-008 [42989195843](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195843): 118/118 pruebas por sistema.
 - CI AUD-013 [43003867274](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867274): 124/124 pruebas en Ubuntu y Windows; formato, lint, tipos generados, typecheck, build y smoke test CLI.
 - Probe SDK AUD-008 [42989195787](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195787): Ubuntu y Windows.
