@@ -207,7 +207,7 @@ Se detectaron documentos desincronizados respecto al código:
 - docs/quality-and-testing.md seguía describiendo comandos y cobertura previos al pipeline Ajv y los adaptadores.
 - docs/decisions.md mantenía la evaluación del SDK como pendiente y JSON/SVG como planificados.
 
-Estos documentos se han sincronizado con el estado observado. La auditoría de continuidad y este informe son las referencias operativas para la siguiente sesión.
+Se sincronizaron: README.md, docs/ai-master-prompt.md, docs/roadmap.md, docs/architecture.md, docs/development.md, docs/quality-and-testing.md, docs/decisions.md, docs/cli.md y docs/project-audit-and-continuation.md; se creó este informe. También se revisaron docs/adapters.md, docs/schema-validation.md, docs/ir-specification.md, docs/grammar.md, docs/style-system.md, spec/conformance/README.md y docs/decisions/ADR-0001-xmind-sdk.md, que ya describían correctamente el comportamiento observado y no necesitaron reescritura. La auditoría de continuidad y este informe son las referencias operativas para la siguiente sesión.
 
 ## 9. Backlog y orden de continuación
 
