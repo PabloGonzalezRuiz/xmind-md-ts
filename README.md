@@ -10,13 +10,13 @@ Rama de trabajo: **feature/aud-003-runtime-schema**.
 
 **Implementado y verificado en la rama de trabajo:** contrato IR v1.0.0, parser Markdown, validación estructural y semántica, motor de estilos, corpus de conformidad, adaptador JSON, CLI, exportador XMind inicial y exportador SVG. AUD-009 confirmó manualmente apertura, guardado y reapertura en XMind Desktop.
 
-- CI AUD-013: [43003867274](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867274), 124/124 pruebas en Ubuntu y Windows.
-- Prueba aislada del SDK XMind: [42989195787](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195787), Ubuntu y Windows.
-- Código probado: fe1d3e510a76719f12d4eeaf0e081304720196b8.
-- HEAD observado tras preparar el workflow AUD-009 y antes de la última sincronización documental: c8295b031551a7a421fa3b7f550dceb99b865651. Desde el último código probado solo se han añadido fixture, documentación y workflow; no se ha modificado el código de la aplicación.
+- CI del HEAD actual: [43015959095](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015959095), 124/124 pruebas en Ubuntu y Windows, con ejemplos y paquete instalable verificados.
+- Prueba aislada del SDK XMind: [43015959098](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015959098), Ubuntu y Windows.
+- HEAD documental actual: 72c411eed5b497d2399d152f1b27595ad468dd19; CI ejecutada directamente sobre ese SHA.
+- La rama activa está 471 commits por delante de main y 0 por detrás. main permanece en 6aca81b59dbfcfc13034e7e1115c70f7691c5035.
 - main permanece en 6aca81b59dbfcfc13034e7e1115c70f7691c5035; el desarrollo no está integrado.
 
-**Validación Desktop completada:** AUD-009. El workflow [43009405102](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43009405102) generó y publicó el artefacto; el usuario confirmó que XMind Desktop abre el archivo, muestra la jerarquía, permite guardar una copia y volver a abrirla conservando el contenido. La versión exacta de XMind Desktop y el sistema operativo no quedaron registrados. La validación cubre apertura, estructura visible y persistencia; no equivale a una certificación exhaustiva de todas las funciones o estilos de XMind. AUD-010 ha generado y probado un artefacto instalable de GitHub Actions ([run 43012600819](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43012600819)); la CI general más reciente [43013195119](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43013195119) pasa en Ubuntu y Windows, con 124 pruebas por sistema y validación del paquete instalado. La publicación estable sigue pendiente de licencia, revisión de vulnerabilidades y decisión de canal. AUD-011 (visor web) permanece pendiente.
+**Validación Desktop completada:** AUD-009. El workflow [43009405102](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43009405102) generó y publicó el artefacto; el usuario confirmó que XMind Desktop abre el archivo, muestra la jerarquía, permite guardar una copia y volver a abrirla conservando el contenido. La versión exacta de XMind Desktop y el sistema operativo no quedaron registrados. La validación cubre apertura, estructura visible y persistencia; no equivale a una certificación exhaustiva de todas las funciones o estilos de XMind. AUD-010 ha generado y probado un artefacto instalable de GitHub Actions ([run 43012600819](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43012600819)); la CI general más reciente [43013195119](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43013195119) pasa en Ubuntu y Windows, con 124 pruebas por sistema y validación del paquete instalado. La licencia MIT está incorporada y el canal acordado es GitHub Releases (npm aplazado). La publicación pública sigue pendiente de auditoría de dependencias/licencias, política de versión/compatibilidad y preparación/prueba del workflow de release. AUD-011 (visor web) permanece pendiente y no está autorizada.
 
 AUD-013 está corregida y verificada: la CLI deriva correctamente los nombres de salida XMind/SVG cuando se omite --output y los mensajes de error terminan con saltos de línea reales. Hay pruebas de regresión para entradas Markdown y JSON, y para ambos errores; CI pasa en Ubuntu y Windows.
 
@@ -81,3 +81,6 @@ No integrar ramas, crear releases ni iniciar la siguiente tarea de producto sin 
 ## Licencia
 
 Este proyecto se distribuye bajo la licencia [MIT](LICENSE), Copyright (c) 2026 Pablo González Ruiz.
+
+
+**Última comprobación de repositorio (2026-11-11):** HEAD `72c411eed5b497d2399d152f1b27595ad468dd19`. CI [43015959095](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015959095) y SDK probe [43015959098](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015959098) completados correctamente en Ubuntu y Windows. Artefacto de distribución [43015946683](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015946683), ID `13852422612`, temporal hasta 2026-12-11. Próximo paso: completar auditoría de dependencias/licencias y preparar GitHub Releases sin publicar aún.
