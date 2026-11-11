@@ -25,14 +25,18 @@ El workflow manual `.github/workflows/aud-010-distribution-artifact.yml` genera 
 
 Este mecanismo es un artefacto temporal de CI, no una release permanente ni una publicación npm.
 
-## Ruta de distribución propuesta
+## Ruta de distribución acordada
+
+**Canal principal: GitHub Releases.** El usuario ha elegido distribuir las versiones mediante la sección Releases del repositorio, adjuntando los paquetes descargables y sus checksums. La publicación en npm queda aplazada para una fase posterior.
 
 1. Mantener el código fuente y los ejemplos en GitHub.
-2. Generar desde un commit verificado un paquete reproducible que incluya CLI compilada, lanzador, schema IR y metadatos necesarios.
+2. Generar desde un commit verificado un paquete reproducible que incluya CLI compilada, lanzador, schema IR, documentación, ejemplos y licencia.
 3. Probar el paquete empaquetado en un entorno limpio con Node.js 24: instalación, `--help`, `--version`, validación de ejemplo y exportación JSON/XMind/SVG.
 4. Revisar las licencias de dependencias de terceros y sus avisos, sin asumir que quedan cubiertas por la MIT del proyecto.
-5. Decidir el canal de distribución: GitHub Release con artefacto adjunto, npm público o ambos.
-6. Solo después, fijar versión/tag, changelog, notas de release, checksums y política de soporte.
+5. Preparar un workflow de publicación de GitHub Release, con tag/versionado, changelog, notas, artefactos y checksums.
+6. Mantener npm fuera del alcance de esta primera distribución; se reconsiderará posteriormente.
+
+`package.json` conserva `private: true` porque no se publicará en npm en esta fase. Esta propiedad no impide crear GitHub Releases.
 
 ## Criterios de aceptación de una release
 
