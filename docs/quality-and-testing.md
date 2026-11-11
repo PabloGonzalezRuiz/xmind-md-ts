@@ -21,7 +21,7 @@ El workflow .github/workflows/ci.yml ejecuta las mismas comprobaciones en Ubuntu
 
 ## 2. Estado de verificación más reciente
 
-Último código y suite general de referencia AUD-013: `fe1d3e510a76719f12d4eeaf0e081304720196b8`.
+Último HEAD de trabajo verificado en AUD-010: `c276c839bacaf8fce4ee03ee8cea7f5caca12bb4` (código de aplicación AUD-013 sin cambios; se verificaron además scripts, ejemplos y paquete distribuible).
 
 - CI general [43003867274](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867274): Ubuntu y Windows, 124/124 pruebas en cada sistema; formato, lint, tipos generados, typecheck, build y smoke test CLI correctos.
 - Probe SDK [43003867447](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867447): Ubuntu y Windows correctos.
