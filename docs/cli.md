@@ -77,14 +77,17 @@ La salida JSON va a stdout salvo que se indique --output. Los diagnósticos y me
 
 El paquete registra xmind-md mediante el campo bin. Tras compilar y enlazar/instalar el paquete, puede invocarse directamente. La CLI compilada está en dist/src/cli/main.js.
 
-## Incidencia conocida AUD-013
+## Salida predeterminada y mensajes de error
 
-La revisión estática del 2026-11-11 encontró dos defectos pendientes en src/cli/main.ts:
+Cuando se exporta a XMind o SVG sin indicar --output, la CLI elimina la extensión final de la entrada y genera el archivo en el mismo directorio:
 
-1. La expresión regular que elimina la extensión de la entrada para derivar automáticamente el nombre de salida XMind/SVG está escapada de más. Con una entrada mapa.md el nombre derivado conserva .md y termina como mapa.md.xmind o mapa.md.svg. Mientras se corrige, indicar explícitamente --output.
-2. Los mensajes de error de XMindExportError y SvgExportError contienen la secuencia literal \\n en lugar de un salto de línea.
+- mapa.md → mapa.xmind o mapa.svg.
+- mapa.json → mapa.xmind o mapa.svg.
+- Para stdin (-), usa map.xmind o map.svg.
 
-La suite actual no incluye pruebas específicas para esos dos casos. Están registrados en AUD-013; no considerar verificado el comportamiento predeterminado hasta corregirlos y ejecutar CI en Ubuntu y Windows.
+La derivación reconoce separadores de directorio POSIX y Windows. Los mensajes de error de exportación XMind y SVG se escriben en stderr terminados por un salto de línea real.
+
+Estos comportamientos están cubiertos por pruebas de regresión para entradas Markdown y JSON, ejecutadas en Ubuntu y Windows en AUD-013. La CI de referencia está enlazada en docs/project-audit-and-continuation.md.
 
 ## Límites de interoperabilidad
 
