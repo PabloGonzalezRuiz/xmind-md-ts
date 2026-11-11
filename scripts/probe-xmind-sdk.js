@@ -26,7 +26,7 @@ try {
   const sheet = workbook.createSheet('AUD-006 SDK probe', 'Root topic');
   const topic = new Topic({ sheet });
 
-  topic.add({ title: 'Branch A' });
+  topic.add({ title: 'Branch A', labels: 'probe-label' });
   const branchAId = topic.cid();
   assert.ok(branchAId);
 
@@ -37,7 +37,6 @@ try {
   assert.ok(childA2Id);
 
   topic.on(branchAId).note('Probe note');
-  topic.on(branchAId).addLabel('probe-label');
 
   const markerGroup = Marker.groups()[0];
   const markerName = Marker.names(markerGroup)[0];
@@ -84,6 +83,14 @@ try {
   assert.ok(manifest['file-entries']);
   assert.ok(Object.hasOwn(manifest['file-entries'], 'content.json'));
 
+  topic.on(branchAId).addLabel('helper-defect-probe');
+  const labelHelperValidation = workbook.validate();
+  assert.equal(labelHelperValidation.status, false);
+  assert.ok(
+    labelHelperValidation.errors.some((error) => String(error.dataPath).endsWith('.labels')),
+    'The addLabel helper/schema mismatch must remain visible in this compatibility probe',
+  );
+
   console.log(
     JSON.stringify(
       {
@@ -91,13 +98,15 @@ try {
         node: process.version,
         moduleInterop: 'CommonJS package loaded from ESM using createRequire',
         workbookValidation: validation.status,
+        addLabelHelper: 'known defect: helper writes array while schema expects string',
+        addLabelHelperValidation: labelHelperValidation.status,
         generatedFile: path.basename(outputPath),
         archiveEntries: expectedEntries,
         verifiedFeatures: [
           'sheet',
           'nested topics',
           'plain-text note',
-          'label',
+          'label via low-level string field',
           'marker',
           'summary',
           'preset theme',
