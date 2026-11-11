@@ -54,6 +54,7 @@
     "docs/",
     "examples/",
     "spec/ir-v1.schema.json",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md"
   ]
 }
