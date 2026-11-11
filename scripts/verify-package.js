@@ -44,13 +44,7 @@ try {
     'clean package install',
   );
 
-  const installedCli = join(
-    installDirectory,
-    'node_modules',
-    'xmind-md-ts',
-    'bin',
-    'xmind-md.js',
-  );
+  const installedCli = join(installDirectory, 'node_modules', 'xmind-md-ts', 'bin', 'xmind-md.js');
   run(process.execPath, [installedCli, '--help'], 'CLI instalada --help');
   run(process.execPath, [installedCli, '--version'], 'CLI instalada --version');
   run(

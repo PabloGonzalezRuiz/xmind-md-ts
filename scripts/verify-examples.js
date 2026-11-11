@@ -5,10 +5,7 @@ import { join, resolve } from 'node:path';
 import process from 'node:process';
 
 const cli = resolve('dist/src/cli/main.js');
-const examples = [
-  'examples/quick-start.md',
-  'examples/with-notes-and-styles.md',
-];
+const examples = ['examples/quick-start.md', 'examples/with-notes-and-styles.md'];
 const outputDirectory = mkdtempSync(join(tmpdir(), 'xmind-md-ts-examples-'));
 
 function run(args, description) {
