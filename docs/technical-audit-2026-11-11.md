@@ -221,7 +221,7 @@ Se sincronizaron: README.md, docs/ai-master-prompt.md, docs/roadmap.md, docs/arc
 | AUD-006 | Verificada | Evaluación SDK y ADR |
 | AUD-007 | Verificada | Exportador XMind inicial |
 | AUD-008 | Verificada | Exportador SVG |
-| AUD-009 | Pendiente | Abrir, guardar y reabrir artefactos con XMind Desktop; registrar versión y fidelidad |
+| AUD-009 | En curso | Fixture y workflow para artefacto descargable preparados; falta abrir, guardar y reabrir con XMind Desktop y registrar versión/fidelidad |
 | AUD-010 | Pendiente | Documentación de usuario, ejemplos, instalación y publicación |
 | AUD-011 | Pendiente | Visor web, accesibilidad y Playwright |
 | AUD-013 | Resuelta posteriormente | Corrección y pruebas de regresión verificadas en la sección 11 |
@@ -237,7 +237,7 @@ En una conversación nueva, ejecutar este orden:
 3. Consultar en GitHub el HEAD real de main y feature/aud-003-runtime-schema; no reutilizar los SHA del informe como HEAD actual.
 4. Revisar los commits posteriores al último SHA con CI verde y distinguir cambios de código de cambios documentales.
 5. Consultar los runs 42989195843 y 42989195787 como evidencia histórica de AUD-008.
-6. Revisar el backlog. No iniciar AUD-009, AUD-010 ni AUD-011 sin autorización expresa.
+6. Revisar el backlog. AUD-009 está autorizada y en curso; no iniciar AUD-010 ni AUD-011 sin autorización expresa.
 7. No fusionar ramas, abrir PR, modificar main ni crear release sin autorización.
 8. Al terminar cualquier tarea, actualizar este informe, el registro de continuidad, el roadmap, README y los documentos técnicos afectados.
 9. Registrar SHA exacto de código probado, SHA documental, run IDs, matriz de sistemas, número de pruebas y limitaciones.
@@ -255,3 +255,10 @@ La incidencia registrada en la auditoría inicial se resolvió en la rama activa
 - Probe SDK [43003867447](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867447): Ubuntu y Windows correctos.
 
 AUD-013 queda **completada y verificada**. Las tareas aún pendientes son AUD-009 (XMind Desktop), AUD-010 (documentación de usuario y publicación) y AUD-011 (visor web). No se ha modificado `main` ni se ha creado una release o PR.
+
+
+## 12. Seguimiento posterior: AUD-009 en curso
+
+El 2026-11-11 se autorizó iniciar AUD-009. En `feature/aud-003-runtime-schema` se añadieron un fixture Markdown (`fixtures/aud-009-desktop-validation.md`), un workflow (`.github/workflows/aud-009-xmind-desktop-artifact.yml`) que ejecuta `npm ci`, `npm run verify`, exporta mediante la CLI compilada, verifica el ZIP, calcula SHA-256 y publica el artefacto `aud-009-xmind-desktop-validation`, y el procedimiento `docs/aud-009-xmind-desktop-validation.md`.
+
+El HEAD de preparación del workflow es `323caef1df653fc569a169acda87a1f6ae088d66`. El diff desde el último código probado `fe1d3e510a76719f12d4eeaf0e081304720196b8` no modifica el código de aplicación. La ejecución del workflow y la prueba real de apertura, guardado y reapertura en XMind Desktop siguen pendientes de evidencia. AUD-009 permanece **en curso**, no completada.
