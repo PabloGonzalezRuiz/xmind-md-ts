@@ -13,6 +13,12 @@ AUD-010 prepara la documentación de usuario, ejemplos reproducibles y criterios
 
 Por estos motivos no se debe publicar todavía un paquete npm ni etiquetar una release estable como 1.0.0.
 
+## Artefacto instalable de GitHub Actions
+
+El workflow manual `.github/workflows/aud-010-distribution-artifact.yml` genera el tarball tras ejecutar `npm run verify`, calcula SHA-256 y lo publica como artefacto de Actions durante 30 días. Para ejecutarlo: GitHub → Actions → **AUD-010 · Distribution package** → Run workflow. Descarga `xmind-md-ts-distribution`, verifica `SHA256SUMS.txt` y, en Node.js 24, instala el tarball con `npm install --global ./xmind-md-ts-0.1.0.tgz`. Después comprueba `xmind-md --help` y `xmind-md --version`.
+
+Este mecanismo es un artefacto temporal de CI, no una release permanente ni una publicación npm.
+
 ## Ruta de distribución propuesta
 
 1. Mantener el código fuente y los ejemplos en GitHub.
