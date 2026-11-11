@@ -1,0 +1,26 @@
+name: AUD-007 formatting diagnostic
+
+on:
+  push:
+    branches:
+      - feature/aud-003-runtime-schema
+
+permissions:
+  contents: read
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci --no-audit --no-fund
+      - run: npx prettier --write src/adapters/xmind/xmind-adapter.ts src/cli/main.ts
+      - uses: actions/upload-artifact@v4
+        with:
+          name: aud007-formatted-sources
+          path: |
+            src/adapters/xmind/xmind-adapter.ts
+            src/cli/main.ts
