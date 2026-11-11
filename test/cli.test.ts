@@ -12,7 +12,6 @@ let directory: string;
 let markdownPath: string;
 let jsonPath: string;
 
-
 async function writeJsonInput(): Promise<void> {
   const ir = parseMarkdown('# Mapa de prueba\n\n## Rama A\n');
   await writeFile(jsonPath, JSON.stringify(ir));
