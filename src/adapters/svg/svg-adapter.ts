@@ -305,8 +305,14 @@ function renderNode(node: TopicLayout, styles: Map<string, StyleValues>): string
   const strokeWidth = asNumber(values?.strokeWidth, 1.5);
   const opacity = asNumber(values?.opacity, 1);
   const radius = lengthInPixels(values?.borderRadius, 8);
-  const textAnchor = asString(values?.textAlign, 'center') === 'left' ? 'start' : 'middle';
-  const textX = textAnchor === 'start' ? node.x + NODE_PADDING_X : node.x + node.width / 2;
+  const alignment = asString(values?.textAlign, 'center');
+  const textAnchor = alignment === 'left' ? 'start' : alignment === 'right' ? 'end' : 'middle';
+  const textX =
+    textAnchor === 'start'
+      ? node.x + NODE_PADDING_X
+      : textAnchor === 'end'
+        ? node.x + node.width - NODE_PADDING_X
+        : node.x + node.width / 2;
   const textHeight = node.lines.length * node.lineHeight;
   const metadata = [
     ...(topic.labels ?? []),
@@ -478,6 +484,31 @@ export async function exportSvgFile(
   assignPositions(root, PADDING, xPositions);
   const nodes = flattenTopics(root);
   for (const node of nodes) {
+    const topicStyle = styles.get(node.topic.id);
+    if (lengthInPixels(topicStyle?.padding, 8) !== 8) {
+      addDiagnostic(
+        diagnostics,
+        'SVG_PADDING_APPROXIMATE',
+        'warning',
+        'El padding personalizado del tema no se aplica exactamente en el diseño SVG.',
+        `topics.${node.topic.id}.style.padding`,
+      );
+    }
+    const shadow = topicStyle?.shadow;
+    if (
+      typeof shadow === 'object' &&
+      shadow !== null &&
+      !Array.isArray(shadow) &&
+      shadow.enabled === true
+    ) {
+      addDiagnostic(
+        diagnostics,
+        'SVG_SHADOW_NOT_RENDERED',
+        'warning',
+        'La sombra del tema se conserva en los metadatos IR, pero no se dibuja.',
+        `topics.${node.topic.id}.style.shadow`,
+      );
+    }
     if (node.topic.hyperlink && !isSafeHyperlink(node.topic.hyperlink)) {
       addDiagnostic(
         diagnostics,
