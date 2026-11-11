@@ -24,12 +24,7 @@ La aplicación TypeScript ya dispone de un pipeline funcional desde Markdown a I
 
 El proyecto todavía no está integrado en main. La rama principal permanece en el commit inicial 6aca81b59dbfcfc13034e7e1115c70f7691c5035. No hay pull requests ni issues abiertos devueltos por la búsqueda de GitHub. No se ha creado release.
 
-No debe confundirse:
-- paquete XMind generado e inspeccionado en CI;
-- paquete abierto/guardado en XMind Desktop;
-- fidelidad visual real.
-
-Solo está verificado el primer nivel. AUD-009 debe cubrir la validación Desktop.
+No debe confundirse la generación/inspección estructural del paquete con una certificación visual exhaustiva. AUD-009 confirmó manualmente apertura, jerarquía visible, guardado y reapertura en XMind Desktop; no certifica todas las capacidades, estilos o versiones.
 
 La auditoría estática detectó dos defectos de CLI, registrados como AUD-013. Ambos se corrigieron y se añadieron pruebas de regresión; CI 43003867274 confirma 124/124 pruebas en Ubuntu y Windows.
 
@@ -46,7 +41,7 @@ La auditoría estática detectó dos defectos de CLI, registrados como AUD-013. 
 | Corpus parser/IR | Completado y verificado | AUD-004 |
 | JSON y CLI | Completados y verificados | AUD-005 y AUD-013; nombres de salida y errores cubiertos por regresiones |
 | Evaluación SDK XMind | Completada y verificada | AUD-006; ADR-0001 |
-| Adaptador XMind | Implementado y verificado estructuralmente | AUD-007; falta XMind Desktop |
+| Adaptador XMind | Implementado y validado funcionalmente en Desktop para el fixture AUD-009 | La matriz de capacidades sigue documentando pérdidas y elementos no soportados |
 | Adaptador SVG | Implementado y verificado | AUD-008; limitaciones visuales documentadas |
 | XMind Desktop | Completado y verificado manualmente | AUD-009; apertura, jerarquía visible, guardado de copia y reapertura confirmados por el usuario |
 | Documentación de usuario y publicación | En curso | AUD-010; guía, ejemplos y distribución reproducible en preparación; decisiones legales/canal pendientes |
@@ -211,7 +206,7 @@ La auditoría inicial no modificó código. La corrección posterior y su verifi
 | AUD-011 | P3 | Visor web TypeScript | Pendiente |
 | AUD-013 | P1 | Corregir defectos de derivación de salida y stderr de CLI | Completada y verificada; CI 43003867274, 124/124 pruebas Ubuntu/Windows |
 
-AUD-009 es la siguiente tarea pendiente de producto. AUD-013 se ha cerrado posteriormente con corrección y pruebas de regresión; consultar el registro de trabajo al final de este documento.
+AUD-009 está cerrada. AUD-010 está autorizada y en curso; AUD-011 sigue pendiente y requiere autorización independiente. AUD-013 se cerró con corrección y pruebas de regresión.
 
 ## 9. Criterios globales de finalización
 
