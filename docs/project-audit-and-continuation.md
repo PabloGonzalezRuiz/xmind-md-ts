@@ -20,7 +20,7 @@
 
 La aplicación TypeScript ya dispone de un pipeline funcional desde Markdown a IR y de exportación a JSON, XMind y SVG en la rama feature/aud-003-runtime-schema.
 
-**AUD-001 a AUD-009 y AUD-013 están completadas y verificadas** en esa rama. La CI más reciente (43003867274) registra 124/124 pruebas correctas en Ubuntu y Windows. El probe SDK 43003867447 también pasa en ambos sistemas.
+**AUD-001 a AUD-009 y AUD-013 están completadas y verificadas** en esa rama. AUD-010 está autorizada y en curso. La CI más reciente (43003867274) registra 124/124 pruebas correctas en Ubuntu y Windows. El probe SDK 43003867447 también pasa en ambos sistemas.
 
 El proyecto todavía no está integrado en main. La rama principal permanece en el commit inicial 6aca81b59dbfcfc13034e7e1115c70f7691c5035. No hay pull requests ni issues abiertos devueltos por la búsqueda de GitHub. No se ha creado release.
 
@@ -49,7 +49,7 @@ La auditoría estática detectó dos defectos de CLI, registrados como AUD-013. 
 | Adaptador XMind | Implementado y verificado estructuralmente | AUD-007; falta XMind Desktop |
 | Adaptador SVG | Implementado y verificado | AUD-008; limitaciones visuales documentadas |
 | XMind Desktop | Completado y verificado manualmente | AUD-009; apertura, jerarquía visible, guardado de copia y reapertura confirmados por el usuario |
-| Documentación de usuario y publicación | Pendiente | AUD-010 |
+| Documentación de usuario y publicación | En curso | AUD-010; guía, ejemplos y distribución reproducible en preparación; decisiones legales/canal pendientes |
 | Visor web | Pendiente | AUD-011 |
 | Defectos CLI | Corregidos y verificados | AUD-013; CI 43003867274 |
 
@@ -207,7 +207,7 @@ La auditoría inicial no modificó código. La corrección posterior y su verifi
 | AUD-007 | P1 | Exportador XMind inicial | Completada y verificada |
 | AUD-008 | P2 | Exportador SVG | Completada y verificada |
 | AUD-009 | P2 | Validación de apertura/guardado en XMind Desktop | Completada y verificada: apertura, visualización, guardado y reapertura confirmados por el usuario; versión de XMind y SO no registrados |
-| AUD-010 | P2 | Documentación de usuario y publicación | Pendiente |
+| AUD-010 | P2 | Documentación de usuario y publicación | En curso: guía de usuario y ejemplos creados; smoke tests añadidos a verify; pendiente CI y decisiones de licencia/distribución |
 | AUD-011 | P3 | Visor web TypeScript | Pendiente |
 | AUD-013 | P1 | Corregir defectos de derivación de salida y stderr de CLI | Completada y verificada; CI 43003867274, 124/124 pruebas Ubuntu/Windows |
 
@@ -236,13 +236,13 @@ Al abrir un chat nuevo:
 5. Comparar HEAD con el último SHA de código probado; revisar commits y diffs para separar código de documentación.
 6. Consultar el último CI general y el probe SDK; abrir logs y confirmar los sistemas, pasos y número de pruebas.
 7. Revisar backlog y autorizaciones existentes.
-8. AUD-009 está completada y verificada. AUD-010 y AUD-011 siguen pendientes; no iniciarlas sin autorización expresa del usuario.
+8. AUD-009 está completada y verificada. AUD-010 está autorizada y en curso. AUD-011 sigue pendiente y requiere autorización expresa.
 9. No fusionar ramas, abrir PR, modificar main ni crear release sin autorización expresa.
 10. Tras cada tarea, actualizar este documento, la auditoría técnica, roadmap, README, prompt maestro y documentación funcional.
 
 ### Primera acción al retomar
 
-Verificar el HEAD actual y comparar con el código probado fe1d3e510a76719f12d4eeaf0e081304720196b8. AUD-013 está cerrada. AUD-009 está completada: workflow satisfactorio y validación manual en XMind Desktop confirmada por el usuario. No iniciar AUD-010 ni AUD-011 sin autorización expresa.
+Verificar el HEAD actual y comparar con el código probado fe1d3e510a76719f12d4eeaf0e081304720196b8. AUD-013 está cerrada. AUD-009 está completada: workflow satisfactorio y validación manual en XMind Desktop confirmada por el usuario. AUD-010 está autorizada y en curso; AUD-011 requiere autorización independiente.
 
 ## 11. Registro de trabajo resumido
 
@@ -258,6 +258,7 @@ Verificar el HEAD actual y comparar con el código probado fe1d3e510a76719f12d4e
 | 2026-11-11 | AUD-008 | SVG; CI 42989195843, 118 pruebas Ubuntu/Windows; probe 42989195787 |
 | 2026-11-11 | AUD-013 | Corregida derivación de salida XMind/SVG sin --output; corregidos saltos de línea en errores XMind/SVG; añadidas seis regresiones (Markdown/JSON, XMind/SVG y stderr). CI 43003867274: 124/124 pruebas en Ubuntu y Windows; formato, lint, tipos generados, typecheck, build y smoke test correctos. Probe SDK 43003867447 correcto en ambos sistemas. Código probado: fe1d3e510a76719f12d4eeaf0e081304720196b8. | Completada y verificada |
 | 2026-11-11 | AUD-009 | Workflow 43009405102 completado correctamente; artefacto XMind publicado en `artifacts/aud-009/aud-009-desktop-validation.xmind`. El usuario confirmó apertura en XMind Desktop, visualización de la jerarquía (captura), guardado de copia con otro nombre y reapertura correcta tras cerrar la aplicación. Versión exacta de XMind Desktop y sistema operativo no facilitados. | Completada y verificada |
+| 2026-11-11 | AUD-010 | Autorizada. Creada guía `docs/user-guide.md`, ejemplos `examples/quick-start.md` y `examples/with-notes-and-styles.md`, política de distribución `docs/release-readiness.md` y script `scripts/verify-examples.js`. Añadida comprobación de ejemplos a `npm run verify`. La CI de esta nueva puerta está pendiente; publicación npm bloqueada por `private: true` y falta decisión/licencia de proyecto. | En curso |
 
 
 ## 12. Seguimiento AUD-009 — validación XMind Desktop completada
