@@ -1,82 +1,97 @@
 # Desarrollo local y automatización
 
-## 1. Entorno local
+## 1. Entorno
 
 Requisitos:
 - Windows 10/11, Linux o macOS.
-- Node.js 24 o superior.
+- Node.js 24 o superior; versión de referencia en .nvmrc.
 - npm incluido con Node.js.
 - Git.
-- Visual Studio Code recomendado.
 
-La versión de referencia está fijada en `.nvmrc` (24). No instalar dependencias globales.
+No se requieren herramientas globales de TypeScript, Vitest, ESLint ni Prettier. Las dependencias se instalan desde el lockfile.
 
-## 2. Instalación y comandos
+## 2. Instalación y verificación
 
 En la raíz del repositorio:
 
-```powershell
-npm ci
-npm run verify
-```
+    npm ci
+    npm run verify
+    npm run build
+    npm start -- --help
 
-Scripts disponibles:
-- `npm run dev`: ejecución de desarrollo con recarga.
-- `npm run build`: compila TypeScript en `dist/`.
-- `npm start`: ejecuta la salida compilada.
-- `npm run typecheck`: comprueba tipos sin emitir archivos.
-- `npm run lint`: ejecuta ESLint.
-- `npm run format` / `npm run format:check`: formatea o comprueba formato.
-- `npm test` / `npm run test:watch`: ejecuta Vitest.
-- `npm run verify`: ejecuta todas las comprobaciones anteriores.
+Scripts:
+- npm run dev: desarrollo con recarga.
+- npm run build: compila a dist/.
+- npm start: ejecuta la CLI compilada.
+- npm run typecheck: TypeScript sin emitir.
+- npm run lint: ESLint.
+- npm run format / npm run format:check: Prettier.
+- npm test / npm run test:watch: Vitest.
+- npm run generate:types: genera spec/ir-v1.types.ts desde el JSON Schema.
+- npm run check:generated-types: comprueba que los tipos versionados coinciden con el generador.
+- npm run verify: formato, lint, tipos generados, typecheck, tests y build.
 
-`package-lock.json` está versionado. Utiliza `npm ci` tanto en local como en CI; no edites el lockfile manualmente.
+Usa npm ci; no edites manualmente package-lock.json ni spec/ir-v1.types.ts.
 
 ## 3. Parser Markdown
 
-La API se exporta desde `src/index.ts`:
-- `parseMarkdown(markdown, options)` devuelve un `IrDocument`.
-- `parseMarkdownWithDiagnostics(markdown, options)` devuelve el IR y los avisos del modo compatible.
+API exportada desde src/index.ts:
+- parseMarkdown(markdown, options): devuelve IrDocument.
+- parseMarkdownWithDiagnostics(markdown, options): devuelve IR y diagnósticos del modo compatible.
 
-Las opciones incluyen `sourcePath` y `mode` (`compatible` o `strict`). La gramática y sus límites se describen en `docs/grammar.md`.
+Opciones: sourcePath, mode (compatible o strict). La gramática, directivas y límites están en docs/grammar.md.
 
-## 4. Validación semántica
+## 4. Validación
 
-`validateIrDocument(input, options)` acepta una entrada `unknown` y devuelve:
+- validateIrSchema(input): JSON Schema Draft 2020-12 mediante Ajv 8; acumula errores estructurales y no muta ni corrige la entrada.
+- validateIrDocument(input, options): invariantes semánticas, IDs, referencias, ciclos, tablas, URI, límites y rutas de assets.
+- validateIrDocumentComplete(input, options): ejecuta primero schema y después semántica; fail-fast si la estructura no es válida.
 
-- `valid`: indica si no se encontraron errores semánticos.
-- `diagnostics`: lista de errores con código estable, mensaje, ruta JSON y posición de origen cuando está disponible.
+Límites semánticos por defecto: 100 niveles, 100.000 temas, 250.000 bloques y 10.000 assets. Se pueden configurar con maxDepth, maxTopics, maxContentBlocks, maxAssets; assetRootDirectory restringe la resolución de assets relativos.
 
-La función no modifica el IR. Comprueba unicidad de IDs, referencias a temas y assets, relaciones, boundaries, summaries, conjuntos de estilos, ciclos de herencia, enlaces, URI, tablas y límites de tamaño/profundidad.
-
-Límites predeterminados: 100 niveles de temas/contenido, 100.000 temas, 250.000 bloques y 10.000 assets. Se pueden ajustar con `maxDepth`, `maxTopics`, `maxContentBlocks` y `maxAssets`. Para impedir que una URI relativa de asset salga de un directorio permitido, configura `assetRootDirectory`.
-
-Esta API valida invariantes semánticas; no sustituye todavía la validación completa contra `spec/ir-v1.schema.json`.
+Consulta Validación estructural y Calidad y pruebas.
 
 ## 5. Motor de estilos
 
-`resolveIrStyles(ir)` devuelve los estilos efectivos del mapa, temas, relaciones, boundaries, summaries y runs, junto con la procedencia de cada propiedad y diagnósticos de valores desconocidos o incompatibles. No modifica el IR. El catálogo v1, los tipos, rangos y precedencia están definidos en `docs/style-system.md` y `src/styles/catalog.ts`. Los defaults de mapa se declaran en `sheet.settings.styleDefaults`, agrupados por tipo de elemento.
+resolveIrStyles(ir) produce estilos efectivos y procedencia por elemento/propiedad sin mutar el IR. La precedencia, catálogo, unidades, límites y semántica de null están en docs/style-system.md. Los adaptadores actuales consumen el resultado de estilos según sus capacidades; no todos los valores tienen representación visual equivalente.
 
-## 6. Ejecución de la CLI
+## 6. CLI
 
-La CLI está implementada en `src/cli/main.ts` y el adaptador JSON en `src/adapters/json/json-adapter.ts`. Expone `parse`, `validate` y `export` JSON, admite rutas de Windows, stdin/stdout, modo compatible/estricto, directorio raíz de assets y códigos de salida estables. CI ejecuta formato, lint, typecheck, pruebas, build y smoke test en Ubuntu y Windows. Consulta [CLI](cli.md) para el contrato y los ejemplos. La selección de adaptadores adicionales se incorporará cuando existan.
+La CLI está en src/cli/main.ts; el ejecutable npm es xmind-md (bin/xmind-md.js). Comandos:
+- parse: Markdown a IR JSON.
+- validate: valida Markdown o IR JSON.
+- export --format json|xmind|svg: exporta al formato elegido.
 
-## 7. Depuración
+Admite stdin/stdout, --input-format, --mode, --asset-root, --export-mode, rutas con espacios y códigos de salida 0–3. Las salidas XMind/SVG requieren ruta de archivo. Consulta docs/cli.md.
 
-VS Code puede depurar Node.js/TypeScript mediante source maps. Los errores deben conservar stack trace en modo debug y ofrecer mensajes concisos en modo normal.
+**Incidencia pendiente AUD-013:** la derivación automática del nombre de salida XMind/SVG tiene un patrón de extensión incorrecto y los mensajes de error de exportación incluyen una secuencia \\n literal. Evita considerar probado ese comportamiento por defecto hasta que se corrija; especifica --output para las exportaciones actuales.
+
+## 7. Adaptadores
+
+- JSON: serializa el IR validado.
+- XMind: usa xmind 2.2.33; consulta docs/adapters.md y ADR-0001. CI comprueba el ZIP/JSON interno, no XMind Desktop.
+- SVG: salida XML autocontenida con jerarquía, relaciones, boundaries, summaries y metadatos IR; assets no se dibujan.
+
+Los adaptadores no reinterpretan Markdown ni modifican el IR. Los modos strict/compatible y diagnósticos de pérdidas están documentados por formato.
 
 ## 8. GitHub Actions
 
-El workflow `.github/workflows/ci.yml` se activa en push, pull_request y workflow_dispatch. Configura Node.js 24 e instala dependencias para ejecutar formato, lint, typecheck, pruebas y build.
+.github/workflows/ci.yml se ejecuta en Ubuntu y Windows con Node 24:
+1. npm ci.
+2. Prettier check.
+3. ESLint.
+4. Check de tipos generados.
+5. Typecheck.
+6. Vitest.
+7. Build.
+8. Smoke test de CLI compilada.
 
-## 9. Contribución asistida por IA
+.github/workflows/xmind-sdk-probe.yml prueba el SDK oficial en un entorno temporal aislado, sin depender de que el adaptador de producción funcione. No sustituye a la CI general ni a la validación Desktop.
 
-Antes de pedir a la IA un cambio, indicar objetivo y criterio de aceptación. Mantener tareas pequeñas, exigir pruebas, revisar diff y comprobar que la documentación coincide con el comportamiento.
+## 9. Reproducibilidad y seguridad
 
-## 10. Reproducibilidad y seguridad
-
-- Versiones directas de desarrollo fijadas en `package.json`.
-- Versionar `package-lock.json` y mantener las instalaciones reproducibles con `npm ci`.
-- Revisar licencias de dependencias directas y transitivas.
-- Evitar scripts de instalación innecesarios.
-- No almacenar tokens ni secretos en el repositorio.
+- Versiones directas fijadas y lockfile versionado.
+- No guardar tokens ni secretos en el repositorio.
+- Revisar licencias y mantenimiento de dependencias, especialmente el SDK XMind antiguo.
+- CI tiene permiso contents: read; no formatea, commitea ni hace push.
+- Mantener finales LF mediante .gitattributes.
