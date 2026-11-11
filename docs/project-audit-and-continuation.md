@@ -20,7 +20,7 @@
 
 La aplicación TypeScript ya dispone de un pipeline funcional desde Markdown a IR y de exportación a JSON, XMind y SVG en la rama feature/aud-003-runtime-schema.
 
-**AUD-001 a AUD-009 y AUD-013 están completadas y verificadas** en esa rama. AUD-010 está autorizada y en curso. La CI de referencia más reciente [43012605756](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43012605756) registra 124/124 pruebas correctas en Ubuntu y Windows e incluye la verificación de ejemplos y del paquete instalado. La distribución [43012600819](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43012600819) también se generó correctamente.
+**AUD-001 a AUD-009 y AUD-013 están completadas y verificadas** en esa rama. AUD-010 está autorizada y en curso. La CI más reciente [43013195119](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43013195119) registra 124/124 pruebas correctas en Ubuntu y Windows; la CI de empaquetado [43012605756](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43012605756) incluye además la verificación de ejemplos y del paquete instalado. La distribución [43012600819](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43012600819) también se generó correctamente.
 
 El proyecto todavía no está integrado en main. La rama principal permanece en el commit inicial 6aca81b59dbfcfc13034e7e1115c70f7691c5035. No hay pull requests ni issues abiertos devueltos por la búsqueda de GitHub. No se ha creado release.
 
