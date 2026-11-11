@@ -11,7 +11,7 @@
 - Último commit probado con código y pruebas: fe1d3e510a76719f12d4eeaf0e081304720196b8.
 - Corrección de código AUD-013: f3a9ed8081e1c55a62888550e586b6ee8dc98c7e.
 - CI general posterior a AUD-013: run 43003867274 (124/124 pruebas en Ubuntu y Windows).
-- Probe aislado SDK: run 42989195787.
+- Probe aislado SDK más reciente: run 43003867447 (Ubuntu y Windows).
 - main: 6aca81b59dbfcfc13034e7e1115c70f7691c5035.
 - Esta auditoría actualiza documentación y no cambia código de aplicación. Consultar GitHub para el HEAD resultante; no asumir que el SHA de inicio sigue siendo el HEAD actual.
 
@@ -177,7 +177,7 @@ Limitaciones:
 
 Consultar docs/adapters.md para la matriz completa.
 
-## 7. Hallazgos pendientes de la auditoría: AUD-013
+## 7. Hallazgo detectado en la auditoría inicial: AUD-013 (resuelto)
 
 Revisión estática de src/cli/main.ts:
 
@@ -191,7 +191,7 @@ La suite actual pasa porque las pruebas de exportación proporcionan --output ex
 - probar stderr de ambos errores;
 - CI completa Ubuntu/Windows.
 
-No se corrigió código durante esta auditoría.
+La auditoría inicial no modificó código. La corrección posterior y su verificación están registradas en la sección 11; AUD-013 ya no está pendiente.
 
 ## 8. Backlog maestro
 
