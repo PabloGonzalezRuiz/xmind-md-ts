@@ -8,6 +8,7 @@
 - Repositorio: https://github.com/PabloGonzalezRuiz/xmind-md-ts
 - Rama activa de desarrollo: feature/aud-003-runtime-schema.
 - HEAD al comenzar esta auditoría documental: 8a8b28953ac29d7bcd5d3707f19b484d8834915c.
+- HEAD tras preparar el workflow AUD-009: 323caef1df653fc569a169acda87a1f6ae088d66; HEAD documental actualizado después: consultar GitHub.
 - Último commit probado con código y pruebas: fe1d3e510a76719f12d4eeaf0e081304720196b8.
 - Corrección de código AUD-013: f3a9ed8081e1c55a62888550e586b6ee8dc98c7e.
 - CI general posterior a AUD-013: run 43003867274 (124/124 pruebas en Ubuntu y Windows).
@@ -205,7 +206,7 @@ La auditoría inicial no modificó código. La corrección posterior y su verifi
 | AUD-006 | P1 | Evaluación del SDK XMind | Completada y verificada |
 | AUD-007 | P1 | Exportador XMind inicial | Completada y verificada |
 | AUD-008 | P2 | Exportador SVG | Completada y verificada |
-| AUD-009 | P2 | Validación de apertura/guardado en XMind Desktop | Pendiente |
+| AUD-009 | P2 | Validación de apertura/guardado en XMind Desktop | En curso: fixture y workflow preparados; falta prueba real en Desktop |
 | AUD-010 | P2 | Documentación de usuario y publicación | Pendiente |
 | AUD-011 | P3 | Visor web TypeScript | Pendiente |
 | AUD-013 | P1 | Corregir defectos de derivación de salida y stderr de CLI | Completada y verificada; CI 43003867274, 124/124 pruebas Ubuntu/Windows |
@@ -235,13 +236,13 @@ Al abrir un chat nuevo:
 5. Comparar HEAD con el último SHA de código probado; revisar commits y diffs para separar código de documentación.
 6. Consultar el último CI general y el probe SDK; abrir logs y confirmar los sistemas, pasos y número de pruebas.
 7. Revisar backlog y autorizaciones existentes.
-8. No iniciar AUD-009, AUD-010 ni AUD-011 sin autorización expresa del usuario.
+8. AUD-009 está autorizada y en curso; no iniciar AUD-010 ni AUD-011 sin autorización expresa del usuario.
 9. No fusionar ramas, abrir PR, modificar main ni crear release sin autorización expresa.
 10. Tras cada tarea, actualizar este documento, la auditoría técnica, roadmap, README, prompt maestro y documentación funcional.
 
 ### Primera acción al retomar
 
-Verificar el HEAD actual y comparar con el código probado fe1d3e510a76719f12d4eeaf0e081304720196b8. AUD-013 está cerrada; la siguiente tarea pendiente es AUD-009, pero no iniciarla sin autorización expresa.
+Verificar el HEAD actual y comparar con el código probado fe1d3e510a76719f12d4eeaf0e081304720196b8. AUD-013 está cerrada. AUD-009 está en curso: confirmar la ejecución del workflow, descargar el artefacto y registrar la prueba real de XMind Desktop.
 
 ## 11. Registro de trabajo resumido
 
@@ -256,3 +257,16 @@ Verificar el HEAD actual y comparar con el código probado fe1d3e510a76719f12d4e
 | 2026-11-11 | AUD-007 | Exportador XMind; CI 42985540873 y probe 42985540716 |
 | 2026-11-11 | AUD-008 | SVG; CI 42989195843, 118 pruebas Ubuntu/Windows; probe 42989195787 |
 | 2026-11-11 | AUD-013 | Corregida derivación de salida XMind/SVG sin --output; corregidos saltos de línea en errores XMind/SVG; añadidas seis regresiones (Markdown/JSON, XMind/SVG y stderr). CI 43003867274: 124/124 pruebas en Ubuntu y Windows; formato, lint, tipos generados, typecheck, build y smoke test correctos. Probe SDK 43003867447 correcto en ambos sistemas. Código probado: fe1d3e510a76719f12d4eeaf0e081304720196b8. | Completada y verificada |
+
+
+## 12. Seguimiento AUD-009 — validación XMind Desktop en curso
+
+Autorización recibida el 2026-11-11. Se ha preparado en `feature/aud-003-runtime-schema` un fixture reproducible y un workflow independiente que compila la aplicación, ejecuta `npm run verify`, exporta un `.xmind` mediante la CLI compilada, comprueba el ZIP, calcula SHA-256 y publica el artefacto `aud-009-xmind-desktop-validation` durante 14 días.
+
+- Fixture: `fixtures/aud-009-desktop-validation.md`.
+- Workflow: `.github/workflows/aud-009-xmind-desktop-artifact.yml`.
+- Procedimiento: `docs/aud-009-xmind-desktop-validation.md`.
+- Commits de preparación: `fd367669a932bdb385819b1f9a77f2b641ef0a46` (fixture), `83cb7af187d1a00df91a53cbcffa64a17bb55739` (procedimiento) y `323caef1df653fc569a169acda87a1f6ae088d66` (workflow).
+- El diff desde el código probado `fe1d3e510a76719f12d4eeaf0e081304720196b8` no modifica `src/`, `test/` ni `spec/`; añade fixture, workflow y documentación.
+- La ejecución satisfactoria del workflow y la apertura, guardado y reapertura reales en XMind Desktop aún no están demostrados. Registrar versión exacta de XMind y sistema operativo antes de cerrar la tarea.
+- No se ha modificado `main`, ni creado PR, merge o release.
