@@ -19,9 +19,9 @@ No conviertas línea por línea el proyecto Python anterior. Reutiliza requisito
 - Probe SDK XMind AUD-013 [43003867447](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867447): Ubuntu y Windows, correcto.
 - AUD-001 a AUD-009 y AUD-013 están completadas y verificadas en la rama activa.
 - AUD-009: workflow 43009405102 satisfactorio; el usuario confirmó apertura, visualización de la jerarquía, guardado de una copia y reapertura correcta en XMind Desktop. Versión exacta de XMind Desktop y sistema operativo no facilitados. Procedimiento y evidencia: docs/aud-009-xmind-desktop-validation.md y docs/project-audit-and-continuation.md.
-- AUD-010 está autorizada y en curso: guía `docs/user-guide.md`, ejemplos `examples/`, `CHANGELOG.md`, política `docs/release-readiness.md`, verificación de ejemplos y de instalación limpia del paquete. CI 43012605756 pasa en Ubuntu/Windows (124/124 pruebas por sistema); artefacto `xmind-md-ts-distribution` generado en run 43012600819. La release pública queda pendiente de licencia, revisión de vulnerabilidades y canal de distribución.
+- AUD-010 está autorizada y en curso: guía `docs/user-guide.md`, ejemplos `examples/`, `CHANGELOG.md`, política `docs/release-readiness.md`, verificación de ejemplos y de instalación limpia del paquete. CI 43012605756 pasa en Ubuntu/Windows (124/124 pruebas por sistema); artefacto `xmind-md-ts-distribution` generado en run 43012600819. La release pública queda pendiente de auditoría individual de vulnerabilidades/licencias, preparación y prueba del workflow GitHub Releases y criterios restantes.
 - AUD-011 (visor web) sigue pendiente y requiere autorización expresa.
-- main sigue en 6aca81b59dbfcfc13034e7e1115c70f7691c5035 y no contiene el desarrollo. No fusionar, abrir PR ni crear release sin autorización expresa.
+- main sigue en 6aca81b59dbfcfc13034e7e1115c70f7691c5035 y no contiene el desarrollo. No fusionar, abrir PR ni crear release pública sin autorización expresa. El canal acordado es GitHub Releases; npm queda aplazado.
 
 El estado completo, las limitaciones, el backlog y la historia están en docs/project-audit-and-continuation.md y docs/technical-audit-2026-11-11.md.
 
@@ -100,3 +100,10 @@ Orden: código y pruebas presentes; resultados CI/logs del SHA exacto; JSON Sche
 ## Regla de informe
 
 Separar siempre: planificado, implementado, probado localmente, verificado por CI, validado en aplicación de escritorio y pendiente. No afirmar que un archivo XMind abre en Desktop por haber generado y validado su ZIP.
+
+
+## Actualización operativa 2026-11-11
+
+El HEAD vigente es `72c411eed5b497d2399d152f1b27595ad468dd19`. La CI de ese SHA es [43015959095](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015959095) (Ubuntu/Windows, 124/124 pruebas por sistema, verificaciones de ejemplos y paquete) y el probe SDK [43015959098](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015959098); ambos correctos. El artefacto de distribución de [43015946683](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015946683) está disponible como artefacto temporal hasta 2026-12-11 (ID 13852422612).
+
+La siguiente tarea es terminar AUD-010: auditoría reproducible de dependencias y licencias, política de versionado/compatibilidad IR y workflow de GitHub Releases probado sin publicar. No iniciar AUD-011. No crear una release pública sin autorización expresa.
