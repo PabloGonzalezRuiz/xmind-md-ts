@@ -165,7 +165,7 @@ Limitaciones:
 - Métricas tipográficas aproximadas: los glifos pueden variar entre fuentes/motores SVG.
 - Un SVG convencional no permite recuperar la sintaxis Markdown original, aunque se preserve el IR.
 
-## 7. Hallazgos nuevos de revisión estática: AUD-013
+## 7. Hallazgos de revisión estática detectados inicialmente: AUD-013
 
 Se encontraron dos defectos en src/cli/main.ts:
 
@@ -224,9 +224,9 @@ Se sincronizaron: README.md, docs/ai-master-prompt.md, docs/roadmap.md, docs/arc
 | AUD-009 | Pendiente | Abrir, guardar y reabrir artefactos con XMind Desktop; registrar versión y fidelidad |
 | AUD-010 | Pendiente | Documentación de usuario, ejemplos, instalación y publicación |
 | AUD-011 | Pendiente | Visor web, accesibilidad y Playwright |
-| AUD-013 | Pendiente | Corregir los dos defectos CLI y añadir regresiones |
+| AUD-013 | Resuelta posteriormente | Corrección y pruebas de regresión verificadas en la sección 11 |
 
-AUD-009 es la siguiente tarea de producto en la hoja de ruta. AUD-013 es una incidencia funcional recién detectada que conviene resolver antes de publicar o considerar estable la CLI. No se ha iniciado ninguna de las dos en esta auditoría.
+AUD-009 es la siguiente tarea de producto pendiente. AUD-013 se cerró posteriormente; la sección 11 registra la corrección y la evidencia de CI.
 
 ## 10. Protocolo para recuperar contexto
 
@@ -237,7 +237,7 @@ En una conversación nueva, ejecutar este orden:
 3. Consultar en GitHub el HEAD real de main y feature/aud-003-runtime-schema; no reutilizar los SHA del informe como HEAD actual.
 4. Revisar los commits posteriores al último SHA con CI verde y distinguir cambios de código de cambios documentales.
 5. Consultar los runs 42989195843 y 42989195787 como evidencia histórica de AUD-008.
-6. Revisar el backlog. No iniciar AUD-009, AUD-010, AUD-011 ni AUD-013 sin autorización expresa.
+6. Revisar el backlog. No iniciar AUD-009, AUD-010 ni AUD-011 sin autorización expresa.
 7. No fusionar ramas, abrir PR, modificar main ni crear release sin autorización.
 8. Al terminar cualquier tarea, actualizar este informe, el registro de continuidad, el roadmap, README y los documentos técnicos afectados.
 9. Registrar SHA exacto de código probado, SHA documental, run IDs, matriz de sistemas, número de pruebas y limitaciones.
