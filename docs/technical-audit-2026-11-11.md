@@ -222,7 +222,7 @@ Se sincronizaron: README.md, docs/ai-master-prompt.md, docs/roadmap.md, docs/arc
 | AUD-007 | Verificada | Exportador XMind inicial |
 | AUD-008 | Verificada | Exportador SVG |
 | AUD-009 | Completada y verificada | Workflow 43009405102 correcto; usuario confirmó apertura, jerarquía visible, guardado y reapertura en XMind Desktop. Versión/SO no registrados |
-| AUD-010 | Pendiente | Documentación de usuario, ejemplos, instalación y publicación |
+| AUD-010 | En curso | Guía, ejemplos, CI y artefacto instalable verificados; release pública pendiente de licencia, auditoría de vulnerabilidades y canal |
 | AUD-011 | Pendiente | Visor web, accesibilidad y Playwright |
 | AUD-013 | Resuelta posteriormente | Corrección y pruebas de regresión verificadas en la sección 11 |
 
@@ -269,6 +269,8 @@ La prueba de aceptación de escritorio se completó con confirmación directa de
 
 ## 14. AUD-010 — documentación y preparación de distribución en curso
 
-Se añadió `docs/user-guide.md`, dos ejemplos en `examples/`, `docs/release-readiness.md` y `scripts/verify-examples.js`. El script valida ambos ejemplos y ejecuta exportaciones JSON, XMind y SVG del ejemplo rápido con la CLI compilada. `npm run verify` incorpora `npm run verify:examples`. La nueva puerta aún debe pasar CI en Ubuntu y Windows.
+Se añadieron `docs/user-guide.md`, los ejemplos `examples/quick-start.md` y `examples/with-notes-and-styles.md`, `CHANGELOG.md`, `docs/release-readiness.md`, `scripts/verify-examples.js` y `scripts/verify-package.js`. `npm run verify` incorpora las comprobaciones de ejemplos y de empaquetado/instalación limpia. La CI [43012605756](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43012605756), sobre el HEAD documental `c276c839bacaf8fce4ee03ee8cea7f5caca12bb4`, terminó correctamente en Ubuntu y Windows: 11 archivos y 124/124 pruebas por sistema; formato, lint, tipos generados, typecheck, build, smoke test CLI, validación de ambos ejemplos, exportación JSON/XMind/SVG e instalación del tarball en un directorio limpio.
 
-La publicación npm no está habilitada: `package.json` conserva `private: true`; el proyecto no contiene una licencia raíz y la versión sigue en `0.1.0`. No se ha publicado paquete ni creado release. Se requiere decisión explícita de licencia y canal de distribución antes de publicar.
+El workflow de distribución [43012600819](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43012600819) generó el artefacto `xmind-md-ts-distribution` (ID `13851262408`), con `xmind-md-ts-0.1.0.tgz`, `README.txt` y `SHA256SUMS.txt`. SHA-256 del tarball: `8276da05de8d3d2c96781b48c6acd30780152b8d7d34adab4b430cdea89827dd`. El artefacto temporal está disponible hasta el 2026-12-11. El único commit entre el SHA de generación y el HEAD final elimina un workflow temporal de formateo; no cambia el paquete.
+
+La publicación npm no está habilitada: `package.json` conserva `private: true`; el proyecto no contiene una licencia raíz y la versión sigue en `0.1.0`. Además, una instalación de dependencias reportó 15 vulnerabilidades (14 moderadas y 1 alta), aún sin clasificación individual. No se ha publicado paquete en npm ni creado release pública. Se requiere decisión explícita de licencia y canal, y completar la revisión de dependencias antes de publicar.
