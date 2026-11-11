@@ -34,7 +34,7 @@ AUD-010 fue autorizada el 2026-11-11. Guía, ejemplos y empaquetado están imple
 | AUD-007 | Exportador XMind inicial | Completada y verificada |
 | AUD-008 | Exportador SVG | Completada y verificada |
 | AUD-009 | Validación de paquetes con XMind Desktop | Completada y verificada: apertura, visualización, guardado y reapertura confirmados por el usuario; versión/SO no registrados |
-| AUD-010 | Documentación de usuario y publicación | En curso: guía, ejemplos, CI y artefacto instalable verificados; release pública pendiente de licencia, auditoría de vulnerabilidades y canal |
+| AUD-010 | Documentación de usuario y publicación | En curso: guía, ejemplos, CI y artefacto instalable verificados; release pública pendiente de auditoría de vulnerabilidades y canal; licencia MIT incorporada |
 | AUD-011 | Visor web | Pendiente |
 | AUD-013 | Corregir derivación de nombre de salida y formato de errores de exportación en CLI | Completada y verificada; CI 43003867274, 124/124 pruebas Ubuntu/Windows |
 
