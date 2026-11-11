@@ -77,7 +77,7 @@ try {
   assert.equal(branch.labels, 'probe-label');
   assert.equal(branch.markers.length, 1);
   assert.equal(branch.children.attached.length, 2);
-  assert.equal(branch.children.attached[0].summaries.length, 1);
+  assert.equal(branch.summaries.length, 1);
 
   const manifest = JSON.parse(await archive.file('manifest.json').async('string'));
   assert.ok(manifest['file-entries']);
