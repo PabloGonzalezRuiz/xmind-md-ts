@@ -29,7 +29,7 @@ Scripts:
 - npm test / npm run test:watch: Vitest.
 - npm run generate:types: genera spec/ir-v1.types.ts desde el JSON Schema.
 - npm run check:generated-types: comprueba que los tipos versionados coinciden con el generador.
-- npm run verify: formato, lint, tipos generados, typecheck, tests y build.
+- npm run verify: formato, lint, tipos generados, typecheck, tests, build y comprobación de ejemplos mediante la CLI compilada.
 
 Usa npm ci; no edites manualmente package-lock.json ni spec/ir-v1.types.ts.
 
@@ -64,7 +64,7 @@ La CLI está en src/cli/main.ts; el ejecutable npm es xmind-md (bin/xmind-md.js)
 
 Admite stdin/stdout, --input-format, --mode, --asset-root, --export-mode, rutas con espacios y códigos de salida 0–3. Las salidas XMind/SVG requieren ruta de archivo. Consulta docs/cli.md.
 
-**Incidencia pendiente AUD-013:** la derivación automática del nombre de salida XMind/SVG tiene un patrón de extensión incorrecto y los mensajes de error de exportación incluyen una secuencia \\n literal. Evita considerar probado ese comportamiento por defecto hasta que se corrija; especifica --output para las exportaciones actuales.
+La derivación automática del nombre de salida XMind/SVG y los saltos de línea de los errores se corrigieron en AUD-013. Las regresiones se ejecutan en CI Ubuntu/Windows (run 43003867274).
 
 ## 7. Adaptadores
 
@@ -93,5 +93,5 @@ Los adaptadores no reinterpretan Markdown ni modifican el IR. Los modos strict/c
 - Versiones directas fijadas y lockfile versionado.
 - No guardar tokens ni secretos en el repositorio.
 - Revisar licencias y mantenimiento de dependencias, especialmente el SDK XMind antiguo.
-- CI tiene permiso contents: read; no formatea, commitea ni hace push.
+- La CI general tiene permiso contents: read y no modifica el repositorio. El workflow AUD-009 es independiente y publica el fixture de aceptación en su rama.
 - Mantener finales LF mediante .gitattributes.
