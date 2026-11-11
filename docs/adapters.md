@@ -30,21 +30,21 @@ El adaptador publicará una matriz por entidad/propiedad con estados:
 
 La exportación no descartará datos sin advertencia. El modo estricto rechazará características estructurales no soportadas. El modo compatible podrá producir salida parcial únicamente con diagnóstico explícito y autorización de configuración.
 
-## 4. Adaptador JSON
+## 4. Integración CLI XMind\n\n`xmind-md export <archivo.md|archivo.json> --format xmind [--output <archivo.xmind>] [--export-mode strict|compatible]` valida el IR antes de exportar. Si no se indica `--output`, genera un `.xmind` junto al archivo de entrada (o `map.xmind` para stdin). La salida binaria requiere una ruta de archivo; no se escribe en stdout.\n\n## 5. Adaptador JSON
 
 Implementado en `src/adapters/json/json-adapter.ts`: `serializeIrJson(ir)` serializa el IR validado para inspección, pruebas, intercambio y consumo por herramientas externas. La serialización es determinista, versionada por `irVersion` y no modifica el documento. La validación JSON Schema y semántica se ejecuta antes, en el pipeline.
 
-## 5. Adaptador SVG
+## 6. Adaptador SVG
 
 Renderiza el IR como SVG autocontenido o con recursos referenciados según una política documentada. Debe preservar metadatos semánticos (IDs, jerarquía, texto y propiedades recuperables) cuando sea posible.
 
 SVG no es la fuente de verdad. La reconstrucción exacta del Markdown original requiere conservar la fuente original o metadatos suficientes; un SVG gráfico convencional no preserva comentarios, orden de directivas ni sintaxis exacta.
 
-## 6. Visor web futuro
+## 7. Visor web futuro
 
 El visor consumirá el IR serializado. Se evaluarán bibliotecas como Markmap u otras según su modelo de datos, licencia, accesibilidad, interacción, rendimiento y compatibilidad con mapas complejos. No se acoplará el IR al modelo de una biblioteca de visualización.
 
-## 7. Validación de XMind
+## 8. Validación de XMind
 
 Niveles separados:
 1. Validación del IR.

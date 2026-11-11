@@ -223,22 +223,6 @@ function exportTopicTree(
   });
 }
 
-function countImageBlocks(blocks: ContentBlock[]): number {
-  let count = 0;
-  for (const block of blocks) {
-    if (block.type === 'image') count += 1;
-    else if (block.type === 'quote') count += countImageBlocks(block.blocks);
-    else if (block.type === 'list') {
-      for (const item of block.items) count += countImageBlocks(item.blocks);
-    } else if (block.type === 'table') {
-      for (const row of block.rows) {
-        for (const cell of row.cells) count += countImageBlocks(cell.blocks);
-      }
-    }
-  }
-  return count;
-}
-
 function hasTopicStyles(topic: IrTopic): boolean {
   return Boolean(topic.style) || topic.children.some(hasTopicStyles);
 }
@@ -310,7 +294,7 @@ export async function exportXMindFile(
   const root = document.sheet.rootTopic;
   const rootNoteParts: string[] = [];
   if (root.content.length) {
-    rootNoteParts.push(`Contenido\\n${renderBlocks(root.content)}`);
+    rootNoteParts.push(`Contenido\n${renderBlocks(root.content)}`);
     addDiagnostic(
       diagnostics,
       'XMIND_CONTENT_AS_NOTE',
@@ -321,7 +305,7 @@ export async function exportXMindFile(
   }
   if (root.notes?.length) rootNoteParts.push(renderBlocks(root.notes));
   if (rootNoteParts.length) {
-    topicApi.on(rootSdkId).note(rootNoteParts.join('\\n\\n'));
+    topicApi.on(rootSdkId).note(rootNoteParts.join('\n\n'));
     features.notes += 1;
   }
   for (const markerName of root.markers ?? []) {
