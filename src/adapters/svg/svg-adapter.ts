@@ -110,6 +110,12 @@ function safeColor(value: JsonValue | undefined, fallback: string): string {
   return /^[#(),.%\w\s+-]+$/.test(value) ? value : fallback;
 }
 
+function isSafeHyperlink(value: string): boolean {
+  if (/[\\u0000-\\u001F\\u007F]/.test(value)) return false;
+  const scheme = value.match(/^([a-z][a-z0-9+.-]*):/i)?.[1]?.toLowerCase();
+  return !scheme || ['http', 'https', 'mailto', 'tel'].includes(scheme);
+}
+
 function styleMap(styles: ReturnType<typeof resolveIrStyles>['styles']): Map<string, StyleValues> {
   return new Map(styles.map((style) => [style.elementId, style.values]));
 }
@@ -305,7 +311,7 @@ function renderNode(node: TopicLayout, styles: Map<string, StyleValues>): string
     .join('');
   const labelY = textTop + textHeight + 2;
   const nodeMarkup = `<g id="${xmlId(topic.id)}" data-ir-id="${escapeXml(topic.id)}" data-ir-type="topic" role="group"><title>${escapeXml(topic.title)}</title><desc>${escapeXml(topicDescription(topic))}</desc><g fill="${fill}" stroke="${stroke}" stroke-width="${strokeWidth}" opacity="${opacity}">${shapeMarkup}</g><text fill="${color}" font-family="${escapeXml(fontFamily)}" font-size="${fontSize}" font-weight="${escapeXml(asString(values?.fontWeight, 'normal'))}" font-style="${escapeXml(asString(values?.fontStyle, 'normal'))}" text-decoration="${escapeXml(asString(values?.textDecoration, 'none'))}" text-anchor="${textAnchor}">${textMarkup}</text>${metadataText ? `<text x="${textX}" y="${labelY}" fill="#64748B" font-family="sans-serif" font-size="10" text-anchor="${textAnchor}">${escapeXml(metadataText)}</text>` : ''}</g>`;
-  return topic.hyperlink
+  return topic.hyperlink && isSafeHyperlink(topic.hyperlink)
     ? `<a href="${escapeXml(topic.hyperlink)}" aria-label="${escapeXml(`Abrir ${topic.title}`)}">${nodeMarkup}</a>`
     : nodeMarkup;
 }
@@ -339,6 +345,8 @@ function renderRelationship(
   const startX = source.x + source.width / 2;
   const endX = target.x + target.width / 2;
   const path = `M ${startX} ${source.y} Q ${(startX + endX) / 2 + 28} ${(source.y + target.y) / 2 - 24} ${endX} ${target.y}`;
+  const arrowStart = asBoolean(values?.arrowStart, false) ? 'marker-start="url(#arrow)"' : '';
+  const arrowEnd = asBoolean(values?.arrowEnd, true) ? 'marker-end="url(#arrow)"' : '';
   const label = relationship.label
     ? `<text x="${(startX + endX) / 2 + 28}" y="${(source.y + target.y) / 2 - 30}" font-size="11" text-anchor="middle" fill="${stroke}">${escapeXml(relationship.label)}</text>`
     : '';
@@ -444,6 +452,17 @@ export async function exportSvgFile(
   });
   assignPositions(root, PADDING, xPositions);
   const nodes = flattenTopics(root);
+  for (const node of nodes) {
+    if (node.topic.hyperlink && !isSafeHyperlink(node.topic.hyperlink)) {
+      addDiagnostic(
+        diagnostics,
+        'SVG_HYPERLINK_OMITTED',
+        'warning',
+        'Se ha omitido un hipervínculo con un esquema no permitido en SVG.',
+        `topics.${node.topic.id}.hyperlink`,
+      );
+    }
+  }
   const positions = new Map(nodes.map((node) => [node.topic.id, node]));
   const totalWidth = Math.max(
     320,
