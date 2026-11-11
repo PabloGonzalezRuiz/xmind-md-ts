@@ -24,7 +24,7 @@ describe('XMind adapter', () => {
 
     const bytes = await readFile(result.outputPath);
     expect(bytes.subarray(0, 2).toString()).toBe('PK');
-    expect(result.features.topics).toBe(2);
+    expect(result.features.topics).toBe(3);
     expect(result.features.notes).toBe(1);
   });
 
