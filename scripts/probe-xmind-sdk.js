@@ -69,9 +69,7 @@ try {
   assert.equal(content[0].title, 'AUD-006 SDK probe');
   assert.equal(content[0].rootTopic.title, 'Root topic');
 
-  const branch = content[0].rootTopic.children.attached.find(
-    (item) => item.title === 'Branch A',
-  );
+  const branch = content[0].rootTopic.children.attached.find((item) => item.title === 'Branch A');
   assert.ok(branch, 'Branch A must be present in content.json');
   assert.equal(branch.notes.plain.content, 'Probe note');
   assert.equal(branch.labels, 'probe-label');
