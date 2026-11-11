@@ -13,12 +13,13 @@ No conviertas línea por línea el proyecto Python anterior. Reutiliza requisito
 ## Estado actual confirmado
 
 - Rama de trabajo: feature/aud-003-runtime-schema.
-- Último código y pruebas verificados: fe1d3e510a76719f12d4eeaf0e081304720196b8.
+- Último código y pruebas verificados: fe1d3e510a76719f12d4eeaf0e081304720196b8. HEAD de preparación AUD-009: 323caef1df653fc569a169acda87a1f6ae088d66 (solo fixture, documentación y workflow desde el SHA probado).
 - Último SHA de código y pruebas verificado: fe1d3e510a76719f12d4eeaf0e081304720196b8; los commits posteriores de sincronización documental no cambian código. Consultar GitHub antes de continuar para detectar commits posteriores.
 - CI AUD-013 [43003867274](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867274): Ubuntu y Windows, 124/124 pruebas en cada sistema; formato, lint, tipos generados, typecheck, build y smoke test CLI correctos.
 - Probe SDK XMind AUD-013 [43003867447](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867447): Ubuntu y Windows, correcto.
 - AUD-001 a AUD-008 y AUD-013 están completadas y verificadas en la rama activa.
-- Pendientes: AUD-009 (validación XMind Desktop), AUD-010 (documentación de usuario/publicación) y AUD-011 (visor web).
+- AUD-009 está autorizada y en curso: fixture y workflow de artefacto descargable preparados; falta confirmar CI y la prueba real de apertura/guardado/reapertura en XMind Desktop. Procedimiento: docs/aud-009-xmind-desktop-validation.md.
+- Pendientes posteriores: AUD-010 (documentación de usuario/publicación) y AUD-011 (visor web).
 - main sigue en 6aca81b59dbfcfc13034e7e1115c70f7691c5035 y no contiene el desarrollo. No fusionar, abrir PR ni crear release sin autorización expresa.
 
 El estado completo, las limitaciones, el backlog y la historia están en docs/project-audit-and-continuation.md y docs/technical-audit-2026-11-11.md.
@@ -88,7 +89,7 @@ AUD-013 (completada y verificada):
 4. Consultar CI y logs de ambos sistemas antes de declarar un estado.
 5. Trabajar en la rama activa salvo autorización; no modificar main, fusionar ramas ni crear PR/release sin autorización.
 6. Cambios pequeños y verificables: pruebas, formato, lint, typecheck, build, revisión de diff y actualización documental.
-7. No comenzar AUD-009, AUD-010 ni AUD-011 hasta que el usuario autorice expresamente la tarea concreta.
+7. AUD-009 está autorizada y en curso; no comenzar AUD-010 ni AUD-011 hasta que el usuario autorice expresamente la tarea concreta.
 8. Al terminar una tarea, actualizar auditoría, roadmap, README y documentación funcional aplicable; registrar SHA exacto y run IDs.
 
 ## Fuentes de verdad
