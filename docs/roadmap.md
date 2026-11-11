@@ -15,7 +15,7 @@ Las fases se ejecutan secuencialmente. Al terminar una tarea/fase se presenta el
 | 7 | Adaptador JSON y CLI | parse, validate, export JSON; stdin/stdout y códigos de salida | Completada; AUD-005 verificada |
 | 8 | Evaluación e integración XMind | SDK evaluado, decisión ADR, exportador XMind y diagnósticos | Completada; AUD-006/007 verificadas |
 | 9 | Adaptador SVG | SVG autocontenido, determinista y con metadatos IR | Completada; AUD-008 verificada |
-| 10 | Corpus XMind y validación Desktop | Abrir, inspeccionar, guardar y reabrir artefactos en XMind Desktop con versión identificada | En curso; artefacto automatizado preparado, aceptación Desktop pendiente; AUD-009 |
+| 10 | Corpus XMind y validación Desktop | Abrir, inspeccionar, guardar y reabrir artefactos en XMind Desktop | Completada; apertura, jerarquía, guardado y reapertura confirmados por el usuario; versión/SO no registrados; AUD-009 |
 | 11 | Documentación de usuario y publicación | Guía de instalación/uso, ejemplos, limitaciones, releases y artefactos | Pendiente; AUD-010 |
 | 12 | Visor web TypeScript | Aplicación web que consume IR, accesibilidad y pruebas Playwright | Pendiente; AUD-011 |
 
@@ -31,7 +31,7 @@ Las fases se ejecutan secuencialmente. Al terminar una tarea/fase se presenta el
 | AUD-006 | Evaluación del SDK oficial XMind | Completada y verificada |
 | AUD-007 | Exportador XMind inicial | Completada y verificada |
 | AUD-008 | Exportador SVG | Completada y verificada |
-| AUD-009 | Validación de paquetes con XMind Desktop | En curso: fixture y workflow preparados; falta prueba real en Desktop |
+| AUD-009 | Validación de paquetes con XMind Desktop | Completada y verificada: apertura, visualización, guardado y reapertura confirmados por el usuario; versión/SO no registrados |
 | AUD-010 | Documentación de usuario y publicación | Pendiente |
 | AUD-011 | Visor web | Pendiente |
 | AUD-013 | Corregir derivación de nombre de salida y formato de errores de exportación en CLI | Completada y verificada; CI 43003867274, 124/124 pruebas Ubuntu/Windows |
@@ -49,13 +49,15 @@ AUD-012 (generación de tipos TypeScript desde el JSON Schema y control de sincr
 - Probe SDK AUD-013 [43003867447](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867447): Ubuntu y Windows.
 - main sigue en 6aca81b59dbfcfc13034e7e1115c70f7691c5035; no se ha hecho merge.
 
-## AUD-009 — Validación Desktop en curso
+## AUD-009 — Validación Desktop completada
 
 - Fixture: `fixtures/aud-009-desktop-validation.md`.
 - Workflow: `.github/workflows/aud-009-xmind-desktop-artifact.yml`.
 - Artefacto esperado: `aud-009-xmind-desktop-validation` (XMind + README + SHA-256).
 - Procedimiento: [docs/aud-009-xmind-desktop-validation.md](aud-009-xmind-desktop-validation.md).
-- Pendiente: comprobar ejecución satisfactoria del workflow y realizar apertura, guardado y reapertura con XMind Desktop; registrar versión y sistema operativo.
+- Workflow [43009405102](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43009405102) satisfactorio; el archivo también está publicado en `artifacts/aud-009/aud-009-desktop-validation.xmind`.
+- El usuario confirmó apertura, visualización de la jerarquía (captura), guardado de copia y reapertura correcta.
+- Versión exacta de XMind Desktop y sistema operativo no facilitados.
 
 ## Reglas de avance
 
