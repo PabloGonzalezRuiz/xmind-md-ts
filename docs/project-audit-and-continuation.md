@@ -8,7 +8,7 @@
 - Repositorio: https://github.com/PabloGonzalezRuiz/xmind-md-ts
 - Rama activa de desarrollo: feature/aud-003-runtime-schema.
 - HEAD al comenzar esta auditoría documental: 8a8b28953ac29d7bcd5d3707f19b484d8834915c.
-- HEAD tras preparar el workflow AUD-009: 323caef1df653fc569a169acda87a1f6ae088d66; HEAD documental actualizado después: consultar GitHub.
+- HEAD tras preparar el workflow AUD-009: 323caef1df653fc569a169acda87a1f6ae088d66. HEAD documental observado antes de esta actualización: c8295b031551a7a421fa3b7f550dceb99b865651; consultar GitHub para el HEAD vigente.
 - Último commit probado con código y pruebas: fe1d3e510a76719f12d4eeaf0e081304720196b8.
 - Corrección de código AUD-013: f3a9ed8081e1c55a62888550e586b6ee8dc98c7e.
 - CI general posterior a AUD-013: run 43003867274 (124/124 pruebas en Ubuntu y Windows).
