@@ -274,3 +274,17 @@ Se añadieron `docs/user-guide.md`, los ejemplos `examples/quick-start.md` y `ex
 El workflow de distribución [43012600819](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43012600819) generó el artefacto `xmind-md-ts-distribution` (ID `13851262408`), con `xmind-md-ts-0.1.0.tgz`, `README.txt` y `SHA256SUMS.txt`. SHA-256 del tarball: `8276da05de8d3d2c96781b48c6acd30780152b8d7d34adab4b430cdea89827dd`. El artefacto temporal está disponible hasta el 2026-12-11. El único commit entre el SHA de generación y el HEAD final elimina un workflow temporal de formateo; no cambia el paquete.
 
 La licencia del proyecto se ha fijado como MIT, con `Copyright (c) 2026 Pablo González Ruiz`, mediante `LICENSE`; `package.json` declara `license: MIT` e incluye el archivo en el paquete. La publicación npm sigue deshabilitada porque `private: true`; la versión continúa en `0.1.0`. Una instalación de dependencias reportó 15 vulnerabilidades (14 moderadas y 1 alta), aún sin clasificación individual. No se ha publicado paquete en npm ni creado release pública. Quedan pendientes la revisión de dependencias y la decisión del canal de distribución.
+
+## Addendum de estado — 2026-11-11 (13:25 Europe/Madrid)
+
+La inspección actual del repositorio y de GitHub Actions actualiza las referencias históricas de este documento:
+
+- HEAD vigente: `72c411eed5b497d2399d152f1b27595ad468dd19` en `feature/aud-003-runtime-schema`.
+- Último código probado sigue siendo el contenido de aplicación cubierto por las CI anteriores; el último HEAD actual contiene cambios documentales de decisión de distribución. CI ejecutada directamente sobre HEAD: [43015959095](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015959095), Ubuntu/Windows success, 124/124 pruebas por sistema y verificaciones de ejemplos/paquete; probe SDK [43015959098](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015959098), ambos sistemas success.
+- Workflow de distribución [43015946683](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015946683): success; artefacto ID `13852422612`, caduca 2026-12-11. Digest del ZIP del artefacto: `b50009e4761e2d14b84b5eb84da2cb06b89e15503ccc851c74815ebf49022846`.
+- `main` continúa en `6aca81b59dbfcfc13034e7e1115c70f7691c5035`; la rama activa está 471 commits por delante, 0 por detrás.
+- El README y el prompt maestro históricos contienen SHA y decisiones de distribución desactualizados; esta auditoría se sincroniza en este commit.
+- El aviso de 15 vulnerabilidades (14 moderadas, 1 alta) procede de una instalación anterior y aún no ha sido auditado individualmente contra el lockfile actual. Permanece como riesgo pendiente, no como resultado vigente confirmado.
+- La ruta de distribución acordada es GitHub Releases; npm aplazado. No existe release pública. AUD-011 sigue sin autorización.
+
+**Siguiente tarea autorizada: completar AUD-010**, comenzando por auditoría de vulnerabilidades y licencias, después política de versionado/compatibilidad y workflow de GitHub Releases en modo de preparación/prueba. No crear la release pública sin autorización expresa.
