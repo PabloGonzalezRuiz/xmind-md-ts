@@ -54,3 +54,6 @@ jobs:
 
       - name: CLI compiled smoke test
         run: node dist/src/cli/main.js --help
+
+      - name: Verify examples and installable package
+        run: npm run verify:examples && npm run verify:package
