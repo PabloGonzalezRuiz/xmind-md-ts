@@ -14,7 +14,7 @@ AUD-010 prepara la documentación de usuario, ejemplos reproducibles y criterios
 - `package.json` declara `private: true`, por lo que npm impide publicar el paquete en el registro.
 - La versión de paquete es `0.1.0`; no debe presentarse como una versión estable 1.0.
 - El proyecto incorpora `LICENSE` con licencia MIT y titularidad `Copyright (c) 2026 Pablo González Ruiz`. `package.json` declara `"license": "MIT"` y el paquete incluye el archivo `LICENSE`. Esta licencia cubre el código y la documentación de este repositorio; no altera las licencias de dependencias de terceros.
-- La instalación de dependencias del workflow [43011667426](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43011667426) registró 15 avisos de vulnerabilidad (14 moderadas y 1 alta); aún no se ha realizado la clasificación individual ni una auditoría de dependencias específica para release.
+- Una instalación anterior registró 15 avisos (14 moderados, 1 alto). Ese recuento no se ha reproducido ni clasificado contra el lockfile actual; debe tratarse como señal histórica pendiente de auditoría, no como inventario vigente.
 - El SDK `xmind@2.2.33` está fijado, pero es una dependencia antigua y el adaptador no ofrece importación/round-trip ni mapea todas las capacidades del IR.
 
 Por estos motivos no se debe publicar todavía un paquete npm ni etiquetar una release estable como 1.0.0.
@@ -42,6 +42,7 @@ Este mecanismo es un artefacto temporal de CI, no una release permanente ni una 
 
 - [x] Licencia MIT del proyecto elegida y archivo LICENSE incorporado.
 - [ ] Política de versionado y compatibilidad IR documentada.
+- [ ] Auditoría actual de vulnerabilidades y licencias de dependencias completada.
 - [ ] Versión del paquete y tag coincidentes.
 - [ ] Paquete construido desde un SHA identificado.
 - [ ] Instalación probada en un directorio limpio con Node.js 24.
@@ -53,4 +54,14 @@ Este mecanismo es un artefacto temporal de CI, no una release permanente ni una 
 
 ## Restricciones de esta tarea
 
-AUD-010 ya dispone de guía, ejemplos, verificación CI y artefacto instalable temporal. La licencia del proyecto ya está decidida (MIT, Pablo González Ruiz). La release pública permanece bloqueada hasta revisar las vulnerabilidades reportadas, decidir el canal de publicación y completar los demás criterios de aceptación. La incorporación de la licencia no autoriza por sí sola a publicar en npm ni a crear una release pública. No modificar `main`, fusionar ramas ni crear una release estable por inferencia.
+AUD-010 ya dispone de guía, ejemplos, verificación CI y artefacto instalable temporal. La licencia del proyecto ya está decidida (MIT, Pablo González Ruiz). La release pública permanece bloqueada hasta clasificar las vulnerabilidades, revisar las licencias de dependencias, preparar/probar el workflow GitHub Releases y completar los demás criterios de aceptación. La incorporación de la licencia no autoriza por sí sola a publicar en npm ni a crear una release pública. No modificar `main`, fusionar ramas ni crear una release estable por inferencia.
+
+
+## Verificación más reciente — 2026-11-11
+
+- HEAD: `72c411eed5b497d2399d152f1b27595ad468dd19`.
+- CI del HEAD: [43015959095](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015959095), Ubuntu y Windows success, 124/124 pruebas por sistema; incluye formato, lint, tipos, typecheck, build, CLI, ejemplos y verificación del paquete.
+- SDK probe: [43015959098](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015959098), Ubuntu y Windows success.
+- Artefacto de distribución: [run 43015946683](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015946683), artefacto ID `13852422612`, disponible hasta 2026-12-11. Digest SHA-256 del ZIP de Actions: `b50009e4761e2d14b84b5eb84da2cb06b89e15503ccc851c74815ebf49022846`.
+- Canal acordado: GitHub Releases. npm aplazado; mantener `private: true`.
+- Próximo trabajo: auditoría actual reproducible de dependencias y licencias; política de versionado/compatibilidad IR; preparar y probar workflow de release sin publicar.
