@@ -76,39 +76,53 @@ describe('CLI', () => {
     expect(svg).toContain('Rama A');
   });
 
-  it.each([
-    { source: 'Markdown', format: 'xmind', extension: '.xmind' },
-    { source: 'Markdown', format: 'svg', extension: '.svg' },
-    { source: 'JSON', format: 'xmind', extension: '.xmind' },
-    { source: 'JSON', format: 'svg', extension: '.svg' },
-  ])(
-    'deriva el nombre de salida correcto desde $source para $format sin --output',
-    async ({ source, format, extension }) => {
-      let inputPath = markdownPath;
-      let basePath = markdownPath.slice(0, -'.md'.length);
-      if (source === 'JSON') {
-        await writeFile(
-          jsonPath,
-          JSON.stringify(parseMarkdown('# Mapa de prueba\n\n## Rama A\n')),
-        );
-        inputPath = jsonPath;
-        basePath = jsonPath.slice(0, -'.json'.length);
-      }
+  it('deriva la salida XMind desde Markdown sin --output', async () => {
+    const outputPath = markdownPath.replace(/\.md$/, '.xmind');
+    const result = execute(['export', markdownPath, '--format', 'xmind']);
 
-      const result = execute(['export', inputPath, '--format', format]);
-      const outputPath = basePath + extension;
+    expect(result.status).toBe(0);
+    const bytes = await readFile(outputPath);
+    expect(bytes.subarray(0, 2).toString()).toBe('PK');
+    expect(result.stdout).toContain(outputPath);
+  });
 
-      expect(result.status).toBe(0);
-      if (format === 'xmind') {
-        expect((await readFile(outputPath)).subarray(0, 2).toString()).toBe('PK');
-      } else {
-        expect(await readFile(outputPath, 'utf8')).toContain(
-          '<svg xmlns="http://www.w3.org/2000/svg"',
-        );
-      }
-      expect(result.stdout).toContain(outputPath);
-    },
-  );
+  it('deriva la salida SVG desde Markdown sin --output', async () => {
+    const outputPath = markdownPath.replace(/\.md$/, '.svg');
+    const result = execute(['export', markdownPath, '--format', 'svg']);
+
+    expect(result.status).toBe(0);
+    const svg = await readFile(outputPath, 'utf8');
+    expect(svg).toContain('<svg xmlns="http://www.w3.org/2000/svg"');
+    expect(result.stdout).toContain(outputPath);
+  });
+
+  it('deriva la salida XMind desde JSON sin --output', async () => {
+    await writeFile(
+      jsonPath,
+      JSON.stringify(parseMarkdown('# Mapa de prueba\n\n## Rama A\n')),
+    );
+    const outputPath = jsonPath.replace(/\.json$/, '.xmind');
+    const result = execute(['export', jsonPath, '--format', 'xmind']);
+
+    expect(result.status).toBe(0);
+    const bytes = await readFile(outputPath);
+    expect(bytes.subarray(0, 2).toString()).toBe('PK');
+    expect(result.stdout).toContain(outputPath);
+  });
+
+  it('deriva la salida SVG desde JSON sin --output', async () => {
+    await writeFile(
+      jsonPath,
+      JSON.stringify(parseMarkdown('# Mapa de prueba\n\n## Rama A\n')),
+    );
+    const outputPath = jsonPath.replace(/\.json$/, '.svg');
+    const result = execute(['export', jsonPath, '--format', 'svg']);
+
+    expect(result.status).toBe(0);
+    const svg = await readFile(outputPath, 'utf8');
+    expect(svg).toContain('<svg xmlns="http://www.w3.org/2000/svg"');
+    expect(result.stdout).toContain(outputPath);
+  });
 
   it('termina el error de exportación XMind con un salto de línea real', async () => {
     const ir = parseMarkdown('# Mapa\n\n## Rama A\n\n## Rama B\n');
