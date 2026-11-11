@@ -17,9 +17,9 @@ No conviertas línea por línea el proyecto Python anterior. Reutiliza requisito
 - Último SHA de código y pruebas verificado: fe1d3e510a76719f12d4eeaf0e081304720196b8; los commits posteriores de sincronización documental no cambian código. Consultar GitHub antes de continuar para detectar commits posteriores.
 - CI AUD-013 [43003867274](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867274): Ubuntu y Windows, 124/124 pruebas en cada sistema; formato, lint, tipos generados, typecheck, build y smoke test CLI correctos.
 - Probe SDK XMind AUD-013 [43003867447](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867447): Ubuntu y Windows, correcto.
-- AUD-001 a AUD-008 y AUD-013 están completadas y verificadas en la rama activa.
-- AUD-009 está autorizada y en curso: fixture y workflow de artefacto descargable preparados; falta confirmar CI y la prueba real de apertura/guardado/reapertura en XMind Desktop. Procedimiento: docs/aud-009-xmind-desktop-validation.md.
-- Pendientes posteriores: AUD-010 (documentación de usuario/publicación) y AUD-011 (visor web).
+- AUD-001 a AUD-009 y AUD-013 están completadas y verificadas en la rama activa.
+- AUD-009: workflow 43009405102 satisfactorio; el usuario confirmó apertura, visualización de la jerarquía, guardado de una copia y reapertura correcta en XMind Desktop. Versión exacta de XMind Desktop y sistema operativo no facilitados. Procedimiento y evidencia: docs/aud-009-xmind-desktop-validation.md y docs/project-audit-and-continuation.md.
+- Pendientes: AUD-010 (documentación de usuario/publicación) y AUD-011 (visor web); requieren autorización expresa antes de iniciarse.
 - main sigue en 6aca81b59dbfcfc13034e7e1115c70f7691c5035 y no contiene el desarrollo. No fusionar, abrir PR ni crear release sin autorización expresa.
 
 El estado completo, las limitaciones, el backlog y la historia están en docs/project-audit-and-continuation.md y docs/technical-audit-2026-11-11.md.
@@ -58,7 +58,7 @@ La gramática vigente está en docs/grammar.md. No inventes semántica ni amplí
 ## Adaptadores y límites conocidos
 
 - JSON: serialización determinista del IR validado.
-- XMind: SDK oficial xmind 2.2.33, encapsulado y fijado. No promete importación ni round-trip. La compatibilidad Desktop no está demostrada. Consulta ADR-0001 y la matriz de docs/adapters.md.
+- XMind: SDK oficial xmind 2.2.33, encapsulado y fijado. No promete importación ni round-trip. La apertura, representación básica, guardado y reapertura se validaron manualmente en XMind Desktop en AUD-009; la versión exacta de Desktop y el sistema operativo no quedaron registrados. Consulta ADR-0001 y la matriz de docs/adapters.md.
 - SVG: autocontenido y determinista; conserva IR completo en metadata. Contenido/notas son accesibles en descripciones, no cuerpo visible; assets no se dibujan; sombras no se representan visualmente; padding puede ser aproximado.
 - En modo strict, los elementos no soportados que generan error detienen la exportación. compatible permite salida parcial solo con diagnósticos de pérdidas.
 
@@ -89,7 +89,7 @@ AUD-013 (completada y verificada):
 4. Consultar CI y logs de ambos sistemas antes de declarar un estado.
 5. Trabajar en la rama activa salvo autorización; no modificar main, fusionar ramas ni crear PR/release sin autorización.
 6. Cambios pequeños y verificables: pruebas, formato, lint, typecheck, build, revisión de diff y actualización documental.
-7. AUD-009 está autorizada y en curso; no comenzar AUD-010 ni AUD-011 hasta que el usuario autorice expresamente la tarea concreta.
+7. AUD-009 está completada y verificada. No comenzar AUD-010 ni AUD-011 hasta que el usuario autorice expresamente la tarea concreta.
 8. Al terminar una tarea, actualizar auditoría, roadmap, README y documentación funcional aplicable; registrar SHA exacto y run IDs.
 
 ## Fuentes de verdad
