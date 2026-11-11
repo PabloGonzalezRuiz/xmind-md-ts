@@ -40,7 +40,8 @@
     "unified": "11.0.5",
     "yaml": "2.8.1",
     "ajv2020": "npm:ajv@8.17.1",
-    "ajv-formats": "3.0.1"
+    "ajv-formats": "3.0.1",
+    "xmind": "2.2.33"
   },
   "bin": {
     "xmind-md": "./bin/xmind-md.js"

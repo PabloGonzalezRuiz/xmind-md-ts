@@ -55,3 +55,12 @@ export { validateIrDocumentComplete } from './validation/complete-validator.js';
 export type { IrCompleteValidationResult } from './validation/complete-validator.js';
 
 export { serializeIrJson } from './adapters/json/json-adapter.js';
+
+export { exportXMindFile, XMindExportError } from './adapters/xmind/xmind-adapter.js';
+export type {
+  XMindDiagnosticSeverity,
+  XMindExportDiagnostic,
+  XMindExportMode,
+  XMindExportOptions,
+  XMindExportResult,
+} from './adapters/xmind/xmind-adapter.js';

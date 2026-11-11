@@ -8,6 +8,7 @@ import {
   parseMarkdownWithDiagnostics,
   serializeIrJson,
   validateIrDocumentComplete,
+  exportXMindFile,
 } from '../index.js';
 import type { IrDocument } from '../../spec/ir-v1.types.js';
 
@@ -19,7 +20,8 @@ type Options = {
   output?: string;
   mode: 'compatible' | 'strict';
   inputFormat?: InputFormat;
-  format: 'json';
+  format: 'json' | 'xmind';
+  exportMode: 'strict' | 'compatible';
   assetRoot?: string;
 };
 
@@ -34,7 +36,7 @@ const HELP = `xmind-md ${applicationVersion}
 Uso:
   xmind-md parse <archivo.md> [--output <archivo.json>] [--mode compatible|strict]
   xmind-md validate <archivo.md|archivo.json> [--input-format markdown|json] [--mode compatible|strict]
-  xmind-md export <archivo.md|archivo.json> [--output <archivo.json>] [--format json]
+  xmind-md export <archivo.md|archivo.json> [--output <archivo.json>] [--format json|xmind] [--export-mode strict|compatible]
   xmind-md --help
   xmind-md --version
 
@@ -42,7 +44,7 @@ Opciones:
   -o, --output       Archivo de salida. Si se omite, se escribe en stdout.
   --mode             Modo del parser Markdown: compatible (por defecto) o strict.
   --input-format     Formato de entrada para stdin o para forzar la detección: markdown o json.
-  --format           Formato de exportación. Actualmente solo se admite json.
+  --format           Formato de exportación: json (por defecto) o xmind.\n  --export-mode      Política XMind: strict (por defecto) o compatible (permite pérdidas diagnosticadas).
   --asset-root       Directorio permitido para resolver assets relativos durante la validación.
   -h, --help         Muestra esta ayuda.
   --version          Muestra la versión.
@@ -50,7 +52,7 @@ Opciones:
 Comandos:
   parse              Convierte Markdown a IR JSON y valida el resultado.
   validate           Valida un Markdown o un documento IR JSON sin exportarlo.
-  export             Valida y serializa el IR canónico como JSON.
+  export             Valida y exporta el IR como JSON o paquete XMind.
 
 Entrada "-" lee desde stdin. La salida se escribe en stdout salvo que se indique --output.
 
@@ -72,6 +74,7 @@ function parseArguments(args: string[]): Options {
   let mode: Options['mode'] = 'compatible';
   let inputFormat: InputFormat | undefined;
   let format: Options['format'] = 'json';
+  let exportMode: Options['exportMode'] = 'strict';
   let assetRoot: string | undefined;
 
   for (let index = 1; index < args.length; index += 1) {
@@ -95,8 +98,16 @@ function parseArguments(args: string[]): Options {
       inputFormat = next;
       index += 1;
     } else if (arg === '--format') {
-      if (next !== 'json') throw new UsageError('El único formato disponible es json.');
-      format = 'json';
+      if (next !== 'json' && next !== 'xmind') {
+        throw new UsageError('--format debe ser json o xmind.');
+      }
+      format = next;
+      index += 1;
+    } else if (arg === '--export-mode') {
+      if (next !== 'strict' && next !== 'compatible') {
+        throw new UsageError('--export-mode debe ser strict o compatible.');
+      }
+      exportMode = next;
       index += 1;
     } else if (arg === '--asset-root') {
       if (!next || next.startsWith('--')) throw new UsageError('Falta el valor de --asset-root.');
@@ -112,6 +123,12 @@ function parseArguments(args: string[]): Options {
   }
 
   if (!input) throw new UsageError('Falta el archivo de entrada.');
+  if (command !== 'export' && format !== 'json') {
+    throw new UsageError('--format xmind solo se admite con el comando export.');
+  }
+  if (command !== 'export' && exportMode !== 'strict') {
+    throw new UsageError('--export-mode solo se admite con export.');
+  }
   if (command === 'parse' && inputFormat === 'json') {
     throw new UsageError('El comando parse solo admite entrada Markdown.');
   }
@@ -127,6 +144,7 @@ function parseArguments(args: string[]): Options {
     input,
     mode,
     format,
+    exportMode,
     ...(output === undefined ? {} : { output }),
     ...(inputFormat === undefined ? {} : { inputFormat }),
     ...(assetRoot === undefined ? {} : { assetRoot }),
@@ -251,6 +269,21 @@ async function run(options: Options): Promise<void> {
 
   if (options.command === 'validate') {
     process.stdout.write('Documento válido: estructura y semántica IR v1.0.0 correctas.\n');
+    return;
+  }
+
+  if (options.command === 'export' && options.format === 'xmind') {
+    const outputPath = options.output ??
+      (options.input === '-' ? 'map.xmind' : options.input.replace(/\\.[^.\\/]+$/, '') + '.xmind');
+    if (options.input !== '-' && resolve(options.input) === resolve(outputPath)) {
+      throw new UsageError('La ruta de salida no puede sobrescribir el archivo de entrada.');
+    }
+    const result = await exportXMindFile(ir as IrDocument, {
+      outputPath: resolve(outputPath),
+      mode: options.exportMode,
+    });
+    reportDiagnostics(result.diagnostics);
+    process.stdout.write(`Paquete XMind generado: ${result.outputPath}\n`);
     return;
   }
 
