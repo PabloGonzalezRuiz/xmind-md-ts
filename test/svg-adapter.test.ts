@@ -127,6 +127,20 @@ describe('SVG adapter', () => {
     expect(svg).toContain('javascript:alert(1)');
   });
 
+  it('removes XML 1.0 forbidden control characters from visible text', async () => {
+    const outputDirectory = await createDirectory('xmind-md-svg-controls-');
+    const ir = parseMarkdown('# Mapa\n');
+    ir.sheet.rootTopic.title = 'Texto con control \u0001 permitido';
+
+    const result = await exportSvgFile(ir, {
+      outputPath: join(outputDirectory, 'controls.svg'),
+    });
+    const svg = await readFile(result.outputPath, 'utf8');
+
+    expect(svg).not.toContain('\u0001');
+    expect(svg).toContain('Texto con control  permitido');
+  });
+
   it('escapes XML-sensitive metadata and keeps topic identifiers available', async () => {
     const outputDirectory = await createDirectory('xmind-md-svg-escape-');
     const ir = parseMarkdown('# A & B\n\n## C < D\n');

@@ -64,7 +64,20 @@ const MIN_NODE_WIDTH = 150;
 const DEFAULT_FONT_SIZE = 14;
 
 function escapeXml(value: string): string {
-  return value
+  const xmlSafe = Array.from(value)
+    .filter((character) => {
+      const code = character.codePointAt(0) ?? 0;
+      return (
+        code === 9 ||
+        code === 10 ||
+        code === 13 ||
+        (code >= 32 && code <= 0xd7ff) ||
+        (code >= 0xe000 && code <= 0xfffd) ||
+        (code >= 0x10000 && code <= 0x10ffff)
+      );
+    })
+    .join('');
+  return xmlSafe
     .replaceAll('&', '&amp;')
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;')
@@ -351,13 +364,16 @@ function renderRelationship(
   const stroke = safeColor(values?.stroke ?? values?.color, '#D97706');
   const width = asNumber(values?.strokeWidth, 1.8);
   const dash = lineStyle(values);
-  const startX = source.x + source.width / 2;
-  const endX = target.x + target.width / 2;
-  const path = `M ${startX} ${source.y} Q ${(startX + endX) / 2 + 28} ${(source.y + target.y) / 2 - 24} ${endX} ${target.y}`;
+  const forward = target.x >= source.x;
+  const startX = forward ? source.x + source.width : source.x;
+  const endX = forward ? target.x : target.x + target.width;
+  const curveOffset = forward ? 28 : -28;
+  const labelX = (startX + endX) / 2 + curveOffset;
+  const path = `M ${startX} ${source.y} Q ${labelX} ${(source.y + target.y) / 2 - 24} ${endX} ${target.y}`;
   const arrowStart = asBoolean(values?.arrowStart, false) ? 'marker-start="url(#arrow)"' : '';
   const arrowEnd = asBoolean(values?.arrowEnd, true) ? 'marker-end="url(#arrow)"' : '';
   const label = relationship.label
-    ? `<text x="${(startX + endX) / 2 + 28}" y="${(source.y + target.y) / 2 - 30}" font-size="11" text-anchor="middle" fill="${stroke}">${escapeXml(relationship.label)}</text>`
+    ? `<text x="${labelX}" y="${(source.y + target.y) / 2 - 30}" font-size="11" text-anchor="middle" fill="${stroke}">${escapeXml(relationship.label)}</text>`
     : '';
   return `<g id="${xmlId(relationship.id)}" data-ir-id="${escapeXml(relationship.id)}" data-ir-type="relationship"><title>${escapeXml(relationship.label ?? relationship.kind ?? 'Relación')}</title><path d="${path}" fill="none" stroke="${stroke}" stroke-width="${width}" ${dash ? `stroke-dasharray="${dash}"` : ''} ${arrowStart} ${arrowEnd} />${label}</g>`;
 }
