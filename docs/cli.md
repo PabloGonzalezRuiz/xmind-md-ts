@@ -1,58 +1,68 @@
 # CLI
 
-La CLI coordina el parser Markdown y el validador completo del IR. No contiene reglas de parsing ni de validación duplicadas.
+La CLI coordina el parser Markdown, el pipeline de validación y los adaptadores. No duplica reglas de parsing ni de validación.
 
 ## Requisitos
 
 - Node.js 24 o posterior.
-- Dependencias instaladas con `npm ci`.
-- Proyecto compilado con `npm run build`.
+- Dependencias instaladas con npm ci.
+- Proyecto compilado con npm run build.
 
 ## Comandos
 
+### Ayuda y versión
+
+    xmind-md --help
+    xmind-md --version
+
+Desde el repositorio, después de compilar:
+
+    npm start -- --help
+
 ### Markdown a IR JSON
 
-```powershell
-node dist/src/cli/main.js parse .\documentos\mapa.md --output .\salida\mapa.json
-```
+    xmind-md parse .\documentos\mapa.md --output .\salida\mapa.json
 
-Si se omite `--output`, el JSON se escribe en stdout. Los avisos del parser se escriben en stderr.
-
-El comando `parse` admite `--mode compatible` (por defecto) y `--mode strict`. En modo estricto, cualquier característica Markdown que el parser solo pueda advertir provoca un error.
+Si se omite --output, el JSON se escribe en stdout. Los avisos del parser se escriben en stderr. parse admite --mode compatible (predeterminado) y --mode strict. En modo estricto, una característica Markdown que solo puede advertirse en modo compatible provoca un error.
 
 ### Validar Markdown o IR JSON
 
-```powershell
-node dist/src/cli/main.js validate .\documentos\mapa.md
-node dist/src/cli/main.js validate .\salida\mapa.json
-```
+    xmind-md validate .\documentos\mapa.md
+    xmind-md validate .\salida\mapa.json
+    xmind-md validate .\salida\mapa.json --asset-root .\recursos
 
-La detección se basa en la extensión `.json`; cualquier otra extensión se interpreta como Markdown. Puede forzarse con `--input-format markdown|json`. La validación ejecuta JSON Schema Draft 2020-12 y, si la estructura es correcta, las reglas semánticas del IR. No modifica el documento.
+La detección se basa en la extensión .json; cualquier otra extensión se interpreta como Markdown. Puede forzarse con --input-format markdown|json. La validación ejecuta JSON Schema Draft 2020-12 y, si la estructura es correcta, las reglas semánticas del IR. No modifica el documento.
 
-Para restringir la resolución de assets relativos:
-
-```powershell
-node dist/src/cli/main.js validate .\salida\mapa.json --asset-root .\recursos
-```
+--asset-root restringe la resolución de assets relativos a un directorio permitido.
 
 ### Exportar JSON canónico
 
-```powershell
-node dist/src/cli/main.js export .\documentos\mapa.md --format json --output .\salida\mapa.json
-node dist/src/cli/main.js export .\salida\mapa.json
-```
+    xmind-md export .\documentos\mapa.md --format json --output .\salida\mapa.json
+    xmind-md export .\salida\mapa.json
 
 La exportación acepta Markdown o IR JSON, valida el resultado y serializa el IR con indentación de dos espacios y salto de línea final.
 
+### Exportar XMind
+
+    xmind-md export .\mapa.md --format xmind --output .\salida\mapa.xmind
+    xmind-md export .\mapa.json --format xmind --export-mode compatible
+
+El modo strict es el predeterminado y detiene la exportación si hay elementos que el adaptador no puede representar. compatible permite generar un paquete parcial con diagnósticos de pérdidas. La matriz está en docs/adapters.md.
+
+### Exportar SVG
+
+    xmind-md export .\mapa.md --format svg --output .\salida\mapa.svg
+    xmind-md export .\mapa.json --format svg --export-mode compatible
+
+strict es el modo predeterminado; compatible permite continuar con omisiones visuales diagnosticadas. El IR completo se conserva en el elemento metadata. El contenido y las notas se exponen como descripciones accesibles, no como cuerpo visible de los nodos.
+
 ## Entrada y salida estándar
 
-El nombre de archivo `-` representa stdin o stdout. Para stdin hay que declarar el formato:
+El nombre de archivo - representa stdin o stdout. Para stdin hay que declarar el formato:
 
-```powershell
-Get-Content -Raw .\documentos\mapa.md | node dist/src/cli/main.js export - --input-format markdown
-```
+    Get-Content -Raw .\documentos\mapa.md | xmind-md export - --input-format markdown --format json
 
-La salida va a stdout salvo que se indique `--output`. Los diagnósticos y mensajes de operación van a stderr, para permitir encadenar la salida JSON con otras herramientas.
+La salida JSON va a stdout salvo que se indique --output. Los diagnósticos y mensajes de operación van a stderr. Las salidas XMind y SVG requieren una ruta de archivo y no se escriben en stdout.
 
 ## Códigos de salida
 
@@ -65,36 +75,17 @@ La salida va a stdout salvo que se indique `--output`. Los diagnósticos y mensa
 
 ## Ejecutable instalado
 
-El paquete registra el comando `xmind-md` mediante el campo `bin`. Tras compilar y enlazar/instalar el paquete, puede invocarse directamente:
+El paquete registra xmind-md mediante el campo bin. Tras compilar y enlazar/instalar el paquete, puede invocarse directamente. La CLI compilada está en dist/src/cli/main.js.
 
-```powershell
-xmind-md --help
-```
+## Incidencia conocida AUD-013
 
-En el propio repositorio, `npm start -- --help` ejecuta la CLI compilada. `npm run build` debe ejecutarse antes de usar `start` o el ejecutable generado.
+La revisión estática del 2026-11-11 encontró dos defectos pendientes en src/cli/main.ts:
 
+1. La expresión regular que elimina la extensión de la entrada para derivar automáticamente el nombre de salida XMind/SVG está escapada de más. Con una entrada mapa.md el nombre derivado conserva .md y termina como mapa.md.xmind o mapa.md.svg. Mientras se corrige, indicar explícitamente --output.
+2. Los mensajes de error de XMindExportError y SvgExportError contienen la secuencia literal \\n en lugar de un salto de línea.
 
-## Exportación XMind
+La suite actual no incluye pruebas específicas para esos dos casos. Están registrados en AUD-013; no considerar verificado el comportamiento predeterminado hasta corregirlos y ejecutar CI en Ubuntu y Windows.
 
-El comando `export` admite también `--format xmind`:
+## Límites de interoperabilidad
 
-```powershell
-xmind-md export .\mapa.md --format xmind
-xmind-md export .\mapa.md --format xmind --output .\salida\mapa.xmind
-xmind-md export .\mapa.md --format xmind --export-mode compatible
-```
-
-El modo `strict` es el predeterminado y detiene la exportación cuando el IR contiene elementos que el adaptador no puede representar. `compatible` debe solicitarse expresamente y genera el paquete parcial junto con diagnósticos de pérdidas. La matriz completa está en [Adaptadores de salida](adapters.md).
-
-
-## Exportación SVG
-
-El comando `export` admite `--format svg` desde Markdown o IR JSON:
-
-```powershell
-xmind-md export .\mapa.md --format svg
-xmind-md export .\mapa.md --format svg --output .\salida\mapa.svg
-xmind-md export .\mapa.md --format svg --export-mode compatible
-```
-
-Por defecto se aplica `strict`: la exportación se detiene si el IR contiene assets que no se dibujan. `compatible` genera el SVG y comunica las omisiones. El IR completo se conserva dentro de `<metadata>`; las notas y el contenido también se exponen como descripciones accesibles de los temas. La matriz de capacidades y las limitaciones están en [Adaptadores de salida](adapters.md).
+La CI inspecciona la estructura generada del paquete XMind, pero no abre ni guarda el archivo con XMind Desktop. La validación de aplicación de escritorio corresponde a AUD-009. Consulta docs/adapters.md y docs/decisions/ADR-0001-xmind-sdk.md.
