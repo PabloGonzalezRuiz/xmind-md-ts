@@ -64,3 +64,12 @@ export type {
   XMindExportOptions,
   XMindExportResult,
 } from './adapters/xmind/xmind-adapter.js';
+
+export { exportSvgFile, SvgExportError } from './adapters/svg/svg-adapter.js';
+export type {
+  SvgDiagnosticSeverity,
+  SvgExportDiagnostic,
+  SvgExportMode,
+  SvgExportOptions,
+  SvgExportResult,
+} from './adapters/svg/svg-adapter.js';

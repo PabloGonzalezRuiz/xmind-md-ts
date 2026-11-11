@@ -10,6 +10,8 @@ import {
   validateIrDocumentComplete,
   exportXMindFile,
   XMindExportError,
+  exportSvgFile,
+  SvgExportError,
 } from '../index.js';
 import type { IrDocument } from '../../spec/ir-v1.types.js';
 
@@ -21,7 +23,7 @@ type Options = {
   output?: string;
   mode: 'compatible' | 'strict';
   inputFormat?: InputFormat;
-  format: 'json' | 'xmind';
+  format: 'json' | 'xmind' | 'svg';
   exportMode: 'strict' | 'compatible';
   assetRoot?: string;
 };
@@ -37,15 +39,15 @@ const HELP = `xmind-md ${applicationVersion}
 Uso:
   xmind-md parse <archivo.md> [--output <archivo.json>] [--mode compatible|strict]
   xmind-md validate <archivo.md|archivo.json> [--input-format markdown|json] [--mode compatible|strict]
-  xmind-md export <archivo.md|archivo.json> [--output <archivo.json>] [--format json|xmind] [--export-mode strict|compatible]
+  xmind-md export <archivo.md|archivo.json> [--output <archivo.json>] [--format json|xmind|svg] [--export-mode strict|compatible]
   xmind-md --help
   xmind-md --version
 
 Opciones:
-  -o, --output       Archivo de salida. Si se omite, JSON va a stdout y XMind se guarda junto a la entrada.
+  -o, --output       Archivo de salida. Si se omite, JSON va a stdout; XMind y SVG se guardan junto a la entrada.
   --mode             Modo del parser Markdown: compatible (por defecto) o strict.
   --input-format     Formato de entrada para stdin o para forzar la detección: markdown o json.
-  --format           Formato de exportación: json (por defecto) o xmind.\n  --export-mode      Política XMind: strict (por defecto) o compatible (permite pérdidas diagnosticadas).
+  --format           Formato de exportación: json (por defecto), xmind o svg.\n  --export-mode      Política XMind/SVG: strict (por defecto) o compatible (permite pérdidas diagnosticadas).
   --asset-root       Directorio permitido para resolver assets relativos durante la validación.
   -h, --help         Muestra esta ayuda.
   --version          Muestra la versión.
@@ -53,7 +55,7 @@ Opciones:
 Comandos:
   parse              Convierte Markdown a IR JSON y valida el resultado.
   validate           Valida un Markdown o un documento IR JSON sin exportarlo.
-  export             Valida y exporta el IR como JSON o paquete XMind.
+  export             Valida y exporta el IR como JSON, paquete XMind o SVG.
 
 Entrada "-" lee desde stdin. La salida se escribe en stdout salvo que se indique --output.
 
@@ -99,8 +101,8 @@ function parseArguments(args: string[]): Options {
       inputFormat = next;
       index += 1;
     } else if (arg === '--format') {
-      if (next !== 'json' && next !== 'xmind') {
-        throw new UsageError('--format debe ser json o xmind.');
+      if (next !== 'json' && next !== 'xmind' && next !== 'svg') {
+        throw new UsageError('--format debe ser json, xmind o svg.');
       }
       format = next;
       index += 1;
@@ -125,7 +127,7 @@ function parseArguments(args: string[]): Options {
 
   if (!input) throw new UsageError('Falta el archivo de entrada.');
   if (command !== 'export' && format !== 'json') {
-    throw new UsageError('--format xmind solo se admite con el comando export.');
+    throw new UsageError('--format xmind y svg solo se admiten con el comando export.');
   }
   if (command !== 'export' && exportMode !== 'strict') {
     throw new UsageError('--export-mode solo se admite con export.');
@@ -273,22 +275,34 @@ async function run(options: Options): Promise<void> {
     return;
   }
 
-  if (options.command === 'export' && options.format === 'xmind') {
+  if (options.command === 'export' && options.format !== 'json') {
+    const extension = options.format === 'xmind' ? '.xmind' : '.svg';
     const outputPath =
       options.output ??
-      (options.input === '-' ? 'map.xmind' : options.input.replace(/\\.[^.\\/]+$/, '') + '.xmind');
+      (options.input === '-'
+        ? `map${extension}`
+        : options.input.replace(/\\.[^.\\/]+$/, '') + extension);
     if (options.input !== '-' && resolve(options.input) === resolve(outputPath)) {
       throw new UsageError('La ruta de salida no puede sobrescribir el archivo de entrada.');
     }
     if (outputPath === '-') {
-      throw new UsageError('La salida XMind requiere una ruta de archivo; no admite stdout.');
+      throw new UsageError(`La salida ${options.format.toUpperCase()} requiere una ruta de archivo; no admite stdout.`);
     }
-    const result = await exportXMindFile(ir as IrDocument, {
-      outputPath: resolve(outputPath),
-      mode: options.exportMode,
-    });
-    reportDiagnostics(result.diagnostics);
-    process.stdout.write(`Paquete XMind generado: ${result.outputPath}\n`);
+    if (options.format === 'xmind') {
+      const result = await exportXMindFile(ir as IrDocument, {
+        outputPath: resolve(outputPath),
+        mode: options.exportMode,
+      });
+      reportDiagnostics(result.diagnostics);
+      process.stdout.write(`Paquete XMind generado: ${result.outputPath}\n`);
+    } else {
+      const result = await exportSvgFile(ir as IrDocument, {
+        outputPath: resolve(outputPath),
+        mode: options.exportMode,
+      });
+      reportDiagnostics(result.diagnostics);
+      process.stdout.write(`SVG generado: ${result.outputPath}\n`);
+    }
     return;
   }
 
@@ -328,6 +342,10 @@ async function main(): Promise<void> {
     } else if (error instanceof XMindExportError) {
       reportDiagnostics(error.diagnostics);
       process.stderr.write(`Error de exportación XMind: ${error.message}\\n`);
+      process.exitCode = EXIT.invalid;
+    } else if (error instanceof SvgExportError) {
+      reportDiagnostics(error.diagnostics);
+      process.stderr.write(`Error de exportación SVG: ${error.message}\\n`);
       process.exitCode = EXIT.invalid;
     } else if (error instanceof InputError) {
       if (error.message !== 'El documento no supera la validación.') {
