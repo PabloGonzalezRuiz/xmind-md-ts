@@ -226,7 +226,7 @@ Se sincronizaron: README.md, docs/ai-master-prompt.md, docs/roadmap.md, docs/arc
 | AUD-011 | Pendiente | Visor web, accesibilidad y Playwright |
 | AUD-013 | Resuelta posteriormente | Corrección y pruebas de regresión verificadas en la sección 11 |
 
-AUD-009 y AUD-013 están cerradas. AUD-010 es la siguiente tarea de producto pendiente y requiere autorización expresa.
+AUD-009 y AUD-013 están cerradas. AUD-010 está autorizada y en curso; AUD-011 permanece pendiente.
 
 ## 10. Protocolo para recuperar contexto
 
@@ -266,3 +266,9 @@ El HEAD de preparación del workflow es `323caef1df653fc569a169acda87a1f6ae088d6
 ## 13. Cierre de AUD-009 — 2026-11-11
 
 La prueba de aceptación de escritorio se completó con confirmación directa del usuario. La evidencia cubre apertura, inspección visual de la estructura, guardado de copia y reapertura. No debe describirse como prueba automatizada: la automatización genera y publica el artefacto; la compatibilidad Desktop se comprobó manualmente. Workflow: [43009405102](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43009405102). Artefacto: `artifacts/aud-009/aud-009-desktop-validation.xmind`. Versión de XMind Desktop y sistema operativo: no facilitados.
+
+## 14. AUD-010 — documentación y preparación de distribución en curso
+
+Se añadió `docs/user-guide.md`, dos ejemplos en `examples/`, `docs/release-readiness.md` y `scripts/verify-examples.js`. El script valida ambos ejemplos y ejecuta exportaciones JSON, XMind y SVG del ejemplo rápido con la CLI compilada. `npm run verify` incorpora `npm run verify:examples`. La nueva puerta aún debe pasar CI en Ubuntu y Windows.
+
+La publicación npm no está habilitada: `package.json` conserva `private: true`; el proyecto no contiene una licencia raíz y la versión sigue en `0.1.0`. No se ha publicado paquete ni creado release. Se requiere decisión explícita de licencia y canal de distribución antes de publicar.
