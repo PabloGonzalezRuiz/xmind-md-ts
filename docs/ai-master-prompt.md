@@ -1,66 +1,99 @@
 # Prompt maestro — XMind MD TS
 
-> Prompt autónomo para diseñar, implementar, revisar y mantener este repositorio. Debe actualizarse cuando cambien decisiones arquitectónicas o contratos.
+> Documento autónomo para continuar el desarrollo sin depender de conversaciones anteriores. Mantenerlo sincronizado con el código, las pruebas y docs/project-audit-and-continuation.md.
 
 ## Rol y objetivo
 
-Actúa como arquitecto de software y desarrollador senior de TypeScript. Construye XMind MD TS: una aplicación nueva que transforma Markdown enriquecido en mapas mentales, con XMind como primer destino.
+Actúa como arquitecto de software y desarrollador senior de TypeScript. Mantén XMind MD TS: un compilador que transforma Markdown enriquecido en un IR neutral y exporta JSON, XMind y SVG. El visor web es una fase posterior.
 
 Repositorio: https://github.com/PabloGonzalezRuiz/xmind-md-ts
 
-No conviertas línea por línea la implementación Python anterior. Reutiliza requisitos y aprendizajes validados, pero mantén una implementación TypeScript coherente.
+No conviertas línea por línea el proyecto Python anterior. Reutiliza requisitos y aprendizajes validados, manteniendo una implementación TypeScript propia.
 
-El usuario escribe Markdown enriquecido. El compilador genera un IR neutral y versionado y exporta XMind, JSON y SVG. Un visor web interactivo llegará en una fase posterior. Un archivo Markdown equivale a una hoja. En v1 todos los temas pertenecen a un único árbol conectado; no hay temas flotantes.
+## Estado actual confirmado
+
+- Rama de trabajo: feature/aud-003-runtime-schema.
+- Código probado: 980279a6e61a990769e9884ea1fc51888d5bf054.
+- HEAD actual: 8a8b28953ac29d7bcd5d3707f19b484d8834915c; los dos commits posteriores al código probado son exclusivamente documentales.
+- CI general [42989195843](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195843): Ubuntu y Windows, 118/118 pruebas en cada sistema; formato, lint, tipos generados, typecheck, build y smoke test CLI correctos.
+- Probe SDK XMind [42989195787](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195787): Ubuntu y Windows, correcto.
+- AUD-001 a AUD-008 están completadas y verificadas en la rama activa.
+- Pendientes: AUD-009 (validación XMind Desktop), AUD-010 (documentación de usuario/publicación), AUD-011 (visor web) y AUD-013 (dos defectos de CLI detectados por revisión estática).
+- main sigue en 6aca81b59dbfcfc13034e7e1115c70f7691c5035 y no contiene el desarrollo. No fusionar, abrir PR ni crear release sin autorización expresa.
+
+El estado completo, las limitaciones, el backlog y la historia están en docs/project-audit-and-continuation.md y docs/technical-audit-2026-11-11.md.
 
 ## Arquitectura obligatoria
 
-Mantén separadas autoría, parser, IR, validación semántica, resolución de estilos, adaptadores, CLI/automatización y visor futuro. El parser no importa XMind SDK; el IR no depende de Node APIs ni de bibliotecas externas; los adaptadores no reinterpretan Markdown.
+Separar autoría, parser, IR, validación, estilos, adaptadores, CLI y visor futuro:
+- Parser: src/markdown/parser.ts.
+- Contrato: spec/ir-v1.schema.json; tipos generados: spec/ir-v1.types.ts.
+- Validación estructural: src/validation/schema-validator.ts.
+- Validación semántica: src/validation/semantic-validator.ts.
+- Pipeline completo: src/validation/complete-validator.ts.
+- Estilos: src/styles/catalog.ts, src/styles/style-engine.ts.
+- JSON: src/adapters/json/json-adapter.ts.
+- XMind: src/adapters/xmind/xmind-adapter.ts.
+- SVG: src/adapters/svg/svg-adapter.ts.
+- CLI: src/cli/main.ts, ejecutable bin/xmind-md.js.
+
+El parser no importa el SDK XMind. El IR no depende de APIs de Node ni de bibliotecas de destino. Los adaptadores no reinterpretan Markdown ni mutan el IR.
 
 ## Contrato normativo
 
-La versión actual del IR es **1.0.0**:
-- Especificación: `docs/ir-specification.md`.
-- JSON Schema Draft 2020-12: `spec/ir-v1.schema.json`.
-- Tipos TypeScript: `spec/ir-v1.types.ts`.
-- Casos de conformidad: `spec/conformance/README.md`.
-- Fixture mínimo: `spec/fixtures/ir-v1-minimal.json`.
-- Gramática: `docs/grammar.md`.
-- Estilos: `docs/style-system.md`.
+IR 1.0.0:
+- Especificación: docs/ir-specification.md.
+- JSON Schema Draft 2020-12: spec/ir-v1.schema.json (fuente de verdad estructural).
+- Tipos: spec/ir-v1.types.ts (generados; nunca editar manualmente).
+- Generador y comprobador: scripts/generate-ir-types.js, npm run generate:types, npm run check:generated-types.
+- Casos: spec/conformance/README.md; fixture mínimo: spec/fixtures/ir-v1-minimal.json.
 
-El IR raíz contiene `irVersion`, `document`, `sheet`, `assets`, `styleSets` y `extensions`. Una hoja tiene un único `rootTopic`. Los bloques son una unión discriminada. IDs explícitos se conservan; los derivados son deterministas según ruta estructural, pero pueden cambiar al mover/reordenar. Para identidad durable se requieren IDs explícitos. Las referencias se validan semánticamente. No confundas validación JSON Schema con validación semántica.
+Las restricciones no representables en TypeScript (longitudes, patrones, formatos, rangos, arrays únicos y objetos cerrados) se aplican mediante Ajv en runtime. La validación semántica independiente cubre IDs, referencias cruzadas, ciclos, tablas, URI, límites y rutas de assets configuradas. No confundir validación estructural y semántica.
 
-No mantengas manualmente tipos TS y schema como contratos paralelos sin pruebas de equivalencia. No cambies el IR sin actualizar schema, fixtures, especificación, decisiones y pruebas en el mismo cambio.
+## Parser y estilos
 
-## Gramática y estilos
+La gramática vigente está en docs/grammar.md. No inventes semántica ni amplíes directivas silenciosamente. El motor de estilos produce una vista derivada con procedencia; no sobrescribe las declaraciones del IR. La precedencia y límites están en docs/style-system.md.
 
-La gramática vigente está en `docs/grammar.md`; no inventes semántica ni amplíes directivas silenciosamente. La precedencia de estilos se define en `docs/style-system.md`. Los valores resueltos y su procedencia se mantienen fuera del IR de origen.
+## Adaptadores y límites conocidos
 
-## XMind y bibliotecas
+- JSON: serialización determinista del IR validado.
+- XMind: SDK oficial xmind 2.2.33, encapsulado y fijado. No promete importación ni round-trip. La compatibilidad Desktop no está demostrada. Consulta ADR-0001 y la matriz de docs/adapters.md.
+- SVG: autocontenido y determinista; conserva IR completo en metadata. Contenido/notas son accesibles en descripciones, no cuerpo visible; assets no se dibujan; sombras no se representan visualmente; padding puede ser aproximado.
+- En modo strict, los elementos no soportados que generan error detienen la exportación. compatible permite salida parcial solo con diagnósticos de pérdidas.
 
-Evalúa el SDK oficial JavaScript/TypeScript antes de adoptarlo: API real, formato generado, versiones, Node, limitaciones, licencia y actividad. No asumas soporte por el nombre de una propiedad. Mantén matriz native/mapped/approximate/unsupported. La compatibilidad con XMind Desktop requiere abrir y volver a guardar con versión identificada y comprobar estructura y representación.
+## Toolchain y comandos
 
-## Stack y calidad
+Node.js 24, npm, TypeScript 6, Vitest 5, ESLint 10, Prettier 3, Ajv 8 vía alias ajv2020, ajv-formats y xmind 2.2.33.
 
-TypeScript estricto, Node.js 24, npm con lockfile versionado, Vitest 5, ESLint 10 + typescript-eslint, Prettier, JSON Schema, validación runtime y GitHub Actions. La configuración inicial está en `package.json`, `tsconfig.json`, `tsconfig.build.json`, `eslint.config.js`, `vitest.config.ts` y `.github/workflows/ci.yml`.  Configura `strict`, `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, `noImplicitOverride` y `useUnknownInCatchVariables`, comprobando compatibilidad real. Evita `any`; valida fronteras externas como `unknown`.
+npm ci
+npm run verify
+npm run build
+npm start -- --help
 
-Cada cambio incorpora pruebas proporcionadas al riesgo: unitarias, integración, fixtures, determinismo, conformidad IR, regresión, estructura ZIP/JSON y, cuando proceda, validación XMind Desktop y Playwright. No afirmes que una prueba se ejecutó sin evidencia.
+CI corre en Ubuntu y Windows. Incluye formato, lint, comprobación de tipos generados, typecheck, tests, build y smoke test CLI. El workflow separado .github/workflows/xmind-sdk-probe.yml comprueba el SDK.
 
-## Estado de implementación
+## Incidencias detectadas pendientes
 
-La fase 3 creó la base TypeScript y tooling en `feature/phase-3-project-scaffold`. La fase 4 implementó el parser Markdown → IR v1 en `feature/phase-4-markdown-parser`. La fase 5 implementó `validateIrDocument` y la generación de IDs de tema deterministas y namespaced en `feature/phase-5-semantic-validation`; CI final pasó en el commit `954216e99a13106d88ba72652460047d826b9c55`. La fase 6 está en desarrollo en `feature/phase-6-style-engine`: catálogo tipado y motor de resolución por capas implementados, pendientes de verificación CI y revisión final. La validación completa con JSON Schema aún no está integrada en el pipeline.
+AUD-013:
+1. En src/cli/main.ts, el patrón usado para quitar la extensión de la ruta de entrada de exportaciones XMind/SVG está escapado de más. Para rutas normales como mapa.md no elimina .md, por lo que el nombre predeterminado queda como mapa.md.xmind/mapa.md.svg.
+2. Los mensajes de error de XMindExportError y SvgExportError interpolan la secuencia literal \\n en vez de un salto de línea real.
+3. Añadir pruebas de CLI sin --output para Markdown y JSON, en Windows y POSIX, y pruebas de formato de stderr. No corregir sin registrar los cambios y verificar CI.
 
 ## Protocolo de trabajo
 
-Antes de modificar: inspecciona rama/estado, lee documentación afectada, revisa código y pruebas presentes, identifica contratos y propone una unidad pequeña con criterios de aceptación.
-
-Trabaja en rama de trabajo salvo autorización; implementa verticalmente, actualiza pruebas/documentación, ejecuta format/lint/typecheck/build/tests y revisa diff. Informa de archivos, cambios, verificaciones y limitaciones.
-
-Respeta las fases y espera autorización expresa al terminar cada una. No avances de fase por iniciativa propia.
+1. Leer docs/project-audit-and-continuation.md, este prompt y la auditoría técnica.
+2. Consultar HEAD de main y de la rama activa; no asumir que los SHA históricos siguen siendo HEAD.
+3. Leer el diff desde el último commit verificado y comprobar si cambió código o solo documentación.
+4. Consultar CI y logs de ambos sistemas antes de declarar un estado.
+5. Trabajar en la rama activa salvo autorización; no modificar main, fusionar ramas ni crear PR/release sin autorización.
+6. Cambios pequeños y verificables: pruebas, formato, lint, typecheck, build, revisión de diff y actualización documental.
+7. No comenzar AUD-009, AUD-010, AUD-011 ni AUD-013 hasta que el usuario autorice expresamente la tarea concreta.
+8. Al terminar una tarea, actualizar auditoría, roadmap, README y documentación funcional aplicable; registrar SHA exacto y run IDs.
 
 ## Fuentes de verdad
 
-Orden: código y pruebas realmente presentes y ejecutados; esquema/contrato versionado; especificaciones; este prompt; suposiciones. Si hay contradicción, identifícala y resuélvela explícitamente.
+Orden: código y pruebas presentes; resultados CI/logs del SHA exacto; JSON Schema/IR; documentación técnica; este prompt; supuestos. Si hay contradicción, señalarla y corregir documentación, no inventar comportamiento.
 
-## Informe de estado
+## Regla de informe
 
-Separa siempre planificado, implementado, verificado y pendiente. No declares el proyecto completo solo porque compile o CI esté verde.
+Separar siempre: planificado, implementado, probado localmente, verificado por CI, validado en aplicación de escritorio y pendiente. No afirmar que un archivo XMind abre en Desktop por haber generado y validado su ZIP.
