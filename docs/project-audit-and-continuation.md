@@ -44,7 +44,7 @@ La auditoría estática detectó dos defectos de CLI, registrados como AUD-013. 
 | Adaptador XMind | Implementado y validado funcionalmente en Desktop para el fixture AUD-009 | La matriz de capacidades sigue documentando pérdidas y elementos no soportados |
 | Adaptador SVG | Implementado y verificado | AUD-008; limitaciones visuales documentadas |
 | XMind Desktop | Completado y verificado manualmente | AUD-009; apertura, jerarquía visible, guardado de copia y reapertura confirmados por el usuario |
-| Documentación de usuario y publicación | En curso | AUD-010; guía, ejemplos, CI y artefacto instalable verificados; release pública pendiente de revisión de vulnerabilidades y canal; licencia MIT incorporada |
+| Documentación de usuario y publicación | En curso | AUD-010; guía, ejemplos, CI y artefacto instalable verificados; release pública pendiente de revisión de vulnerabilidades y preparación del workflow GitHub Releases; licencia MIT incorporada, canal acordado |
 | Visor web | Pendiente | AUD-011 |
 | Defectos CLI | Corregidos y verificados | AUD-013; CI 43003867274 |
 
