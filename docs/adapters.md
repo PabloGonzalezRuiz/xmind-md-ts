@@ -8,7 +8,7 @@ Cada adaptador recibe un IR validado/resuelto y devuelve un artefacto más un in
 
 El backend inicial utiliza el SDK oficial `xmind@2.2.33`, fijado exactamente en `package.json` y `package-lock.json`. La integración está encapsulada en `src/adapters/xmind/xmind-adapter.ts`; los tipos del SDK no se filtran al IR, parser ni CLI.
 
-La prueba aislada `scripts/probe-xmind-sdk.js` y el workflow `.github/workflows/xmind-sdk-probe.yml` verifican la generación e inspección del ZIP/JSON con Node 24 en Ubuntu y Windows. No se ha probado todavía la apertura y guardado en XMind Desktop; esa validación corresponde a AUD-009. El SDK no carga archivos XMind existentes desde la versión 2.2.0, por lo que no se ofrece importación ni round-trip.
+La prueba aislada `scripts/probe-xmind-sdk.js` y el workflow `.github/workflows/xmind-sdk-probe.yml` verifican la generación e inspección del ZIP/JSON con Node 24 en Ubuntu y Windows. AUD-009 completó la prueba manual en XMind Desktop: el usuario confirmó apertura del archivo, inspección de jerarquía, guardado de copia y reapertura correcta. La versión exacta de Desktop y el sistema operativo no quedaron registrados. Esta prueba no certifica todas las funciones ni todos los estilos. El SDK no carga archivos XMind existentes desde la versión 2.2.0, por lo que no se ofrece importación ni round-trip.
 
 No se utiliza `Topic.addLabel()`: el helper oficial escribe un array, aunque el schema del SDK espera una cadena. El adaptador asigna directamente la propiedad `labels` como cadena.
 
@@ -102,4 +102,4 @@ Niveles separados:
 4. Apertura y guardado en XMind Desktop.
 5. Inspección visual con fixtures y pruebas de regresión.
 
-Solo los niveles realmente ejecutados pueden declararse completados. La apertura en XMind Desktop debe indicar versión y resultado.
+Solo los niveles realmente ejecutados pueden declararse completados. AUD-009 valida apertura, estructura visible, guardado y reapertura; quedan sin registrar la versión exacta de XMind Desktop y el sistema operativo. La fidelidad de todas las propiedades no está certificada.
