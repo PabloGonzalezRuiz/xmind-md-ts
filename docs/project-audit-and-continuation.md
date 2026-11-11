@@ -44,7 +44,7 @@ La auditoría estática detectó dos defectos de CLI, registrados como AUD-013. 
 | Adaptador XMind | Implementado y validado funcionalmente en Desktop para el fixture AUD-009 | La matriz de capacidades sigue documentando pérdidas y elementos no soportados |
 | Adaptador SVG | Implementado y verificado | AUD-008; limitaciones visuales documentadas |
 | XMind Desktop | Completado y verificado manualmente | AUD-009; apertura, jerarquía visible, guardado de copia y reapertura confirmados por el usuario |
-| Documentación de usuario y publicación | En curso | AUD-010; guía, ejemplos, CI y artefacto instalable verificados; release pública pendiente de licencia y revisión de vulnerabilidades |
+| Documentación de usuario y publicación | En curso | AUD-010; guía, ejemplos, CI y artefacto instalable verificados; release pública pendiente de revisión de vulnerabilidades y canal; licencia MIT incorporada |
 | Visor web | Pendiente | AUD-011 |
 | Defectos CLI | Corregidos y verificados | AUD-013; CI 43003867274 |
 
@@ -202,7 +202,7 @@ La auditoría inicial no modificó código. La corrección posterior y su verifi
 | AUD-007 | P1 | Exportador XMind inicial | Completada y verificada |
 | AUD-008 | P2 | Exportador SVG | Completada y verificada |
 | AUD-009 | P2 | Validación de apertura/guardado en XMind Desktop | Completada y verificada: apertura, visualización, guardado y reapertura confirmados por el usuario; versión de XMind y SO no registrados |
-| AUD-010 | P2 | Documentación de usuario y publicación | En curso: guía, ejemplos, empaquetado e instalación limpia verificados en CI Ubuntu/Windows; artefacto generado; release pública pendiente de licencia, auditoría de vulnerabilidades y canal |
+| AUD-010 | P2 | Documentación de usuario y publicación | En curso: guía, ejemplos, empaquetado e instalación limpia verificados en CI Ubuntu/Windows; artefacto generado; release pública pendiente de auditoría de vulnerabilidades y canal; licencia MIT incorporada |
 | AUD-011 | P3 | Visor web TypeScript | Pendiente |
 | AUD-013 | P1 | Corregir defectos de derivación de salida y stderr de CLI | Completada y verificada; CI 43003867274, 124/124 pruebas Ubuntu/Windows |
 
