@@ -82,11 +82,9 @@ describe('CLI', () => {
     { source: 'Markdown', format: 'svg', extension: '.svg' },
     { source: 'JSON', format: 'xmind', extension: '.xmind' },
     { source: 'JSON', format: 'svg', extension: '.svg' },
-  ])('deriva el nombre de salida correcto desde $source para $format sin --output', async ({
-    source,
-    format,
-    extension,
-  }) => {
+  ])(
+    'deriva el nombre de salida correcto desde $source para $format sin --output',
+    async ({ source, format, extension }) => {
     let inputPath = markdownPath;
     let basePath = markdownPath.slice(0, -'.md'.length);
     if (source === 'JSON') {
@@ -102,10 +100,13 @@ describe('CLI', () => {
     if (format === 'xmind') {
       expect((await readFile(outputPath)).subarray(0, 2).toString()).toBe('PK');
     } else {
-      expect(await readFile(outputPath, 'utf8')).toContain('<svg xmlns="http://www.w3.org/2000/svg"');
+      expect(await readFile(outputPath, 'utf8')).toContain(
+        '<svg xmlns="http://www.w3.org/2000/svg"',
+      );
     }
-    expect(result.stdout).toContain(outputPath);
-  });
+      expect(result.stdout).toContain(outputPath);
+    },
+  );
 
   it('termina el error de exportación XMind con un salto de línea real', async () => {
     const ir = parseMarkdown('# Mapa\n\n## Rama A\n\n## Rama B\n');
