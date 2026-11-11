@@ -19,7 +19,8 @@ No conviertas línea por línea el proyecto Python anterior. Reutiliza requisito
 - Probe SDK XMind AUD-013 [43003867447](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867447): Ubuntu y Windows, correcto.
 - AUD-001 a AUD-009 y AUD-013 están completadas y verificadas en la rama activa.
 - AUD-009: workflow 43009405102 satisfactorio; el usuario confirmó apertura, visualización de la jerarquía, guardado de una copia y reapertura correcta en XMind Desktop. Versión exacta de XMind Desktop y sistema operativo no facilitados. Procedimiento y evidencia: docs/aud-009-xmind-desktop-validation.md y docs/project-audit-and-continuation.md.
-- Pendientes: AUD-010 (documentación de usuario/publicación) y AUD-011 (visor web); requieren autorización expresa antes de iniciarse.
+- AUD-010 está autorizada y en curso: guía `docs/user-guide.md`, ejemplos `examples/`, política `docs/release-readiness.md` y smoke test de ejemplos en `npm run verify`. Pendiente CI de esta puerta y decisión de licencia/canal de distribución.
+- AUD-011 (visor web) sigue pendiente y requiere autorización expresa.
 - main sigue en 6aca81b59dbfcfc13034e7e1115c70f7691c5035 y no contiene el desarrollo. No fusionar, abrir PR ni crear release sin autorización expresa.
 
 El estado completo, las limitaciones, el backlog y la historia están en docs/project-audit-and-continuation.md y docs/technical-audit-2026-11-11.md.
@@ -89,7 +90,7 @@ AUD-013 (completada y verificada):
 4. Consultar CI y logs de ambos sistemas antes de declarar un estado.
 5. Trabajar en la rama activa salvo autorización; no modificar main, fusionar ramas ni crear PR/release sin autorización.
 6. Cambios pequeños y verificables: pruebas, formato, lint, typecheck, build, revisión de diff y actualización documental.
-7. AUD-009 está completada y verificada. No comenzar AUD-010 ni AUD-011 hasta que el usuario autorice expresamente la tarea concreta.
+7. AUD-009 está completada y verificada. AUD-010 está autorizada y en curso. No comenzar AUD-011 hasta autorización expresa.
 8. Al terminar una tarea, actualizar auditoría, roadmap, README y documentación funcional aplicable; registrar SHA exacto y run IDs.
 
 ## Fuentes de verdad
