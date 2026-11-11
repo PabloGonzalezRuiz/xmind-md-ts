@@ -62,6 +62,18 @@ describe('CLI', () => {
     expect(bytes.subarray(0, 2).toString()).toBe('PK');
   });
 
+  it('exporta SVG desde Markdown y conserva metadatos IR', async () => {
+    const output = join(directory, 'mapa.svg');
+    const result = execute(['export', markdownPath, '--format', 'svg', '--output', output]);
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain('SVG generado');
+    const svg = await readFile(output, 'utf8');
+    expect(svg).toContain('<svg xmlns="http://www.w3.org/2000/svg"');
+    expect(svg).toContain('id="xmind-md-ir"');
+    expect(svg).toContain('Rama A');
+  });
+
   it('valida Markdown y JSON IR', async () => {
     const parsed = execute(['parse', markdownPath, '-o', jsonPath]);
     expect(parsed.status).toBe(0);
