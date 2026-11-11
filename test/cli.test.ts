@@ -5,6 +5,8 @@ import { join } from 'node:path';
 
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { parseMarkdown } from '../src/index.js';
+
 const cliPath = join(process.cwd(), 'src', 'cli', 'main.ts');
 let directory: string;
 let markdownPath: string;
@@ -72,6 +74,74 @@ describe('CLI', () => {
     expect(svg).toContain('<svg xmlns="http://www.w3.org/2000/svg"');
     expect(svg).toContain('id="xmind-md-ir"');
     expect(svg).toContain('Rama A');
+  });
+
+
+  it.each([
+    { source: 'Markdown', format: 'xmind', extension: '.xmind' },
+    { source: 'Markdown', format: 'svg', extension: '.svg' },
+    { source: 'JSON', format: 'xmind', extension: '.xmind' },
+    { source: 'JSON', format: 'svg', extension: '.svg' },
+  ])('deriva el nombre de salida correcto desde $source para $format sin --output', async ({
+    source,
+    format,
+    extension,
+  }) => {
+    let inputPath = markdownPath;
+    let basePath = markdownPath.slice(0, -'.md'.length);
+    if (source === 'JSON') {
+      await writeFile(jsonPath, JSON.stringify(parseMarkdown('# Mapa de prueba\n\n## Rama A\n')));
+      inputPath = jsonPath;
+      basePath = jsonPath.slice(0, -'.json'.length);
+    }
+
+    const result = execute(['export', inputPath, '--format', format]);
+    const outputPath = basePath + extension;
+
+    expect(result.status).toBe(0);
+    if (format === 'xmind') {
+      expect((await readFile(outputPath)).subarray(0, 2).toString()).toBe('PK');
+    } else {
+      expect(await readFile(outputPath, 'utf8')).toContain('<svg xmlns="http://www.w3.org/2000/svg"');
+    }
+    expect(result.stdout).toContain(outputPath);
+  });
+
+  it('termina el error de exportación XMind con un salto de línea real', async () => {
+    const ir = parseMarkdown('# Mapa\n\n## Rama A\n\n## Rama B\n');
+    const [first, second] = ir.sheet.rootTopic.children;
+    if (!first || !second) throw new Error('El fixture debe tener dos temas hijos.');
+    ir.sheet.relationships.push({
+      id: 'relation-1',
+      sourceTopicId: first.id,
+      targetTopicId: second.id,
+    });
+    await writeFile(jsonPath, JSON.stringify(ir));
+
+    const result = execute(['export', jsonPath, '--format', 'xmind']);
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain('Error de exportación XMind:');
+    expect(result.stderr).toMatch(/\n$/);
+    expect(result.stderr).not.toContain('\\n');
+  });
+
+  it('termina el error de exportación SVG con un salto de línea real', async () => {
+    const ir = parseMarkdown('# Mapa\n');
+    ir.assets.push({ id: 'asset-1', uri: 'images/diagrama.png', mediaType: 'image/png' });
+    ir.sheet.rootTopic.content.push({
+      type: 'image',
+      assetId: 'asset-1',
+      alt: 'Diagrama de ejemplo',
+    });
+    await writeFile(jsonPath, JSON.stringify(ir));
+
+    const result = execute(['export', jsonPath, '--format', 'svg']);
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain('Error de exportación SVG:');
+    expect(result.stderr).toMatch(/\n$/);
+    expect(result.stderr).not.toContain('\\n');
   });
 
   it('valida Markdown y JSON IR', async () => {
