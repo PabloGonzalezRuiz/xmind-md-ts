@@ -279,7 +279,6 @@ function renderNode(node: TopicLayout, styles: Map<string, StyleValues>): string
   const radius = lengthInPixels(values?.borderRadius, 8);
   const textAnchor = asString(values?.textAlign, 'center') === 'left' ? 'start' : 'middle';
   const textX = textAnchor === 'start' ? node.x + NODE_PADDING_X : node.x + node.width / 2;
-  const textWidth = Math.max(1, node.width - NODE_PADDING_X * 2);
   const textHeight = node.lines.length * node.lineHeight;
   const metadata = [
     ...(topic.labels ?? []),
