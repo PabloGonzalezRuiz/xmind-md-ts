@@ -1,9 +1,8 @@
 import { createRequire } from 'node:module';
-import { basename, dirname, resolve } from 'node:path';
+import { basename, dirname, join, resolve } from 'node:path';
 import { mkdir } from 'node:fs/promises';
 
 import type {
-  Asset,
   ContentBlock,
   IrDocument,
   Topic as IrTopic,
@@ -112,10 +111,6 @@ function renderBlocks(blocks: ContentBlock[]): string {
     .join('\n\n');
 }
 
-function collectAssets(document: IrDocument): Map<string, Asset> {
-  return new Map(document.assets.map((asset) => [asset.id, asset]));
-}
-
 function markerValue(markerName: string, marker: SdkMarkerConstructor): unknown | undefined {
   const normalized = markerName.toLowerCase();
   for (const group of marker.groups()) {
@@ -137,6 +132,7 @@ function exportTopicTree(
   topicIds: Map<string, string>,
   features: XMindExportResult['features'],
   markerApi: SdkMarkerConstructor,
+  topicParents: Map<string, string>,
 ): void {
   topics.forEach((topic, index) => {
     const topicPath = `${path}.children[${index}]`;
@@ -169,6 +165,7 @@ function exportTopicTree(
       return;
     }
     topicIds.set(topic.id, sdkId);
+    topicParents.set(topic.id, parentSdkId);
     features.topics += 1;
     if (topic.hyperlink) features.hyperlinks += 1;
 
@@ -225,6 +222,7 @@ function exportTopicTree(
       topicIds,
       features,
       markerApi,
+      topicParents,
     );
   });
 }
@@ -243,6 +241,10 @@ function countImageBlocks(blocks: ContentBlock[]): number {
     }
   }
   return count;
+}
+
+function hasTopicStyles(topic: IrTopic): boolean {
+  return Boolean(topic.style) || topic.children.some(hasTopicStyles);
 }
 
 /**
@@ -265,9 +267,6 @@ export async function exportXMindFile(
     throw new Error('El nombre del archivo XMind no es válido.');
   }
 
-  const assetMap = collectAssets(document);
-  void assetMap;
-
   if (document.sheet.relationships.length) {
     addDiagnostic(
       diagnostics,
@@ -286,7 +285,7 @@ export async function exportXMindFile(
       'sheet.boundaries',
     );
   }
-  if (document.styleSets.length || document.sheet.rootTopic.style) {
+  if (document.styleSets.length || hasTopicStyles(document.sheet.rootTopic)) {
     addDiagnostic(
       diagnostics,
       'XMIND_STYLES_UNSUPPORTED',
@@ -295,13 +294,7 @@ export async function exportXMindFile(
       'styleSets',
     );
   }
-  const imageCount =
-    countImageBlocks(document.sheet.rootTopic.content) +
-    document.sheet.rootTopic.children.reduce(
-      (sum, topic) => sum + countImageBlocks(topic.content),
-      0,
-    );
-  if (document.assets.length || imageCount) {
+  if (document.assets.length) {
     addDiagnostic(
       diagnostics,
       'XMIND_ASSETS_NOT_EMBEDDED',
@@ -316,6 +309,49 @@ export async function exportXMindFile(
   const topicApi = new sdk.Topic({ sheet });
   const rootSdkId = topicApi.cid();
   const topicIds = new Map<string, string>([[document.sheet.rootTopic.id, rootSdkId]]);
+  const topicParents = new Map<string, string>();
+
+  const root = document.sheet.rootTopic;
+  const rootNoteParts: string[] = [];
+  if (root.content.length) {
+    rootNoteParts.push(`Contenido\\n${renderBlocks(root.content)}`);
+    addDiagnostic(
+      diagnostics,
+      'XMIND_CONTENT_AS_NOTE',
+      'warning',
+      'El contenido del tema central se ha convertido en texto de nota.',
+      'sheet.rootTopic.content',
+    );
+  }
+  if (root.notes?.length) rootNoteParts.push(renderBlocks(root.notes));
+  if (rootNoteParts.length) {
+    topicApi.on(rootSdkId).note(rootNoteParts.join('\\n\\n'));
+    features.notes += 1;
+  }
+  for (const markerName of root.markers ?? []) {
+    const value = markerValue(markerName, sdk.Marker);
+    if (value === undefined) {
+      addDiagnostic(
+        diagnostics,
+        'XMIND_MARKER_UNSUPPORTED',
+        'error',
+        `El marcador "${markerName}" no existe en el catálogo del SDK.`,
+        'sheet.rootTopic.markers',
+      );
+      continue;
+    }
+    topicApi.on(rootSdkId).marker(value);
+    features.markers += 1;
+  }
+  if (root.hyperlink) {
+    addDiagnostic(
+      diagnostics,
+      'XMIND_ROOT_HYPERLINK_OMITTED',
+      'warning',
+      'El SDK no expone un setter de hipervínculo para el tema central en su API de alto nivel.',
+      'sheet.rootTopic.hyperlink',
+    );
+  }
 
   exportTopicTree(
     topicApi,
@@ -326,12 +362,20 @@ export async function exportXMindFile(
     topicIds,
     features,
     sdk.Marker,
+    topicParents,
   );
 
   for (const summary of document.sheet.summaries) {
     const first = topicIds.get(summary.topicIds[0] ?? '');
     const last = topicIds.get(summary.topicIds.at(-1) ?? '');
-    if (!first || !last || first === last) {
+    const firstTopicId = summary.topicIds[0] ?? '';
+    const lastTopicId = summary.topicIds.at(-1) ?? '';
+    if (
+      !first ||
+      !last ||
+      first === last ||
+      topicParents.get(firstTopicId) !== topicParents.get(lastTopicId)
+    ) {
       addDiagnostic(
         diagnostics,
         'XMIND_SUMMARY_RANGE_INVALID',
@@ -345,8 +389,7 @@ export async function exportXMindFile(
     features.summaries += 1;
   }
 
-  for (const topic of [document.sheet.rootTopic, ...document.sheet.rootTopic.children]) {
-    if (topic.labels?.length && topic.id === document.sheet.rootTopic.id) {
+  if (root.labels?.length) {
       addDiagnostic(
         diagnostics,
         'XMIND_ROOT_LABELS_OMITTED',
@@ -354,7 +397,6 @@ export async function exportXMindFile(
         'Las etiquetas del tema central no se exportan en esta versión.',
         'sheet.rootTopic.labels',
       );
-    }
   }
 
   if (!workbook.theme(document.sheet.title, theme)) {
@@ -393,7 +435,7 @@ export async function exportXMindFile(
     throw new XMindExportError('El SDK no ha podido guardar el paquete XMind.', diagnostics);
   }
 
-  return { outputPath: `${outputDirectory}/${filename}.xmind`, diagnostics, features };
+  return { outputPath: join(outputDirectory, `${filename}.xmind`), diagnostics, features };
 }
 
 export class XMindExportError extends Error {

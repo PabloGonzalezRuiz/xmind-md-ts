@@ -52,6 +52,16 @@ describe('CLI', () => {
     expect(ir.sheet.rootTopic.children[0]?.title).toBe('Rama A');
   });
 
+  it('exporta un paquete XMind desde Markdown', async () => {
+    const output = join(directory, 'mapa.xmind');
+    const result = execute(['export', markdownPath, '--format', 'xmind', '--output', output]);
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain('Paquete XMind generado');
+    const bytes = await readFile(output);
+    expect(bytes.subarray(0, 2).toString()).toBe('PK');
+  });
+
   it('valida Markdown y JSON IR', async () => {
     const parsed = execute(['parse', markdownPath, '-o', jsonPath]);
     expect(parsed.status).toBe(0);

@@ -9,6 +9,7 @@ import {
   serializeIrJson,
   validateIrDocumentComplete,
   exportXMindFile,
+  XMindExportError,
 } from '../index.js';
 import type { IrDocument } from '../../spec/ir-v1.types.js';
 
@@ -41,7 +42,7 @@ Uso:
   xmind-md --version
 
 Opciones:
-  -o, --output       Archivo de salida. Si se omite, se escribe en stdout.
+  -o, --output       Archivo de salida. Si se omite, JSON va a stdout y XMind se guarda junto a la entrada.
   --mode             Modo del parser Markdown: compatible (por defecto) o strict.
   --input-format     Formato de entrada para stdin o para forzar la detección: markdown o json.
   --format           Formato de exportación: json (por defecto) o xmind.\n  --export-mode      Política XMind: strict (por defecto) o compatible (permite pérdidas diagnosticadas).
@@ -279,6 +280,9 @@ async function run(options: Options): Promise<void> {
     if (options.input !== '-' && resolve(options.input) === resolve(outputPath)) {
       throw new UsageError('La ruta de salida no puede sobrescribir el archivo de entrada.');
     }
+    if (outputPath === '-') {
+      throw new UsageError('La salida XMind requiere una ruta de archivo; no admite stdout.');
+    }
     const result = await exportXMindFile(ir as IrDocument, {
       outputPath: resolve(outputPath),
       mode: options.exportMode,
@@ -321,6 +325,10 @@ async function main(): Promise<void> {
     if (error instanceof UsageError) {
       process.stderr.write(`Error de uso: ${error.message}\nConsulta "xmind-md --help".\n`);
       process.exitCode = EXIT.usage;
+    } else if (error instanceof XMindExportError) {
+      reportDiagnostics(error.diagnostics);
+      process.stderr.write(`Error de exportación XMind: ${error.message}\\n`);
+      process.exitCode = EXIT.invalid;
     } else if (error instanceof InputError) {
       if (error.message !== 'El documento no supera la validación.') {
         process.stderr.write(`Error de entrada: ${error.message}\n`);
