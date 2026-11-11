@@ -1,0 +1,39 @@
+name: XMind SDK probe
+
+on:
+  push:
+    branches: ['feature/aud-003-runtime-schema']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: xmind-sdk-probe-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    name: Official XMind SDK probe (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+
+      - name: Install official SDK in an isolated temporary directory
+        shell: bash
+        run: npm install --prefix "$RUNNER_TEMP/xmind-sdk-probe" --no-save --no-package-lock --no-audit --no-fund xmind@2.2.33
+
+      - name: Generate and inspect an XMind package
+        run: node scripts/probe-xmind-sdk.js
+        env:
+          XMIND_SDK_PACKAGE: ${{ runner.temp }}/xmind-sdk-probe/node_modules/xmind
