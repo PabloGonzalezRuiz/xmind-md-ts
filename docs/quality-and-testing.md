@@ -15,6 +15,7 @@ npm run verify ejecuta:
 5. npm test
 6. npm run build
 7. npm run verify:examples (valida ejemplos y exporta JSON, XMind y SVG con la CLI compilada).
+8. npm run verify:package (empaqueta, instala en un directorio limpio y prueba la CLI instalada).
 
 El workflow .github/workflows/ci.yml ejecuta las mismas comprobaciones en Ubuntu y Windows y añade un smoke test de la CLI compilada. La prueba aislada del SDK XMind tiene workflow independiente.
 
@@ -25,9 +26,8 @@ El workflow .github/workflows/ci.yml ejecuta las mismas comprobaciones en Ubuntu
 - CI general [43003867274](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867274): Ubuntu y Windows, 124/124 pruebas en cada sistema; formato, lint, tipos generados, typecheck, build y smoke test CLI correctos.
 - Probe SDK [43003867447](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867447): Ubuntu y Windows correctos.
 - AUD-009 Desktop: workflow [43009405102](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43009405102) correcto; el usuario confirmó apertura, guardado y reapertura en XMind Desktop.
-- AUD-010 añade ahora `scripts/verify-examples.js` y lo integra en `npm run verify`. La validación de esta nueva puerta queda pendiente de una ejecución CI sobre el commit que la incorpora.
-
-No se afirma que los commits documentales tengan una ejecución CI propia hasta que el nuevo run termine.
+- CI AUD-010 [43012605756](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43012605756): Ubuntu y Windows success; 11 archivos y 124/124 pruebas por sistema. Incluye formato, lint, tipos, typecheck, build, CLI, validación de ambos ejemplos, exportación JSON/XMind/SVG e instalación limpia del paquete.
+- Artefacto de distribución [43012600819](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43012600819): generación y upload correctos del tarball 0.1.0 con SHA-256. La release pública sigue bloqueada por licencia no decidida, `private: true` y revisión de vulnerabilidades.
 
 ## 3. Pruebas por capas
 
