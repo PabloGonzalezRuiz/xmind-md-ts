@@ -13,7 +13,7 @@ Rama de trabajo: **feature/aud-003-runtime-schema**.
 - CI general: [42989195843](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195843), 118/118 pruebas, Ubuntu y Windows.
 - Prueba aislada del SDK XMind: [42989195787](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195787), Ubuntu y Windows.
 - Código probado: 980279a6e61a990769e9884ea1fc51888d5bf054.
-- HEAD actual de la rama: 8a8b28953ac29d7bcd5d3707f19b484d8834915c; los dos commits posteriores solo modifican documentación.
+- HEAD auditado antes de esta sincronización documental: 8a8b28953ac29d7bcd5d3707f19b484d8834915c. Los commits posteriores de esta auditoría solo modifican documentación; consulta GitHub para el HEAD actual de la rama.
 - main permanece en 6aca81b59dbfcfc13034e7e1115c70f7691c5035; el desarrollo no está integrado.
 
 **Pendiente:** validación de apertura/guardado en XMind Desktop, documentación final/publicación y visor web. Generar un paquete XMind válido estructuralmente no demuestra que XMind Desktop lo abra, lo guarde o lo represente fielmente.
