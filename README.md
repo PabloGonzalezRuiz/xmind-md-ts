@@ -40,6 +40,8 @@ AUD-013 está corregida y verificada: la CLI deriva correctamente los nombres de
 
 ## Documentación y fuentes de verdad
 
+- [Changelog](CHANGELOG.md)
+
 - [Prompt maestro para IA](docs/ai-master-prompt.md)
 - [Auditoría y registro de continuidad](docs/project-audit-and-continuation.md)
 - [Auditoría técnica detallada 2026-11-11](docs/technical-audit-2026-11-11.md)
