@@ -2,91 +2,91 @@
 
 ## 1. Objetivo
 
-Transformar Markdown enriquecido en mapas mentales mediante un compilador modular. El formato XMind es el primer destino, no el modelo interno.
+Transformar Markdown enriquecido en mapas mentales mediante un compilador modular. XMind es el primer destino, no el modelo interno.
 
-## 2. Flujo lógico
+## 2. Flujo lógico implementado
 
-```text
-Markdown + YAML + directivas
-            |
-            v
-      Parser Markdown
-            |
-            v
-       AST semántico
-            |
-            v
-   Construcción del IR tipado
-            |
-            v
-  Validación + diagnósticos
-            |
-            v
- Resolución de estilos y referencias
-            |
-            v
-      IR validado/resuelto
-       /       |        \
-      v        v         v
-   XMind     JSON       SVG
-                         |
-                         v
-                  Visor web futuro
-```
+    Markdown + YAML + directivas
+                |
+                v
+          Parser Markdown
+                |
+                v
+          IR v1.0.0
+                |
+                v
+      Validación estructural
+          JSON Schema/Ajv
+                |
+                v
+       Validación semántica
+                |
+                v
+       Resolución de estilos
+                |
+                v
+          IR validado
+          /    |    \
+         v     v     v
+      XMind   JSON   SVG
+                       |
+                       v
+                Visor web futuro
 
-El AST del parser puede ser transitorio. El IR es el contrato estable entre las fases del compilador y los adaptadores. La versión normativa actual es IR v1.0.0, definida en `docs/ir-specification.md` y validada estructuralmente por `spec/ir-v1.schema.json`.
+El pipeline completo de validación se implementa en src/validation/complete-validator.ts. La CLI y los adaptadores consumen IR validado; la resolución de estilos es una vista derivada y no muta las declaraciones del documento.
 
 ## 3. Módulos y responsabilidades
 
 | Módulo | Responsabilidad | No debe hacer |
 |---|---|---|
-| `authoring` | Tipos y metadatos de entrada | Serializar XMind |
-| `parser` | Markdown y directivas a estructura semántica | Resolver estilos de destino |
-| `ir` | Entidades, tipos, serialización y versionado | Importar SDK XMind |
-| `validation` | Reglas estructurales y semánticas | Corregir silenciosamente datos |
-| `styles` | Cargar, heredar y resolver estilos | Conocer campos internos de XMind |
-| `adapters/xmind` | IR a paquete XMind | Interpretar Markdown |
-| `adapters/json` | Exportar IR para inspección/intercambio | Cambiar el IR |
-| `adapters/svg` | Renderizar SVG desde IR | Reinterpretar directivas |
-| `cli` | Argumentos, rutas, opciones y coordinación | Contener lógica de dominio |
-| `viewer` (futuro) | Visualización e interacción web | Mantener una segunda semántica del documento |
+| src/markdown | Markdown, front matter y directivas a IR | Resolver estilos de destino |
+| spec | Contrato IR, schema y tipos generados | Contener lógica de ejecución |
+| src/validation | Validación estructural y semántica | Corregir silenciosamente datos |
+| src/styles | Catálogo y resolución de estilos | Conocer campos internos del SDK XMind |
+| src/adapters/json | Serialización canónica del IR | Cambiar el IR |
+| src/adapters/xmind | IR a paquete XMind | Interpretar Markdown |
+| src/adapters/svg | IR a SVG | Reinterpretar directivas |
+| src/cli | Argumentos, rutas y coordinación | Contener reglas de dominio |
+| viewer (futuro) | Visualización e interacción web | Mantener semántica duplicada |
 
-La estructura física definitiva se ajustará durante la fase de implementación, sin romper estas fronteras.
+La implementación está separada en archivos TypeScript; consulta el inventario de módulos en docs/project-audit-and-continuation.md.
 
 ## 4. Modelo de ejecución
 
 ### Local
 
-Node.js ejecuta la CLI en Windows, Linux o macOS. npm instala las dependencias y los scripts del proyecto ofrecen comandos uniformes para desarrollo, pruebas y build.
+Node.js 24 ejecuta la CLI en Windows, Linux o macOS. npm instala dependencias y scripts uniformes para desarrollo, pruebas y build.
 
 ### GitHub Actions
 
-Los workflows configuran Node.js, instalan con `npm ci`, ejecutan comprobación de tipos, lint, pruebas y build. Los workflows pueden activarse en `push`, `pull_request` y manualmente mediante `workflow_dispatch`.
-
-GitHub Actions debe usar las mismas órdenes que el desarrollo local. No debe existir una implementación distinta para CI.
+La CI general corre en Ubuntu y Windows, instala con npm ci y ejecuta formato, lint, comprobación de tipos generados, typecheck, Vitest, build y smoke test CLI. Un workflow separado prueba el SDK XMind en un directorio temporal aislado.
 
 ### Navegador
 
-El visor futuro será una aplicación web separada del núcleo de Node. Consumirá IR serializado y compartirá tipos/contratos cuando sea viable, pero no dependerá de APIs exclusivas de Node. Los módulos compartidos deben evitar filesystem, procesos y otras APIs de Node.
+El visor futuro será una aplicación web separada del núcleo Node. Consumirá IR serializado y compartirá contratos cuando sea viable. No forma parte de la implementación actual.
 
 ## 5. Contratos entre capas
 
-- El parser entrega una estructura semántica con ubicaciones de origen.
-- El constructor produce un IR conforme a la versión de esquema.
-- El validador devuelve diagnósticos tipados y no muta silenciosamente el documento.
-- El resolutor produce valores efectivos y conserva procedencia.
-- Cada adaptador declara sus capacidades y pérdidas.
-- La CLI devuelve códigos de salida consistentes y mensajes útiles.
-- Los adaptadores no alteran el IR de entrada.
+- El parser produce IR y diagnósticos con ubicaciones de origen.
+- El JSON Schema define la estructura normativa; los tipos TS se generan desde él.
+- El validador estructural no sustituye la validación semántica.
+- El validador semántico comprueba referencias e invariantes globales.
+- El resolutor produce estilos efectivos y procedencia sin modificar el IR.
+- Cada adaptador declara capacidades, aproximaciones, omisiones y pérdidas.
+- La CLI devuelve códigos de salida estables y separa salida de datos y diagnósticos.
 
 ## 6. Determinismo e identidad
 
-La misma fuente y configuración deben producir el mismo IR lógico y los mismos identificadores, salvo campos explícitamente volátiles. Se admiten IDs explícitos para conservar identidad durante renombrados o movimientos. Los IDs derivados se calculan de forma determinista según namespace y ruta estructural; pueden cambiar al mover/reordenar nodos. Para preservar identidad entre refactorizaciones se requieren IDs explícitos.
+La misma fuente y configuración deben producir el mismo IR lógico y los mismos identificadores, salvo campos explícitamente volátiles. Los IDs explícitos preservan identidad durante renombrados o movimientos. Los IDs derivados dependen de namespace y ruta estructural; pueden cambiar al mover o reordenar nodos.
 
 ## 7. Errores y diagnósticos
 
-Los diagnósticos deben incluir código estable, severidad, mensaje, archivo y ubicación cuando exista, más una sugerencia cuando sea útil. Distinguir errores de sintaxis, validación, resolución y exportación. Los adaptadores deben fallar explícitamente ante datos que no puedan representar de forma segura.
+Los diagnósticos incluyen código estable, severidad, mensaje, ruta y ubicación cuando existe. Se distinguen errores de parsing, validación estructural, validación semántica, estilos y exportación. Los adaptadores fallan explícitamente ante datos que no pueden representar de forma segura.
 
 ## 8. Evolución
 
-El IR se versiona independientemente del paquete npm. Los adaptadores declaran las versiones de IR que soportan. Los cambios incompatibles requieren migración o rechazo explícito; no se reinterpretan silenciosamente.
+El IR se versiona independientemente del paquete npm. Los adaptadores declaran versiones soportadas. Los cambios incompatibles requieren migración o rechazo explícito; no se reinterpretan silenciosamente.
+
+## 9. Estado de interoperabilidad
+
+La exportación estructural XMind está implementada con xmind 2.2.33 y se prueba en CI sobre Ubuntu/Windows. No se ha validado apertura/guardado con XMind Desktop. El SVG es determinista y autocontenido, pero documenta pérdidas visuales para assets, sombras y contenido enriquecido. Consulta docs/adapters.md.
