@@ -198,16 +198,7 @@ function exportTopicTree(
       features.markers += 1;
     }
 
-    const unsupportedBlocks = topic.content.filter((block) => block.type === 'image');
-    for (const block of unsupportedBlocks) {
-      addDiagnostic(
-        diagnostics,
-        'XMIND_IMAGE_NOT_EMBEDDED',
-        'error',
-        'La imagen se representa como texto alternativo; el recurso binario no se incrusta en esta versión.',
-        `${topicPath}.content`,
-      );
-    }
+
 
     exportTopicTree(
       topicApi,
