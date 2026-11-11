@@ -62,7 +62,7 @@ La rama feature/phase-6-style-engine contiene un prototipo anterior de checker e
 - Importación de archivos XMind existentes o round-trip XMind.
 - Integración/merge de las ramas de desarrollo en main.
 - Release pública o paquete publicado.
-- Pruebas automatizadas de apertura/guardado en XMind Desktop.
+- Automatización de apertura/guardado en XMind Desktop (la validación de escritorio se realizó manualmente por el usuario, no mediante pruebas automatizadas).
 
 ## 4. Arquitectura y APIs observadas
 
@@ -221,12 +221,12 @@ Se sincronizaron: README.md, docs/ai-master-prompt.md, docs/roadmap.md, docs/arc
 | AUD-006 | Verificada | Evaluación SDK y ADR |
 | AUD-007 | Verificada | Exportador XMind inicial |
 | AUD-008 | Verificada | Exportador SVG |
-| AUD-009 | En curso | Fixture y workflow para artefacto descargable preparados; falta abrir, guardar y reabrir con XMind Desktop y registrar versión/fidelidad |
+| AUD-009 | Completada y verificada | Workflow 43009405102 correcto; usuario confirmó apertura, jerarquía visible, guardado y reapertura en XMind Desktop. Versión/SO no registrados |
 | AUD-010 | Pendiente | Documentación de usuario, ejemplos, instalación y publicación |
 | AUD-011 | Pendiente | Visor web, accesibilidad y Playwright |
 | AUD-013 | Resuelta posteriormente | Corrección y pruebas de regresión verificadas en la sección 11 |
 
-AUD-009 es la siguiente tarea de producto pendiente. AUD-013 se cerró posteriormente; la sección 11 registra la corrección y la evidencia de CI.
+AUD-009 y AUD-013 están cerradas. AUD-010 es la siguiente tarea de producto pendiente y requiere autorización expresa.
 
 ## 10. Protocolo para recuperar contexto
 
@@ -257,8 +257,12 @@ La incidencia registrada en la auditoría inicial se resolvió en la rama activa
 AUD-013 queda **completada y verificada**. Las tareas aún pendientes son AUD-009 (XMind Desktop), AUD-010 (documentación de usuario y publicación) y AUD-011 (visor web). No se ha modificado `main` ni se ha creado una release o PR.
 
 
-## 12. Seguimiento posterior: AUD-009 en curso
+## 12. Seguimiento posterior: AUD-009 completada
 
 El 2026-11-11 se autorizó iniciar AUD-009. En `feature/aud-003-runtime-schema` se añadieron un fixture Markdown (`fixtures/aud-009-desktop-validation.md`), un workflow (`.github/workflows/aud-009-xmind-desktop-artifact.yml`) que ejecuta `npm ci`, `npm run verify`, exporta mediante la CLI compilada, verifica el ZIP, calcula SHA-256 y publica el artefacto `aud-009-xmind-desktop-validation`, y el procedimiento `docs/aud-009-xmind-desktop-validation.md`.
 
-El HEAD de preparación del workflow es `323caef1df653fc569a169acda87a1f6ae088d66`. El diff desde el último código probado `fe1d3e510a76719f12d4eeaf0e081304720196b8` no modifica el código de aplicación. La ejecución del workflow y la prueba real de apertura, guardado y reapertura en XMind Desktop siguen pendientes de evidencia. AUD-009 permanece **en curso**, no completada.
+El HEAD de preparación del workflow es `323caef1df653fc569a169acda87a1f6ae088d66`. El diff desde el último código probado `fe1d3e510a76719f12d4eeaf0e081304720196b8` no modifica el código de aplicación. El workflow [43009405102](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43009405102) terminó correctamente. El usuario confirmó que el archivo abre en XMind Desktop, que la jerarquía se visualiza correctamente (aportó captura), que pudo guardar una copia con otro nombre y que la copia volvió a abrirse tras cerrar la aplicación conservando el contenido. No se comunicaron incidencias. La versión exacta de XMind Desktop y el sistema operativo no se facilitaron. AUD-009 queda **completada y verificada funcionalmente**; los metadatos del entorno quedan sin registrar.
+
+## 13. Cierre de AUD-009 — 2026-11-11
+
+La prueba de aceptación de escritorio se completó con confirmación directa del usuario. La evidencia cubre apertura, inspección visual de la estructura, guardado de copia y reapertura. No debe describirse como prueba automatizada: la automatización genera y publica el artefacto; la compatibilidad Desktop se comprobó manualmente. Workflow: [43009405102](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43009405102). Artefacto: `artifacts/aud-009/aud-009-desktop-validation.xmind`. Versión de XMind Desktop y sistema operativo: no facilitados.
