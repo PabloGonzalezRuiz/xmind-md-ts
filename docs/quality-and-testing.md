@@ -21,12 +21,12 @@ El workflow .github/workflows/ci.yml ejecuta las mismas comprobaciones en Ubuntu
 
 ## 2. Estado de verificación más reciente
 
-Último HEAD de trabajo verificado en AUD-010: `c276c839bacaf8fce4ee03ee8cea7f5caca12bb4` (código de aplicación AUD-013 sin cambios; se verificaron además scripts, ejemplos y paquete distribuible).
+Último HEAD verificado en CI: `3163ad7190494f21a9289468ea22438ce4544700`. CI [43013195119](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43013195119): Ubuntu y Windows success; 11 archivos y 124/124 pruebas por sistema. El código de aplicación no cambió respecto al SHA de AUD-013; se verificaron además documentación, scripts, ejemplos y paquete instalable.
 
 - CI general [43003867274](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867274): Ubuntu y Windows, 124/124 pruebas en cada sistema; formato, lint, tipos generados, typecheck, build y smoke test CLI correctos.
 - Probe SDK [43003867447](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867447): Ubuntu y Windows correctos.
 - AUD-009 Desktop: workflow [43009405102](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43009405102) correcto; el usuario confirmó apertura, guardado y reapertura en XMind Desktop.
-- CI AUD-010 [43012605756](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43012605756): Ubuntu y Windows success; 11 archivos y 124/124 pruebas por sistema. Incluye formato, lint, tipos, typecheck, build, CLI, validación de ambos ejemplos, exportación JSON/XMind/SVG e instalación limpia del paquete.
+- CI de empaquetado AUD-010 [43012605756](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43012605756): Ubuntu y Windows success; 11 archivos y 124/124 pruebas por sistema. Incluye formato, lint, tipos, typecheck, build, CLI, validación de ambos ejemplos, exportación JSON/XMind/SVG e instalación limpia del paquete.
 - Artefacto de distribución [43012600819](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43012600819): generación y upload correctos del tarball 0.1.0 con SHA-256. La release pública sigue bloqueada por licencia no decidida, `private: true` y revisión de vulnerabilidades.
 
 ## 3. Pruebas por capas
