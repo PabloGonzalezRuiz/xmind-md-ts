@@ -2,6 +2,11 @@
 
 ## Estado actual
 
+**Artefacto de distribución generado y verificado:** workflow [43012600819](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43012600819), basado en el commit `70bcbf42dd48fabb5108087f437d39446ce71f13`. Artefacto `xmind-md-ts-distribution` (ID `13851262408`), disponible hasta el 2026-12-11. Contiene `xmind-md-ts-0.1.0.tgz`, `README.txt` y `SHA256SUMS.txt`. SHA-256 del tarball: `8276da05de8d3d2c96781b48c6acd30780152b8d7d34adab4b430cdea89827dd`.
+
+La CI [43012605756](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43012605756), sobre el HEAD documental final `c276c839bacaf8fce4ee03ee8cea7f5caca12bb4`, terminó correctamente en Ubuntu y Windows: 124/124 pruebas por sistema, formato, lint, tipos generados, typecheck, build, smoke CLI, validación de los dos ejemplos, exportaciones JSON/XMind/SVG e instalación del tarball en un directorio limpio. El único commit entre el SHA que produjo el artefacto y el HEAD final elimina el workflow temporal de formateo; no modifica el contenido del paquete.
+
+
 AUD-010 prepara la documentación de usuario, ejemplos reproducibles y criterios de empaquetado. A fecha de esta revisión:
 
 - La aplicación funciona desde el repositorio con Node.js 24 y npm.
@@ -9,6 +14,7 @@ AUD-010 prepara la documentación de usuario, ejemplos reproducibles y criterios
 - `package.json` declara `private: true`, por lo que npm impide publicar el paquete en el registro.
 - La versión de paquete es `0.1.0`; no debe presentarse como una versión estable 1.0.
 - No hay todavía un archivo de licencia en la raíz. La licencia del SDK XMind no determina la licencia de este proyecto.
+- Una ejecución de instalación de dependencias registró 15 avisos de vulnerabilidad (14 moderadas y 1 alta); aún no se ha realizado la clasificación individual ni una auditoría de dependencias específica para release.
 - El SDK `xmind@2.2.33` está fijado, pero es una dependencia antigua y el adaptador no ofrece importación/round-trip ni mapea todas las capacidades del IR.
 
 Por estos motivos no se debe publicar todavía un paquete npm ni etiquetar una release estable como 1.0.0.
@@ -43,4 +49,4 @@ Este mecanismo es un artefacto temporal de CI, no una release permanente ni una 
 
 ## Restricciones de esta tarea
 
-La autorización de AUD-010 permite preparar la documentación y automatización de empaquetado. No implica elegir una licencia legal ni publicar en npm o crear una release pública sin una decisión explícita sobre esos dos puntos. No modificar `main`, fusionar ramas ni crear una release estable por inferencia.
+AUD-010 ya dispone de guía, ejemplos, verificación CI y artefacto instalable temporal. La release pública permanece bloqueada hasta decidir la licencia, revisar las vulnerabilidades reportadas y decidir el canal de publicación. La autorización de AUD-010 no implica elegir una licencia legal ni publicar en npm o crear una release pública sin una decisión explícita sobre esos puntos. No modificar `main`, fusionar ramas ni crear una release estable por inferencia.
