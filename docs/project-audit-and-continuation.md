@@ -269,3 +269,24 @@ Autorización recibida el 2026-11-11. Se ha preparado en `feature/aud-003-runtim
 - Validación manual confirmada por el usuario el 2026-11-11: apertura del archivo original; captura de la jerarquía visible; guardado de una copia con otro nombre; cierre y reapertura de la copia conservando el contenido. No se comunicaron incidencias.
 - La versión exacta de XMind Desktop y el sistema operativo no se facilitaron y quedan sin registrar.
 - AUD-009 queda completada y verificada funcionalmente. No se ha modificado `main`, ni creado PR, merge o release.
+
+
+## Actualización de auditoría — 2026-11-11 (13:25, Europe/Madrid)
+
+Esta sección prevalece sobre los SHA, estados y pendientes históricos anteriores cuando exista discrepancia.
+
+- Rama activa: `feature/aud-003-runtime-schema`.
+- HEAD comprobado: `72c411eed5b497d2399d152f1b27595ad468dd19` (`docs(release): registrar canal GitHub Releases acordado`).
+- `main`: `6aca81b59dbfcfc13034e7e1115c70f7691c5035`, sin cambios. La comparación actual informa 471 commits por delante y 0 por detrás.
+- CI en HEAD: [run 43015959095](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015959095), Ubuntu y Windows correctos; 124/124 pruebas por sistema y pasos de formato, lint, tipos generados, typecheck, build, smoke CLI, ejemplos y paquete instalable correctos.
+- Probe SDK en HEAD: [run 43015959098](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015959098), Ubuntu y Windows correctos.
+- Distribución: [run 43015946683](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015946683), job correcto; artefacto `xmind-md-ts-distribution`, ID `13852422612`, caduca el 2026-12-11. Digest SHA-256 del ZIP del artefacto de Actions: `b50009e4761e2d14b84b5eb84da2cb06b89e15503ccc851c74815ebf49022846`. Este digest identifica el ZIP del artefacto, no el tarball interno.
+- Los runs cancelados de commits intermedios durante la secuencia rápida de actualizaciones documentales corresponden a la política de concurrencia `cancel-in-progress: true`; no se consideran fallos de calidad. Los workflows del HEAD vigente sí finalizaron con éxito.
+- AUD-009: validación manual en XMind Desktop confirmada por el usuario; cerrada.
+- AUD-010: guía, ejemplos, licencia MIT, verificación del paquete y artefacto temporal completados. La publicación permanente en GitHub Releases sigue pendiente de preparar y probar el workflow de release, cerrar la auditoría de dependencias/licencias y completar los criterios restantes. npm queda aplazado y `private: true` se mantiene.
+- Hallazgo de seguridad no cerrado: un workflow anterior registró 15 avisos (14 moderados, 1 alto). No se ha hecho todavía una clasificación individual reproducible contra el lockfile actual; no presentar ese recuento como auditoría vigente ni como vulnerabilidades ya resueltas.
+- AUD-011 (visor web) continúa sin autorización y no debe iniciarse.
+
+### Próximo punto de reanudación
+
+Continuar AUD-010, en este orden: (1) ejecutar una auditoría reproducible de dependencias a partir de `package-lock.json`, clasificar cada aviso por paquete directo/transitivo, rango afectado, fix disponible e impacto; (2) revisar licencias de dependencias de producción y desarrollo y generar inventario; (3) documentar política de versión/tag y compatibilidad IR; (4) preparar un workflow de GitHub Releases en modo seguro, condicionado a tag y con permisos mínimos, sin publicarlo todavía; (5) probar el paquete y checksums desde un SHA CI-verificado; (6) presentar resultados y solicitar autorización explícita antes de crear una release pública. No modificar `main`, fusionar ramas ni iniciar AUD-011.
