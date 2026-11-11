@@ -1,6 +1,17 @@
 name: AUD-010 · Distribution package
 
 on:
+  push:
+    branches: ['feature/aud-003-runtime-schema']
+    paths:
+      - '.github/workflows/aud-010-distribution-artifact.yml'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'src/**'
+      - 'spec/**'
+      - 'bin/**'
+      - 'scripts/verify-package.js'
+      - 'docs/release-readiness.md'
   workflow_dispatch:
 
 permissions:
