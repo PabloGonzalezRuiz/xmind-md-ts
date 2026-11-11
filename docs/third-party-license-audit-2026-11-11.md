@@ -69,6 +69,6 @@ Los dos paquetes MPL-2.0 son `lightningcss@1.33.0` y el binario de plataforma (`
 
 ## Estado
 
-<badge>Inventario reproducible completado</badge>
+**Estado: inventario reproducible completado.**
 
 La auditoría se considera ejecutada en ambos sistemas. La incorporación/verificación de avisos de terceros en el paquete final sigue siendo criterio de release y se mantiene pendiente dentro de AUD-010.
