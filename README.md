@@ -77,3 +77,7 @@ npm run build
 npm start -- --help
 
 No integrar ramas, crear releases ni iniciar la siguiente tarea de producto sin respetar el protocolo de autorización documentado en el prompt maestro y la auditoría.
+
+## Licencia
+
+Este proyecto se distribuye bajo la licencia [MIT](LICENSE), Copyright (c) 2026 Pablo González Ruiz.
