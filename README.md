@@ -10,15 +10,15 @@ Rama de trabajo: **feature/aud-003-runtime-schema**.
 
 **Implementado y verificado en la rama de trabajo:** contrato IR v1.0.0, parser Markdown, validación estructural y semántica, motor de estilos, corpus de conformidad, adaptador JSON, CLI, exportador XMind inicial y exportador SVG.
 
-- CI general: [42989195843](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195843), 118/118 pruebas, Ubuntu y Windows.
+- CI AUD-013: [43003867274](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867274), 124/124 pruebas en Ubuntu y Windows.
 - Prueba aislada del SDK XMind: [42989195787](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195787), Ubuntu y Windows.
-- Código probado: 980279a6e61a990769e9884ea1fc51888d5bf054.
+- Código probado: fe1d3e510a76719f12d4eeaf0e081304720196b8.
 - HEAD auditado antes de esta sincronización documental: 8a8b28953ac29d7bcd5d3707f19b484d8834915c. Los commits posteriores de esta auditoría solo modifican documentación; consulta GitHub para el HEAD actual de la rama.
 - main permanece en 6aca81b59dbfcfc13034e7e1115c70f7691c5035; el desarrollo no está integrado.
 
 **Pendiente:** validación de apertura/guardado en XMind Desktop, documentación final/publicación y visor web. Generar un paquete XMind válido estructuralmente no demuestra que XMind Desktop lo abra, lo guarde o lo represente fielmente.
 
-La auditoría estática detectó una incidencia en la CLI: la derivación automática del nombre de salida XMind/SVG no elimina correctamente la extensión de entrada y los mensajes de error de exportación contienen un salto de línea escapado incorrectamente. Está registrada como AUD-013; las pruebas actuales no cubren esos casos.
+AUD-013 está corregida y verificada: la CLI deriva correctamente los nombres de salida XMind/SVG cuando se omite --output y los mensajes de error terminan con saltos de línea reales. Hay pruebas de regresión para entradas Markdown y JSON, y para ambos errores; CI pasa en Ubuntu y Windows.
 
 ## Objetivos
 
