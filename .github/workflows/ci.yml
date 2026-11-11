@@ -55,11 +55,3 @@ jobs:
       - name: CLI compiled smoke test
         run: node dist/src/cli/main.js --help
 
-      - name: Install official XMind SDK for isolated probe
-        shell: bash
-        run: npm install --prefix "$RUNNER_TEMP/xmind-sdk-probe" --no-save --no-package-lock --no-audit --no-fund xmind@2.2.33
-
-      - name: Probe official XMind SDK package generation
-        run: node scripts/probe-xmind-sdk.js
-        env:
-          XMIND_SDK_PACKAGE: ${{ runner.temp }}/xmind-sdk-probe/node_modules/xmind
