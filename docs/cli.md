@@ -91,4 +91,4 @@ Estos comportamientos están cubiertos por pruebas de regresión para entradas M
 
 ## Límites de interoperabilidad
 
-La CI inspecciona la estructura generada del paquete XMind, pero no abre ni guarda el archivo con XMind Desktop. AUD-009 dispone de un workflow que publica un artefacto descargable para la aceptación manual en Desktop. Sigue el [procedimiento AUD-009](aud-009-xmind-desktop-validation.md); no se considera completado hasta registrar apertura, guardado y reapertura. Consulta también docs/adapters.md y docs/decisions/ADR-0001-xmind-sdk.md.
+La CI inspecciona la estructura generada del paquete XMind, pero no abre ni guarda el archivo con XMind Desktop. AUD-009 completó la aceptación manual: apertura, inspección de jerarquía, guardado de copia y reapertura confirmados por el usuario. La versión exacta de Desktop y el sistema operativo no quedaron registrados. Consulta [el procedimiento AUD-009](aud-009-xmind-desktop-validation.md) y [la guía de usuario](user-guide.md).
