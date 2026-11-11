@@ -40,15 +40,7 @@ try {
 
   run(
     process.execPath,
-    [
-      npmCli,
-      'install',
-      '--prefix',
-      installDirectory,
-      '--no-audit',
-      '--no-fund',
-      tarball,
-    ],
+    [npmCli, 'install', '--prefix', installDirectory, '--no-audit', '--no-fund', tarball],
     'clean package install',
   );
 
