@@ -14,20 +14,20 @@ npm run verify ejecuta:
 4. npm run typecheck
 5. npm test
 6. npm run build
+7. npm run verify:examples (valida ejemplos y exporta JSON, XMind y SVG con la CLI compilada).
 
 El workflow .github/workflows/ci.yml ejecuta las mismas comprobaciones en Ubuntu y Windows y añade un smoke test de la CLI compilada. La prueba aislada del SDK XMind tiene workflow independiente.
 
 ## 2. Estado de verificación más reciente
 
-Código probado: 980279a6e61a990769e9884ea1fc51888d5bf054.
+Último código y suite general de referencia AUD-013: `fe1d3e510a76719f12d4eeaf0e081304720196b8`.
 
-- CI general [42989195843](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195843): dos jobs completados con éxito, Ubuntu y Windows.
-- En cada sistema: 11 archivos de test, 118/118 pruebas correctas.
-- Pasos correctos: instalación reproducible, formato, lint, generación/sincronización de tipos, typecheck, tests, build y smoke test CLI.
-- Probe SDK [42989195787](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195787): Ubuntu y Windows completados con éxito; instalación aislada, generación e inspección del paquete.
-- HEAD auditado antes de esta sincronización documental: 8a8b28953ac29d7bcd5d3707f19b484d8834915c. Los commits posteriores de esta auditoría son solo documentales; no se ha observado una ejecución CI posterior para el HEAD documental actual.
+- CI general [43003867274](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867274): Ubuntu y Windows, 124/124 pruebas en cada sistema; formato, lint, tipos generados, typecheck, build y smoke test CLI correctos.
+- Probe SDK [43003867447](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867447): Ubuntu y Windows correctos.
+- AUD-009 Desktop: workflow [43009405102](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43009405102) correcto; el usuario confirmó apertura, guardado y reapertura en XMind Desktop.
+- AUD-010 añade ahora `scripts/verify-examples.js` y lo integra en `npm run verify`. La validación de esta nueva puerta queda pendiente de una ejecución CI sobre el commit que la incorpora.
 
-No se ha ejecutado npm run verify en una máquina local durante esta auditoría. La evidencia indicada corresponde a los logs de GitHub Actions.
+No se afirma que los commits documentales tengan una ejecución CI propia hasta que el nuevo run termine.
 
 ## 3. Pruebas por capas
 
@@ -61,7 +61,7 @@ No inventar IDs de conformidad que no estén definidos en la matriz.
 - El SDK XMind 2.2.33 es antiguo, fijado y encapsulado; revisar su cadena de dependencias.
 - El exportador XMind no representa todavía relaciones, boundaries, StyleSets/overrides ni assets binarios; varias estructuras se aplanan a notas. Ver matriz en docs/adapters.md.
 - SVG no dibuja assets ni sombras; el contenido se conserva en metadata y descripciones accesibles; padding puede aproximarse.
-- AUD-013: el nombre de salida XMind/SVG por defecto no elimina correctamente la extensión de entrada; los errores de exportación escriben una secuencia \\n literal. No hay pruebas dedicadas a esos dos comportamientos todavía.
+- AUD-013 está corregida: nombre de salida predeterminado y saltos de línea de errores cubiertos por regresiones en CI 43003867274.
 
 ## 7. Diagnósticos y afirmaciones
 
