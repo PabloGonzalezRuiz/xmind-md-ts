@@ -2,10 +2,10 @@
 
 > Documento operativo para auditar el estado real, mantener el backlog y retomar el desarrollo sin depender del historial del chat.
 >
-> **Última auditoría:** 2026-11-10  
+> **Última auditoría:** 2026-11-11  
 > **Repositorio:** https://github.com/PabloGonzalezRuiz/xmind-md-ts  
 > **Rama de trabajo auditada:** `feature/aud-003-runtime-schema`  
-> **HEAD de implementación verificado:** `55c1700e2d4df7787dddcc65a273e267d112ff42` (AUD-005; CI [42856600346](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42856600346) verde en Ubuntu y Windows; el commit de esta actualización documental será posterior)  
+> **HEAD de código verificado:** `2f6e44a99d0b6b4e45906e2590b990e759c0e7fa` (AUD-006; CI general [42982530041](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42982530041) y prueba SDK [42982529970](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42982529970), ambos verdes en Ubuntu y Windows)  
 > **Rama principal:** `main` — `6aca81b59dbfcfc13034e7e1115c70f7691c5035`
 
 ## 1. Resumen ejecutivo
@@ -25,7 +25,7 @@ El trabajo está distribuido en ramas de características. No hay pull requests 
 | Fase 6: motor de estilos | Motor implementado; robustez AUD-002 verificada | Rama `feature/phase-6-style-engine`; CI completo verde sobre el HEAD registrado. La fase aún requiere integración/exportadores y validación real XMind/SVG |
 | JSON Schema en ejecución | Completada y verificada (AUD-003) | Ajv 8 Draft 2020-12; 15 casos SC definidos; pipeline estructural-semántico; tipos generados desde el schema; comprobación de sincronización y CI verde en HEAD `957ae096359cfa9d62ddbe70883bfa2020efe5ed` |
 | Adaptador JSON y CLI | Completada y verificada (AUD-005) | `src/adapters/json/json-adapter.ts`; comandos `parse`, `validate` y `export`; bin `xmind-md`; CI Ubuntu/Windows [42856600346](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42856600346) |
-| Adaptador XMind | Pendiente | SDK oficial aún no evaluado; no se genera paquete XMind |
+| Evaluación SDK XMind (AUD-006) | Completada y verificada | `xmind@2.2.33`; prueba aislada Node 24 en Ubuntu/Windows; decisión ADR-0001; no añadido aún como dependencia del proyecto |\n| Adaptador XMind (AUD-007) | Pendiente | Estrategia SDK-first provisional; no se genera todavía paquete XMind desde el IR |
 | Adaptador SVG | Pendiente | No existe renderizador |
 | Validación en XMind Desktop | Pendiente | No hay pruebas de apertura/guardado ni corpus real |
 | Visor web | Pendiente | No existe aplicación web ni pruebas Playwright |
@@ -39,7 +39,7 @@ El trabajo está distribuido en ramas de características. No hay pull requests 
 | `feature/phase-4-markdown-parser` | `d31892ba0895f513b8b19a284de929623d10af6b` | Parser Markdown y pruebas |
 | `feature/phase-5-semantic-validation` | `954216e99a13106d88ba72652460047d826b9c55` | Validador semántico, IDs deterministas y pruebas |
 | `feature/phase-6-style-engine` | `21dae3248be2963ccc77b00b79dffd1afd92a98d` | Catálogo y motor de estilos; AUD-001 y AUD-002 verificadas |
-| `feature/aud-003-runtime-schema` | `55c1700e2d4df7787dddcc65a273e267d112ff42` | Ajv runtime, corpus parser/IR, adaptador JSON y CLI; AUD-003, AUD-004 y AUD-005 verificadas |
+| `feature/aud-003-runtime-schema` | `2f6e44a99d0b6b4e45906e2590b990e759c0e7fa` | Ajv runtime, corpus parser/IR, adaptador JSON, CLI y evaluación SDK XMind; AUD-003 a AUD-006 verificadas |
 
 Las ramas de fase están encadenadas por orden de desarrollo y contienen cambios acumulados. No hay PRs abiertos ni issues registrados en el repositorio en el momento de esta auditoría. **No fusionar ni reescribir `main` sin autorización expresa.**
 
@@ -63,7 +63,7 @@ Las ramas de fase están encadenadas por orden de desarrollo y contienen cambios
 - `src/styles/style-engine.ts`: resolución por capas, herencia de StyleSets, roles, estilos con nombre, overrides, runs y procedencia.
 - `src/adapters/json/json-adapter.ts`: serialización determinista del IR validado a JSON, sin mutar el documento.
 - `src/cli/main.ts`: comandos `parse`, `validate` y `export`, stdin/stdout, diagnósticos y códigos de salida.
-- `bin/xmind-md.js`: punto de entrada del ejecutable `xmind-md`.
+- `bin/xmind-md.js`: punto de entrada del ejecutable `xmind-md`.\n- `scripts/probe-xmind-sdk.js`: prueba aislada reproducible de generación/inspección del paquete `xmind@2.2.33`; no es dependencia ni código de producción.\n- `.github/workflows/xmind-sdk-probe.yml`: ejecuta la prueba del SDK en Node 24 sobre Ubuntu y Windows.
 - `src/index.ts`: exporta parser, validadores, motor de estilos y adaptador JSON.
 
 No existen todavía adaptadores XMind/SVG ni aplicación `viewer/`.
@@ -119,7 +119,7 @@ Los IDs de tarea son permanentes. Cambiar el orden o el alcance exige actualizar
 | AUD-003 | P1 | Integrar validación JSON Schema runtime | Ajv 2020; todos los casos SC definidos automatizados; tipos generados desde el schema y sincronización comprobada; integración estructural-semántica; CI verde | Completada y verificada |
 | AUD-004 | P1 | Completar corpus de conformidad parser/IR | Fixtures positivos y negativos de bloques/directivas; códigos estables; diagnósticos y posiciones de origen; validez estructural/semántica del IR; regresión reproducible en CI | Completada y verificada |
 | AUD-005 | P1 | Implementar adaptador JSON y CLI | Comandos de parse, validate y export JSON; códigos de salida; rutas Windows; ejecución local y CI | Completada y verificada |
-| AUD-006 | P1 | Evaluar SDK oficial XMind y decidir estrategia | Informe de API, formatos, Node, licencia, actividad, cobertura, dependencias y prueba mínima | Pendiente |
+| AUD-006 | P1 | Evaluar SDK oficial XMind y decidir estrategia | Informe de API, formatos, Node, licencia, actividad, cobertura, dependencias y prueba mínima en Ubuntu/Windows | Completada y verificada |
 | AUD-007 | P1 | Implementar exportador XMind inicial | Paquete generado, matriz de capacidades y diagnósticos de pérdidas; estructura ZIP/JSON comprobada | Pendiente |
 | AUD-008 | P2 | Implementar adaptador SVG | SVG válido, renderizado determinista, metadatos semánticos y pruebas visuales/estructurales | Pendiente |
 | AUD-009 | P2 | Crear corpus real y validar con XMind Desktop | Fixtures de referencia abiertos y guardados en versión Desktop identificada; informe de fidelidad | Pendiente |
@@ -162,7 +162,7 @@ Al iniciar una sesión de trabajo:
 
 ### Primera acción de continuación
 
-**AUD-001, AUD-002, AUD-003, AUD-004 y AUD-005 están completadas y verificadas.** La siguiente tarea es AUD-006 (evaluación del SDK oficial XMind y decisión de estrategia), pendiente de autorización.
+**AUD-001 a AUD-006 están completadas y verificadas.** La siguiente tarea es AUD-007 (exportador XMind inicial), pendiente de autorización.
 
 ## 8. Registro de sesiones
 
@@ -185,3 +185,4 @@ Al iniciar una sesión de trabajo:
 
 
 | 2026-11-10 | AUD-005: adaptador JSON y CLI | Añadido adaptador tipado `serializeIrJson`; CLI `parse`, `validate` y `export`; códigos de salida 0–3; rutas con espacios y Windows; stdin/stdout; `--mode`, `--asset-root` y detección/forzado de formato. Añadido bin `xmind-md`, documentación y CI multiplataforma. `.gitattributes` fija LF para evitar diferencias de formato en Windows. CI verde: [42856600346](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42856600346), SHA `55c1700e2d4df7787dddcc65a273e267d112ff42`; 9 archivos de test y 107 pruebas correctas en Ubuntu y Windows; formato, lint, tipos generados, typecheck, build y smoke test CLI correctos | Solicitar autorización para AUD-006 |
+\n\n| 2026-11-11 | AUD-006: evaluación SDK oficial XMind | Evaluado `xmind@2.2.33` (MIT), API, formato ZIP/JSON, cobertura, limitaciones, actividad y dependencias. Prueba aislada con Node `v24.22.2`: genera `.xmind`, valida Workbook y comprueba `content.json`, `manifest.json`, temas anidados, notas, etiquetas vía modelo, marcadores, resumen y tema en Ubuntu/Windows. Se detecta defecto de `Topic.addLabel()` (array frente a schema string); workaround probado mediante campo `labels` string. Decisión ADR-0001: SDK-first provisional, encapsulado en adaptador, versión fijada, sin añadirlo aún como dependencia de producción. CI general [42982530041](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42982530041) verde; 9 archivos y 107 pruebas en Ubuntu/Windows. Probe SDK [42982529970](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42982529970) verde en ambos sistemas. `main` verificada en `6aca81b59dbfcfc13034e7e1115c70f7691c5035`. No se ha probado apertura/guardado en XMind Desktop: queda en AUD-009 | Solicitar autorización para AUD-007 |\n

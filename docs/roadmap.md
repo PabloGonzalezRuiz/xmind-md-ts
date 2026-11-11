@@ -11,7 +11,7 @@ Las fases se ejecutan secuencialmente. Al terminar cada fase se presenta el resu
 | 5 | Validación semántica e identidad | IDs deterministas, unicidad, referencias, ciclos, límites y diagnósticos probados | Completada y verificada |
 | 6 | Motor de estilos | Catálogo tipado, conjuntos heredados, roles, estilos, precedencia, fusión y procedencia | Implementación en rama de trabajo; AUD-001/002 verificadas |
 | 7 | Adaptador JSON y CLI | Comandos parse, validate y export JSON; códigos de salida y rutas Windows; ejecución local y CI en Ubuntu/Windows | Completada y verificada |
-| 8 | Evaluación e integración XMind | Matriz de capacidades, SDK evaluado y exportación inicial | Pendiente |
+| 8 | Evaluación e integración XMind | AUD-006 cerrada: SDK evaluado y estrategia SDK-first documentada; AUD-007: exportador inicial aún pendiente | AUD-006 completada; AUD-007 pendiente de autorización |
 | 9 | Adaptador SVG | Renderizado y metadatos semánticos | Pendiente |
 | 10 | Corpus XMind y validación Desktop | Pruebas estructurales y visuales documentadas | Pendiente |
 | 11 | Documentación de usuario y publicación | Guía, ejemplos, releases y artefactos | Pendiente |
@@ -19,7 +19,7 @@ Las fases se ejecutan secuencialmente. Al terminar cada fase se presenta el resu
 
 ## Verificación transversal del contrato IR
 
-Las auditorías AUD-001 a AUD-005 están completadas y verificadas en la rama de trabajo. AUD-003 incorpora validación JSON Schema Draft 2020-12 en runtime y generación sincronizada de tipos TypeScript; AUD-004 añade un corpus reproducible de conformidad Markdown; AUD-005 incorpora adaptador JSON y CLI con pruebas en Windows y Linux. `main` permanece sin cambios. El siguiente trabajo es AUD-006, pendiente de autorización.
+Las auditorías AUD-001 a AUD-006 están completadas y verificadas en la rama de trabajo. AUD-006 evalúa el SDK oficial `xmind@2.2.33`, documenta su cobertura y defectos y recomienda una integración SDK-first provisional detrás del adaptador. La prueba de generación del paquete pasa con Node 24 en Ubuntu y Windows. `main` permanece en `6aca81b59dbfcfc13034e7e1115c70f7691c5035`. El siguiente trabajo es AUD-007, pendiente de autorización.
 
 ## Registro operativo
 

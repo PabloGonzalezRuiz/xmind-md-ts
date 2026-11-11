@@ -6,7 +6,7 @@ Cada adaptador recibe un IR validado/resuelto y devuelve un artefacto más un in
 
 ## 2. Adaptador XMind
 
-Es el primer destino prioritario. Antes de elegir la implementación se evaluará el SDK oficial JavaScript/TypeScript:
+Es el primer destino prioritario. AUD-006 ha evaluado el SDK oficial JavaScript/TypeScript y ha seleccionado una estrategia SDK-first provisional para AUD-007:
 
 - API pública real y documentación.
 - Formatos XMind admitidos y versiones.
@@ -18,7 +18,7 @@ Es el primer destino prioritario. Antes de elegir la implementación se evaluar�
 
 Repositorio de referencia: https://github.com/xmindltd/xmind-sdk-js
 
-El SDK es candidato, no una dependencia aprobada por anticipado. Se comparará con generación directa del formato solo si la especificación y las pruebas lo permiten. No se debe confundir la API del SDK con la capacidad completa de XMind Desktop.
+**Decisión AUD-006 (ADR-0001):** utilizar `xmind@2.2.33` como backend provisional del primer exportador, encapsulado detrás del adaptador interno. No añadir la dependencia hasta AUD-007. Fijar versión exacta, no exponer tipos del SDK fuera del adaptador y conservar diagnósticos explícitos de pérdida. No utilizar `Topic.addLabel()` porque su implementación produce un array que el validador del propio paquete rechaza; pasar el campo `labels` como cadena mediante el modelo de tema. El SDK no carga/reimporta archivos `.xmind` desde la versión 2.2.0.\n\nLa prueba aislada `scripts/probe-xmind-sdk.js` y el workflow `.github/workflows/xmind-sdk-probe.yml` verifican generación e inspección ZIP/JSON con Node 24 en Ubuntu y Windows. No se ha probado todavía apertura/guardado en XMind Desktop; esa validación pertenece a AUD-009. No se debe confundir la API del SDK con la compatibilidad completa de XMind Desktop.
 
 ## 3. Matriz de capacidades
 
