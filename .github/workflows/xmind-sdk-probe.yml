@@ -29,19 +29,6 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Temporary Prettier diagnostic
-        if: runner.os == 'Linux'
-        shell: bash
-        run: |
-          npm install --prefix "$RUNNER_TEMP/prettier" --no-save --no-package-lock --no-audit --no-fund prettier@3.9.10
-          node "$RUNNER_TEMP/prettier/node_modules/prettier/bin/prettier.cjs" --write scripts/probe-xmind-sdk.js .github/workflows/ci.yml
-          echo "PRETTIER_SCRIPT_BEGIN"
-          base64 -w0 scripts/probe-xmind-sdk.js
-          echo
-          echo "PRETTIER_CI_BEGIN"
-          base64 -w0 .github/workflows/ci.yml
-          echo "PRETTIER_END"
-
       - name: Install official SDK in an isolated temporary directory
         shell: bash
         run: npm install --prefix "$RUNNER_TEMP/xmind-sdk-probe" --no-save --no-package-lock --no-audit --no-fund xmind@2.2.33

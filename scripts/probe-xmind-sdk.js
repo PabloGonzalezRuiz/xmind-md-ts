@@ -3,8 +3,10 @@ import { createRequire } from 'node:module';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { log } from 'node:console';
+import { env, version } from 'node:process';
 
-const packageDirectory = process.env.XMIND_SDK_PACKAGE;
+const packageDirectory = env.XMIND_SDK_PACKAGE;
 assert.ok(packageDirectory, 'XMIND_SDK_PACKAGE must point to the isolated xmind installation');
 
 const packageEntry = path.join(packageDirectory, 'dist', 'index.js');
@@ -89,11 +91,11 @@ try {
     'The addLabel helper/schema mismatch must remain visible in this compatibility probe',
   );
 
-  console.log(
+  log(
     JSON.stringify(
       {
         sdk: 'xmind@2.2.33',
-        node: process.version,
+        node: version,
         moduleInterop: 'CommonJS package loaded from ESM using createRequire',
         workbookValidation: validation.status,
         addLabelHelper: 'known defect: helper writes array while schema expects string',
