@@ -350,7 +350,7 @@ function renderRelationship(
   const label = relationship.label
     ? `<text x="${(startX + endX) / 2 + 28}" y="${(source.y + target.y) / 2 - 30}" font-size="11" text-anchor="middle" fill="${stroke}">${escapeXml(relationship.label)}</text>`
     : '';
-  return `<g id="${xmlId(relationship.id)}" data-ir-id="${escapeXml(relationship.id)}" data-ir-type="relationship"><title>${escapeXml(relationship.label ?? relationship.kind ?? 'Relación')}</title><path d="${path}" fill="none" stroke="${stroke}" stroke-width="${width}" ${dash ? `stroke-dasharray="${dash}"` : ''} ${asBoolean(values?.arrowEnd, true) ? 'marker-end="url(#arrow)"' : ''} />${label}</g>`;
+  return `<g id="${xmlId(relationship.id)}" data-ir-id="${escapeXml(relationship.id)}" data-ir-type="relationship"><title>${escapeXml(relationship.label ?? relationship.kind ?? 'Relación')}</title><path d="${path}" fill="none" stroke="${stroke}" stroke-width="${width}" ${dash ? `stroke-dasharray="${dash}"` : ''} ${arrowStart} ${arrowEnd} />${label}</g>`;
 }
 
 function renderBoundary(
