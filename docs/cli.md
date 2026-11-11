@@ -72,3 +72,16 @@ xmind-md --help
 ```
 
 En el propio repositorio, `npm start -- --help` ejecuta la CLI compilada. `npm run build` debe ejecutarse antes de usar `start` o el ejecutable generado.
+
+
+## Exportación XMind
+
+El comando `export` admite también `--format xmind`:
+
+```powershell
+xmind-md export .\mapa.md --format xmind
+xmind-md export .\mapa.md --format xmind --output .\salida\mapa.xmind
+xmind-md export .\mapa.md --format xmind --export-mode compatible
+```
+
+El modo `strict` es el predeterminado y detiene la exportación cuando el IR contiene elementos que el adaptador no puede representar. `compatible` debe solicitarse expresamente y genera el paquete parcial junto con diagnósticos de pérdidas. La matriz completa está en [Adaptadores de salida](adapters.md).

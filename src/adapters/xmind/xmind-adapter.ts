@@ -279,6 +279,7 @@ export async function exportXMindFile(
   const rootSdkId = topicApi.cid();
   const topicIds = new Map<string, string>([[document.sheet.rootTopic.id, rootSdkId]]);
   const topicParents = new Map<string, string>();
+  features.topics += 1;
 
   const root = document.sheet.rootTopic;
   const rootNoteParts: string[] = [];
