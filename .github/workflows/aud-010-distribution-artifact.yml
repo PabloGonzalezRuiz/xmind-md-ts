@@ -1,0 +1,63 @@
+name: AUD-010 · Distribution package
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aud-010-distribution-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  package:
+    name: Build and verify installable package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Run complete verification
+        run: npm run verify
+
+      - name: Build distribution tarball
+        run: |
+          mkdir -p artifacts/aud-010
+          npm pack --pack-destination artifacts/aud-010
+          cd artifacts/aud-010
+          sha256sum *.tgz > SHA256SUMS.txt
+          cat > README.txt <<'EOF'
+          XMind MD TS — distribution package
+
+          Requirements: Node.js 24 or later.
+
+          Verify the SHA-256 checksum before installation.
+          Install the package locally with:
+            npm install --global ./xmind-md-ts-0.1.0.tgz
+
+          Then run:
+            xmind-md --help
+            xmind-md --version
+
+          This is a GitHub Actions package artifact, not an npm registry
+          publication or a stable 1.0 release. Check the repository release
+          notes and compatibility limitations before using it.
+          EOF
+
+      - name: Upload distribution artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: xmind-md-ts-distribution
+          path: artifacts/aud-010/
+          if-no-files-found: error
+          retention-days: 30
