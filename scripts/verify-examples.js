@@ -9,9 +9,7 @@ const examples = [
   'examples/quick-start.md',
   'examples/with-notes-and-styles.md',
 ];
-const outputDirectory = mkdtempSync(
-  join(tmpdir(), 'xmind-md-ts-examples-'),
-);
+const outputDirectory = mkdtempSync(join(tmpdir(), 'xmind-md-ts-examples-'));
 
 function run(args, description) {
   const result = spawnSync(process.execPath, [cli, ...args], {
@@ -20,9 +18,7 @@ function run(args, description) {
   });
   if (result.status !== 0) {
     process.stderr.write(result.stderr || result.stdout);
-    throw new Error(
-      `Falló el ejemplo: ${description} (exit ${result.status}).`,
-    );
+    throw new Error(`Example failed: ${description} (${result.status}).`);
   }
   process.stdout.write(`OK: ${description}\n`);
 }
