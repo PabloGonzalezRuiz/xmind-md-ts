@@ -2,11 +2,7 @@ import { createRequire } from 'node:module';
 import { basename, dirname, join, resolve } from 'node:path';
 import { mkdir } from 'node:fs/promises';
 
-import type {
-  ContentBlock,
-  IrDocument,
-  Topic as IrTopic,
-} from '../../../spec/ir-v1.types.js';
+import type { ContentBlock, IrDocument, Topic as IrTopic } from '../../../spec/ir-v1.types.js';
 
 export type XMindExportMode = 'strict' | 'compatible';
 export type XMindDiagnosticSeverity = 'warning' | 'error';
@@ -390,13 +386,13 @@ export async function exportXMindFile(
   }
 
   if (root.labels?.length) {
-      addDiagnostic(
-        diagnostics,
-        'XMIND_ROOT_LABELS_OMITTED',
-        'warning',
-        'Las etiquetas del tema central no se exportan en esta versión.',
-        'sheet.rootTopic.labels',
-      );
+    addDiagnostic(
+      diagnostics,
+      'XMIND_ROOT_LABELS_OMITTED',
+      'warning',
+      'Las etiquetas del tema central no se exportan en esta versión.',
+      'sheet.rootTopic.labels',
+    );
   }
 
   if (!workbook.theme(document.sheet.title, theme)) {
