@@ -7,6 +7,11 @@ import process from 'node:process';
 const packageRoot = resolve('.');
 const outputDirectory = mkdtempSync(join(tmpdir(), 'xmind-md-ts-package-'));
 const installDirectory = join(outputDirectory, 'install');
+const npmCli = process.env.npm_execpath;
+
+if (!npmCli) {
+  throw new Error('npm_execpath no está definido; ejecuta este script mediante npm run.');
+}
 
 function run(command, args, description, options = {}) {
   const result = spawnSync(command, args, {
@@ -25,8 +30,8 @@ function run(command, args, description, options = {}) {
 
 try {
   const packed = run(
-    'npm',
-    ['pack', '--json', '--pack-destination', outputDirectory],
+    process.execPath,
+    [npmCli, 'pack', '--json', '--pack-destination', outputDirectory],
     'npm pack',
   );
   const packInfo = JSON.parse(packed);
@@ -36,8 +41,8 @@ try {
   }
 
   run(
-    'npm',
-    ['install', '--prefix', installDirectory, '--no-audit', '--no-fund', tarball],
+    process.execPath,
+    [npmCli, 'install', '--prefix', installDirectory, '--no-audit', '--no-fund', tarball],
     'instalación limpia del paquete',
   );
 
