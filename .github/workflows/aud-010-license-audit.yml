@@ -65,12 +65,12 @@ jobs:
               if (pkg.startsWith('xmind-md-ts@')) continue;
               const license = String(data.licenses ?? 'UNKNOWN').trim();
               counts.set(license, (counts.get(license) ?? 0) + 1);
-              if (/UNKNOWN|UNLICENSED|SEE LICENSE|GPL|AGPL|SSPL|Commons Clause|\\bOR\\b|\\bAND\\b|MPL/i.test(license)) {
+              if (/UNKNOWN|UNLICENSED|SEE LICENSE|GPL|AGPL|SSPL|Commons Clause|OR|AND|MPL/i.test(license)) {
                 review.push({ package: pkg, license, repository: data.repository ?? null, path: data.path ?? null });
               }
             }
             summary[scope] = {
-              packageCount: Object.keys(report).length,
+              packageCount: Object.keys(report).filter((pkg) => !pkg.startsWith('xmind-md-ts@')).length,
               licenseCounts: Object.fromEntries([...counts.entries()].sort(([a], [b]) => a.localeCompare(b))),
               manualReview: review,
             };
