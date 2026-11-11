@@ -19,7 +19,7 @@ No conviertas línea por línea el proyecto Python anterior. Reutiliza requisito
 - Probe SDK XMind AUD-013 [43003867447](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867447): Ubuntu y Windows, correcto.
 - AUD-001 a AUD-009 y AUD-013 están completadas y verificadas en la rama activa.
 - AUD-009: workflow 43009405102 satisfactorio; el usuario confirmó apertura, visualización de la jerarquía, guardado de una copia y reapertura correcta en XMind Desktop. Versión exacta de XMind Desktop y sistema operativo no facilitados. Procedimiento y evidencia: docs/aud-009-xmind-desktop-validation.md y docs/project-audit-and-continuation.md.
-- AUD-010 está autorizada y en curso: guía `docs/user-guide.md`, ejemplos `examples/`, política `docs/release-readiness.md` y smoke test de ejemplos en `npm run verify`. Pendiente CI de esta puerta y decisión de licencia/canal de distribución.
+- AUD-010 está autorizada y en curso: guía `docs/user-guide.md`, ejemplos `examples/`, `CHANGELOG.md`, política `docs/release-readiness.md`, verificación de ejemplos y de instalación limpia del paquete. CI 43012605756 pasa en Ubuntu/Windows (124/124 pruebas por sistema); artefacto `xmind-md-ts-distribution` generado en run 43012600819. La release pública queda pendiente de licencia, revisión de vulnerabilidades y canal de distribución.
 - AUD-011 (visor web) sigue pendiente y requiere autorización expresa.
 - main sigue en 6aca81b59dbfcfc13034e7e1115c70f7691c5035 y no contiene el desarrollo. No fusionar, abrir PR ni crear release sin autorización expresa.
 
