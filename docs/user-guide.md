@@ -16,7 +16,7 @@ La versión actual se ejecuta desde el código fuente del repositorio. No hay to
 Clona el repositorio y entra en su directorio:
 
 ```powershell
-git clone https://github.com/PabloGonzalezRuiz/xmind-md-ts.git
+git clone --branch feature/aud-003-runtime-schema https://github.com/PabloGonzalezRuiz/xmind-md-ts.git
 cd xmind-md-ts
 ```
 
