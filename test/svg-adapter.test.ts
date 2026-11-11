@@ -110,6 +110,23 @@ describe('SVG adapter', () => {
     expect(svg).toContain('Diagrama de ejemplo');
   });
 
+  it('omits unsafe hyperlink schemes from rendered SVG while preserving source IR metadata', async () => {
+    const outputDirectory = await createDirectory('xmind-md-svg-hyperlink-');
+    const ir = parseMarkdown('# Mapa\n');
+    ir.sheet.rootTopic.hyperlink = 'javascript:alert(1)';
+
+    const result = await exportSvgFile(ir, {
+      outputPath: join(outputDirectory, 'safe.svg'),
+    });
+    const svg = await readFile(result.outputPath, 'utf8');
+
+    expect(result.diagnostics).toContainEqual(
+      expect.objectContaining({ code: 'SVG_HYPERLINK_OMITTED', severity: 'warning' }),
+    );
+    expect(svg).not.toContain('href="javascript:');
+    expect(svg).toContain('javascript:alert(1)');
+  });
+
   it('escapes XML-sensitive metadata and keeps topic identifiers available', async () => {
     const outputDirectory = await createDirectory('xmind-md-svg-escape-');
     const ir = parseMarkdown('# A & B\n\n## C < D\n');
