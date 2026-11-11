@@ -4,7 +4,7 @@ Las fases se ejecutan secuencialmente. Al terminar una tarea/fase se presenta el
 
 ## Estado de fases
 
-AUD-010 fue autorizada el 2026-11-11. Guía, ejemplos y empaquetado están implementados. CI 43012605756 pasa en Ubuntu/Windows (124/124 pruebas por sistema, ejemplos y paquete instalado). El workflow 43012600819 publica un artefacto temporal instalable. El canal acordado es GitHub Releases; npm queda aplazado. `private: true` se mantiene porque no se publicará en npm. La primera release pública sigue pendiente de auditoría de vulnerabilidades y criterios de aceptación. La licencia MIT ya está incorporada. Ver [preparación de distribución](release-readiness.md).
+AUD-010 fue autorizada el 2026-11-11. Guía, ejemplos y empaquetado están implementados. CI 43012605756 pasa en Ubuntu/Windows (124/124 pruebas por sistema, ejemplos y paquete instalado). El workflow 43012600819 publica un artefacto temporal instalable. El canal acordado es GitHub Releases; npm queda aplazado. `private: true` se mantiene porque no se publicará en npm. La primera release pública sigue pendiente de auditoría individual de dependencias/licencias, workflow de GitHub Releases y criterios de aceptación. La licencia MIT ya está incorporada. Ver [preparación de distribución](release-readiness.md).
 
 | Fase | Alcance | Resultado verificable | Estado |
 |---|---|---|---|
@@ -68,3 +68,12 @@ AUD-012 (generación de tipos TypeScript desde el JSON Schema y control de sincr
 - Separar implementación, pruebas automatizadas, CI, validación de formato y validación en aplicaciones de escritorio.
 - Cada cambio actualiza auditoría, roadmap y documentación funcional afectada.
 - El estado detallado y el protocolo de recuperación están en Auditoría y continuidad.
+
+
+## Estado comprobado 2026-11-11
+
+- HEAD: `72c411eed5b497d2399d152f1b27595ad468dd19`; CI [43015959095](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015959095) success en Ubuntu/Windows, 124/124 pruebas por sistema; SDK probe [43015959098](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015959098) success en ambos.
+- Distribución [43015946683](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015946683) success; artefacto ID `13852422612`, caduca 2026-12-11.
+- `main` permanece en `6aca81b59dbfcfc13034e7e1115c70f7691c5035`; rama activa 471 commits ahead, 0 behind.
+- Próximo paso AUD-010: auditoría de vulnerabilidades y licencias, política de versionado/compatibilidad IR, preparación y prueba del workflow GitHub Releases. No crear una release pública sin autorización.
+- AUD-011 continúa pendiente y no autorizada.
