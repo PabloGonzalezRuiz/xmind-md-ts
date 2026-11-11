@@ -8,8 +8,9 @@
 - Repositorio: https://github.com/PabloGonzalezRuiz/xmind-md-ts
 - Rama activa de desarrollo: feature/aud-003-runtime-schema.
 - HEAD al comenzar esta auditoría documental: 8a8b28953ac29d7bcd5d3707f19b484d8834915c.
-- Último commit de código probado: 980279a6e61a990769e9884ea1fc51888d5bf054.
-- CI general para ese código: run 42989195843.
+- Último commit probado con código y pruebas: fe1d3e510a76719f12d4eeaf0e081304720196b8.
+- Corrección de código AUD-013: f3a9ed8081e1c55a62888550e586b6ee8dc98c7e.
+- CI general posterior a AUD-013: run 43003867274 (124/124 pruebas en Ubuntu y Windows).
 - Probe aislado SDK: run 42989195787.
 - main: 6aca81b59dbfcfc13034e7e1115c70f7691c5035.
 - Esta auditoría actualiza documentación y no cambia código de aplicación. Consultar GitHub para el HEAD resultante; no asumir que el SHA de inicio sigue siendo el HEAD actual.
@@ -18,7 +19,7 @@
 
 La aplicación TypeScript ya dispone de un pipeline funcional desde Markdown a IR y de exportación a JSON, XMind y SVG en la rama feature/aud-003-runtime-schema.
 
-**AUD-001 a AUD-008 están completadas y verificadas** en esa rama. La CI general y el probe del SDK pasan en Ubuntu y Windows. La ejecución general registra 118/118 pruebas correctas en cada sistema.
+**AUD-001 a AUD-008 y AUD-013 están completadas y verificadas** en esa rama. La CI más reciente (43003867274) registra 124/124 pruebas correctas en Ubuntu y Windows. El probe SDK 43003867447 también pasa en ambos sistemas.
 
 El proyecto todavía no está integrado en main. La rama principal permanece en el commit inicial 6aca81b59dbfcfc13034e7e1115c70f7691c5035. No hay pull requests ni issues abiertos devueltos por la búsqueda de GitHub. No se ha creado release.
 
@@ -29,7 +30,7 @@ No debe confundirse:
 
 Solo está verificado el primer nivel. AUD-009 debe cubrir la validación Desktop.
 
-La auditoría estática detectó dos defectos de CLI no cubiertos por la suite actual, registrados como AUD-013. No se ha modificado código para corregirlos en esta auditoría.
+La auditoría estática detectó dos defectos de CLI, registrados como AUD-013. Ambos se corrigieron y se añadieron pruebas de regresión; CI 43003867274 confirma 124/124 pruebas en Ubuntu y Windows.
 
 ## 2. Estado verificable
 
@@ -42,14 +43,14 @@ La auditoría estática detectó dos defectos de CLI no cubiertos por la suite a
 | Fase 6: motor de estilos | Completada y verificada | AUD-001/AUD-002 |
 | Validación JSON Schema runtime | Completada y verificada | AUD-003; Ajv y tipos generados |
 | Corpus parser/IR | Completado y verificado | AUD-004 |
-| JSON y CLI | Completados y verificados | AUD-005; defecto nuevo de nombres de salida pendiente en AUD-013 |
+| JSON y CLI | Completados y verificados | AUD-005 y AUD-013; nombres de salida y errores cubiertos por regresiones |
 | Evaluación SDK XMind | Completada y verificada | AUD-006; ADR-0001 |
 | Adaptador XMind | Implementado y verificado estructuralmente | AUD-007; falta XMind Desktop |
 | Adaptador SVG | Implementado y verificado | AUD-008; limitaciones visuales documentadas |
 | XMind Desktop | Pendiente | AUD-009 |
 | Documentación de usuario y publicación | Pendiente | AUD-010 |
 | Visor web | Pendiente | AUD-011 |
-| Defectos CLI | Detectados, no corregidos | AUD-013 |
+| Defectos CLI | Corregidos y verificados | AUD-013; CI 43003867274 |
 
 ## 3. Ramas y relación con main
 
@@ -207,9 +208,9 @@ No se corrigió código durante esta auditoría.
 | AUD-009 | P2 | Validación de apertura/guardado en XMind Desktop | Pendiente |
 | AUD-010 | P2 | Documentación de usuario y publicación | Pendiente |
 | AUD-011 | P3 | Visor web TypeScript | Pendiente |
-| AUD-013 | P1 | Corregir defectos de derivación de salida y stderr de CLI | Pendiente; detectada por auditoría estática |
+| AUD-013 | P1 | Corregir defectos de derivación de salida y stderr de CLI | Completada y verificada; CI 43003867274, 124/124 pruebas Ubuntu/Windows |
 
-AUD-009 es la siguiente tarea de producto de la hoja de ruta. AUD-013 es una incidencia funcional que conviene corregir antes de publicar o dar por estable la CLI. Ninguna se ha iniciado en esta auditoría.
+AUD-009 es la siguiente tarea pendiente de producto. AUD-013 se ha cerrado posteriormente con corrección y pruebas de regresión; consultar el registro de trabajo al final de este documento.
 
 ## 9. Criterios globales de finalización
 
@@ -234,13 +235,13 @@ Al abrir un chat nuevo:
 5. Comparar HEAD con el último SHA de código probado; revisar commits y diffs para separar código de documentación.
 6. Consultar el último CI general y el probe SDK; abrir logs y confirmar los sistemas, pasos y número de pruebas.
 7. Revisar backlog y autorizaciones existentes.
-8. No iniciar AUD-009, AUD-010, AUD-011 ni AUD-013 sin autorización expresa del usuario.
+8. No iniciar AUD-009, AUD-010 ni AUD-011 sin autorización expresa del usuario.
 9. No fusionar ramas, abrir PR, modificar main ni crear release sin autorización expresa.
 10. Tras cada tarea, actualizar este documento, la auditoría técnica, roadmap, README, prompt maestro y documentación funcional.
 
 ### Primera acción al retomar
 
-Verificar que el HEAD actual sigue siendo descendiente del código probado 980279a6e61a990769e9884ea1fc51888d5bf054 y que los cambios posteriores siguen siendo documentales. Después, solicitar/esperar autorización para una tarea concreta. No iniciar automáticamente AUD-009 ni AUD-013.
+Verificar el HEAD actual y comparar con el código probado fe1d3e510a76719f12d4eeaf0e081304720196b8. AUD-013 está cerrada; la siguiente tarea pendiente es AUD-009, pero no iniciarla sin autorización expresa.
 
 ## 11. Registro de trabajo resumido
 
@@ -254,4 +255,4 @@ Verificar que el HEAD actual sigue siendo descendiente del código probado 98027
 | 2026-11-11 | AUD-006 | Evaluación SDK y ADR-0001; CI 42982530041 y probe 42982529970 |
 | 2026-11-11 | AUD-007 | Exportador XMind; CI 42985540873 y probe 42985540716 |
 | 2026-11-11 | AUD-008 | SVG; CI 42989195843, 118 pruebas Ubuntu/Windows; probe 42989195787 |
-| 2026-11-11 | Auditoría profunda y recuperación de continuidad | Contrastadas seis ramas y sus diferencias frente a main; inspeccionados código, workflows, tests y logs. Sincronizados README, prompt maestro, roadmap, arquitectura, desarrollo, calidad, decisiones, CLI y registro de continuidad; añadida docs/technical-audit-2026-11-11.md. AUD-013 registrada sin modificar código. HEAD de código probado 980279a6e61a990769e9884ea1fc51888d5bf054; CI 42989195843 y probe 42989195787 verdes en Ubuntu/Windows. | Esperar autorización para la siguiente tarea |
+| 2026-11-11 | AUD-013 | Corregida derivación de salida XMind/SVG sin --output; corregidos saltos de línea en errores XMind/SVG; añadidas seis regresiones (Markdown/JSON, XMind/SVG y stderr). CI 43003867274: 124/124 pruebas en Ubuntu y Windows; formato, lint, tipos generados, typecheck, build y smoke test correctos. Probe SDK 43003867447 correcto en ambos sistemas. Código probado: fe1d3e510a76719f12d4eeaf0e081304720196b8. | Completada y verificada |
