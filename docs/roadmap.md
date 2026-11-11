@@ -34,17 +34,19 @@ Las fases se ejecutan secuencialmente. Al terminar una tarea/fase se presenta el
 | AUD-009 | Validación de paquetes con XMind Desktop | Pendiente |
 | AUD-010 | Documentación de usuario y publicación | Pendiente |
 | AUD-011 | Visor web | Pendiente |
-| AUD-013 | Corregir derivación de nombre de salida y formato de errores de exportación en CLI | Pendiente; hallazgo de auditoría estática |
+| AUD-013 | Corregir derivación de nombre de salida y formato de errores de exportación en CLI | Completada y verificada; CI 43003867274, 124/124 pruebas Ubuntu/Windows |
 
 AUD-012 (generación de tipos TypeScript desde el JSON Schema y control de sincronización) se considera incorporada en AUD-003 y cerrada en la rama activa.
 
 ## Rama y evidencia de referencia
 
 - Rama activa de desarrollo: feature/aud-003-runtime-schema.
-- Código probado: 980279a6e61a990769e9884ea1fc51888d5bf054.
+- Código probado más reciente: fe1d3e510a76719f12d4eeaf0e081304720196b8.
 - HEAD auditado antes de esta sincronización documental: 8a8b28953ac29d7bcd5d3707f19b484d8834915c. Los commits posteriores de esta auditoría solo modifican documentación; consulta GitHub para el HEAD actual. El diff original entre código probado y HEAD auditado afectaba únicamente documentación.
-- CI general [42989195843](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195843): Ubuntu y Windows, 118/118 pruebas en cada sistema, formato, lint, tipos generados, typecheck, build y smoke test CLI.
-- Probe SDK [42989195787](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195787): Ubuntu y Windows.
+- CI general AUD-008 [42989195843](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195843): 118/118 pruebas por sistema.
+- CI AUD-013 [43003867274](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867274): 124/124 pruebas en Ubuntu y Windows; formato, lint, tipos generados, typecheck, build y smoke test CLI.
+- Probe SDK AUD-008 [42989195787](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195787): Ubuntu y Windows.
+- Probe SDK AUD-013 [43003867447](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867447): Ubuntu y Windows.
 - main sigue en 6aca81b59dbfcfc13034e7e1115c70f7691c5035; no se ha hecho merge.
 
 ## Reglas de avance
