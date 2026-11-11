@@ -42,7 +42,7 @@ Este mecanismo es un artefacto temporal de CI, no una release permanente ni una 
 
 - [x] Licencia MIT del proyecto elegida y archivo LICENSE incorporado.
 - [ ] Política de versionado y compatibilidad IR documentada.
-- [ ] Auditoría actual de vulnerabilidades y licencias de dependencias completada.
+- [x] Auditoría actual de vulnerabilidades y licencias de dependencias ejecutada e inventariada; quedan riesgos moderados y avisos de terceros que deben resolverse/aceptarse antes de publicar.
 - [ ] Versión del paquete y tag coincidentes.
 - [ ] Paquete construido desde un SHA identificado.
 - [ ] Instalación probada en un directorio limpio con Node.js 24.
@@ -51,6 +51,8 @@ Este mecanismo es un artefacto temporal de CI, no una release permanente ni una 
 - [ ] Checksums SHA-256 publicados.
 - [ ] Notas de release describen capacidades, limitaciones y cambios.
 - [ ] No se anuncia compatibilidad más amplia que la realmente probada.
+- [ ] Decisión explícita sobre los 12 avisos moderados restantes de npm audit.
+- [ ] Avisos de terceros (JSZip MIT y Pako MIT AND Zlib) verificados e incluidos en el paquete de distribución.
 
 ## Restricciones de esta tarea
 
@@ -65,3 +67,16 @@ AUD-010 ya dispone de guía, ejemplos, verificación CI y artefacto instalable t
 - Artefacto de distribución: [run 43015946683](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015946683), artefacto ID `13852422612`, disponible hasta 2026-12-11. Digest SHA-256 del ZIP de Actions: `b50009e4761e2d14b84b5eb84da2cb06b89e15503ccc851c74815ebf49022846`.
 - Canal acordado: GitHub Releases. npm aplazado; mantener `private: true`.
 - Próximo trabajo: auditoría actual reproducible de dependencias y licencias; política de versionado/compatibilidad IR; preparar y probar workflow de release sin publicar.
+
+
+## Estado de auditoría actualizado — 2026-11-11 (16:52 Europe/Madrid)
+
+La rama `feature/aud-003-runtime-schema` tiene como SHA de código/workflows verificado `e66a0da529cd249c54c6d922c80dfcdaa7f7fef4`.
+
+- CI [43053653473](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43053653473): success en Ubuntu y Windows, 124/124 pruebas por sistema; calidad, ejemplos, paquete y auditoría npm correctos.
+- SDK probe [43053653384](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43053653384): success en ambos sistemas.
+- Auditoría de vulnerabilidades: 12 moderadas, 0 altas, 0 críticas. No se han aplicado downgrades mayores de ESLint ni del SDK XMind. El informe está en el artefacto 13870876663.
+- Auditoría de licencias [43053653465](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43053653465): success en Ubuntu y Windows; 120 dependencias de producción y 246 instaladas en total por plataforma. Artefactos 13869797169 y 13871485171. Excepciones de producción: JSZip `MIT OR GPL-3.0-or-later` (se optará por MIT) y Pako `MIT AND Zlib` (conservar ambas atribuciones/avisos). MPL-2.0 solo en Lightning CSS de desarrollo.
+- El inventario y la clasificación están documentados en `docs/third-party-license-audit-2026-11-11.md`.
+
+La auditoría de seguridad/licencias se considera realizada, pero la release sigue bloqueada hasta decidir el riesgo moderado residual y asegurar los avisos de terceros. También siguen pendientes la política de versionado/compatibilidad IR, el workflow de GitHub Releases y la prueba integral final. npm continúa aplazado (`private: true`); canal acordado GitHub Releases. No crear una release pública sin autorización expresa.

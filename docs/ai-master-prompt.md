@@ -107,3 +107,26 @@ Separar siempre: planificado, implementado, probado localmente, verificado por C
 El HEAD vigente es `72c411eed5b497d2399d152f1b27595ad468dd19`. La CI de ese SHA es [43015959095](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015959095) (Ubuntu/Windows, 124/124 pruebas por sistema, verificaciones de ejemplos y paquete) y el probe SDK [43015959098](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015959098); ambos correctos. El artefacto de distribución de [43015946683](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43015946683) está disponible como artefacto temporal hasta 2026-12-11 (ID 13852422612).
 
 La siguiente tarea es terminar AUD-010: auditoría reproducible de dependencias y licencias, política de versionado/compatibilidad IR y workflow de GitHub Releases probado sin publicar. No iniciar AUD-011. No crear una release pública sin autorización expresa.
+
+
+## Estado operativo vigente — 2026-11-11 (16:52 Europe/Madrid)
+
+Esta sección prevalece sobre los SHA, recuentos y próximos pasos históricos anteriores.
+
+- Repositorio y rama: `PabloGonzalezRuiz/xmind-md-ts`, `feature/aud-003-runtime-schema`.
+- SHA de código/workflows verificado: `e66a0da529cd249c54c6d922c80dfcdaa7f7fef4`. Los cambios documentales posteriores no alteran el código ni los workflows.
+- `main`: `6aca81b59dbfcfc13034e7e1115c70f7691c5035`; no modificar. Comparación al SHA verificado: 487 ahead, 0 behind.
+- CI [43053653473](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43053653473): success Ubuntu/Windows, 11 archivos, 124/124 pruebas por sistema; formato, lint, tipos, typecheck, build, CLI, ejemplos, paquete y auditoría de dependencias correctos.
+- Probe SDK [43053653384](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43053653384): success Ubuntu/Windows.
+- Auditoría de seguridad: 12 moderadas, 0 altas, 0 críticas. `yaml@2.9.1`, Ajv 8.20.0 y `fast-uri@3.1.9` están actualizados y ya no figuran en el informe. Permanecen avisos moderados de ESLint/TypeScript-ESLint/minimatch en desarrollo y `uuid@3.4.0` transitiva de `xmind@2.2.33`. No degradar ESLint 10 ni sustituir el SDK por `xmind@0.5.0` sin una revisión de compatibilidad.
+- Auditoría de licencias [43053653465](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43053653465): success Ubuntu/Windows; 120 dependencias de producción y 246 instaladas por plataforma. JSZip admite MIT OR GPL (usar la opción MIT); Pako exige MIT AND Zlib; MPL-2.0 solo en Lightning CSS de desarrollo. Artefactos 13869797169 y 13871485171. Leer `docs/third-party-license-audit-2026-11-11.md`.
+- npm sigue aplazado y `package.json` conserva `private: true`; canal principal GitHub Releases. No hay PR ni release pública.
+
+## Próximas tareas autorizadas de AUD-010
+
+1. Documentar política SemVer y compatibilidad/versionado del IR.
+2. Preparar y probar workflow GitHub Releases seguro, condicionado a tags, permisos mínimos y sin publicar.
+3. Probar integralmente el paquete final y checksums desde un SHA verificado.
+4. Resolver/documentar aceptación del riesgo moderado y asegurar avisos de terceros; revisión final y solicitud de autorización explícita para publicar.
+
+AUD-011 (visor web) sigue pendiente y no está autorizada. No modificar `main`, crear PR, fusionar ni publicar una release sin autorización expresa.

@@ -77,3 +77,18 @@ AUD-012 (generación de tipos TypeScript desde el JSON Schema y control de sincr
 - `main` permanece en `6aca81b59dbfcfc13034e7e1115c70f7691c5035`; rama activa 471 commits ahead, 0 behind.
 - Próximo paso AUD-010: auditoría de vulnerabilidades y licencias, política de versionado/compatibilidad IR, preparación y prueba del workflow GitHub Releases. No crear una release pública sin autorización.
 - AUD-011 continúa pendiente y no autorizada.
+
+
+## Estado y continuación verificados — 2026-11-11 (16:52 Europe/Madrid)
+
+SHA de código/workflows verificado: `e66a0da529cd249c54c6d922c80dfcdaa7f7fef4`. CI [43053653473](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43053653473) success en Ubuntu/Windows, 124/124 pruebas por sistema; probe SDK [43053653384](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43053653384) success en ambos.
+
+AUD-010 sigue en curso. La auditoría npm actual informa 12 vulnerabilidades moderadas, ninguna alta ni crítica (artefacto 13870876663). El inventario de licencias se ejecutó correctamente en Ubuntu y Windows (run [43053653465](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43053653465)): 120 dependencias de producción y 246 instaladas en total por plataforma. Excepciones/expresiones compuestas revisadas: JSZip MIT OR GPL, Pako MIT AND Zlib; MPL-2.0 solo en Lightning CSS de desarrollo. Detalle en [auditoría de licencias](third-party-license-audit-2026-11-11.md).
+
+Siguientes tareas de AUD-010:
+1. Política de versionado semántico y compatibilidad del IR.
+2. Workflow de GitHub Releases preparado y probado, sin publicación.
+3. Prueba integral de distribución desde un SHA verificado y revisión de checksums/contenido.
+4. Revisión final de riesgos y criterios; solicitar autorización explícita antes de publicar.
+
+`main` permanece en `6aca81b59dbfcfc13034e7e1115c70f7691c5035`; la rama de desarrollo estaba 487 commits por delante y 0 por detrás en el SHA auditado. AUD-011 continúa pendiente y no autorizada. No abrir PR, fusionar ni publicar release.

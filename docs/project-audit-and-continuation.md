@@ -290,3 +290,31 @@ Esta sección prevalece sobre los SHA, estados y pendientes históricos anterior
 ### Próximo punto de reanudación
 
 Continuar AUD-010, en este orden: (1) ejecutar una auditoría reproducible de dependencias a partir de `package-lock.json`, clasificar cada aviso por paquete directo/transitivo, rango afectado, fix disponible e impacto; (2) revisar licencias de dependencias de producción y desarrollo y generar inventario; (3) documentar política de versión/tag y compatibilidad IR; (4) preparar un workflow de GitHub Releases en modo seguro, condicionado a tag y con permisos mínimos, sin publicarlo todavía; (5) probar el paquete y checksums desde un SHA CI-verificado; (6) presentar resultados y solicitar autorización explícita antes de crear una release pública. No modificar `main`, fusionar ramas ni iniciar AUD-011.
+
+
+## 13. Actualización de continuidad — 2026-11-11 (16:52 Europe/Madrid)
+
+Esta sección prevalece sobre los estados y recuentos históricos anteriores.
+
+- Rama: `feature/aud-003-runtime-schema`.
+- SHA de código y workflows verificado: `e66a0da529cd249c54c6d922c80dfcdaa7f7fef4`. El commit de actualización documental posterior no modifica código ni workflows.
+- `main`: `6aca81b59dbfcfc13034e7e1115c70f7691c5035`, sin cambios. Comparación en el SHA verificado: 487 commits por delante y 0 por detrás.
+- CI [43053653473](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43053653473): success. Ubuntu y Windows, 11 archivos de test y 124/124 pruebas por sistema; formato, lint, tipos generados, typecheck, build, smoke test CLI, ejemplos, paquete y auditoría de dependencias correctos.
+- Probe SDK [43053653384](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43053653384): success en Ubuntu y Windows.
+- Auditoría de licencias [43053653465](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43053653465): success en Ubuntu y Windows. Artefactos: Ubuntu `13869797169`, Windows `13871485171`; ambos caducan el 2026-12-11.
+- Informe npm audit del SHA verificado: artefacto `npm-audit-report`, ID `13870876663`, disponible hasta 2026-12-11. Resultado: 12 moderadas, 0 altas, 0 críticas.
+- Auditoría de licencias: 120 dependencias de producción y 246 dependencias instaladas en total (incluidas desarrollo/optional) por sistema. El inventario de producción contiene 114 MIT, 2 ISC, 1 BSD-2-Clause, 1 BSD-3-Clause, JSZip con elección MIT entre MIT/GPL y Pako bajo MIT AND Zlib. MPL-2.0 aparece solo en Lightning CSS de desarrollo. Detalle: `docs/third-party-license-audit-2026-11-11.md`.
+- Seguridad: las alertas restantes de ESLint/TypeScript-ESLint/minimatch son de desarrollo; `uuid` es transitiva de `xmind@2.2.33` y permanece como alerta moderada aunque el uso inspeccionado del SDK llama a UUID v4 sin búfer. No se han aplicado downgrades ni cambios de API arriesgados.
+- No hay pull request asociado a esta rama ni releases publicadas. No se ha modificado `main`, fusionado ni publicado nada.
+
+### Estado AUD-010 y siguientes acciones
+
+Completadas y verificadas: evaluación/corrección segura de dependencias directas (`yaml`, Ajv y `fast-uri`), auditoría actual de vulnerabilidades y generación/inventario de licencias en Ubuntu y Windows. La auditoría no elimina los 12 avisos moderados restantes ni sustituye la aceptación formal del riesgo.
+
+Pendiente, en orden:
+1. Documentar política de versionado semántico, versionado del paquete y compatibilidad del IR (incluidas reglas de cambios incompatibles).
+2. Preparar workflow de GitHub Releases con permisos mínimos, validación de tag y checksums, sin publicar.
+3. Ejecutar prueba integral del paquete de distribución desde un SHA CI-verificado y revisar el contenido final.
+4. Completar revisión de riesgos residuales, avisos de terceros y criterios de release; presentar informe y pedir autorización expresa antes de publicar.
+
+AUD-011 (visor web) continúa pendiente y no autorizada. No modificar `main`, abrir PR, fusionar ni crear una release pública sin autorización expresa.

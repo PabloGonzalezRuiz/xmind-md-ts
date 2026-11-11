@@ -288,3 +288,28 @@ La inspección actual del repositorio y de GitHub Actions actualiza las referenc
 - La ruta de distribución acordada es GitHub Releases; npm aplazado. No existe release pública. AUD-011 sigue sin autorización.
 
 **Siguiente tarea autorizada: completar AUD-010**, comenzando por auditoría de vulnerabilidades y licencias, después política de versionado/compatibilidad y workflow de GitHub Releases en modo de preparación/prueba. No crear la release pública sin autorización expresa.
+
+
+## 15. Auditoría reproducible de dependencias — 2026-11-11
+
+La CI [43053653473](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43053653473), sobre `e66a0da529cd249c54c6d922c80dfcdaa7f7fef4`, ejecutó `npm audit --json` con el lockfile vigente. Artefacto `npm-audit-report`: ID `13870876663`.
+
+- Resumen: 12 moderadas, 0 altas, 0 críticas.
+- Dependencias declaradas en el lockfile: prod 121, dev 181, optional 53, peer 36, total 301 (recuentos npm; no equivalen a paquetes físicos únicos).
+- Se actualizaron `yaml` a 2.9.1, Ajv a 8.20.0 (incluido el alias `ajv2020` y el Ajv usado por `ajv-formats`) y `fast-uri` a 3.1.9. Sus avisos previos ya no aparecen en el informe actual.
+- Alertas de desarrollo: `minimatch` (GHSA-g3hv-75wg-m249) y el conjunto de ESLint/TypeScript-ESLint que lo incorpora. La propuesta automática incluye bajar ESLint 10 a 9.39.5 y cambiar la versión de TypeScript-ESLint; no se ha aplicado porque requiere revisar compatibilidad y toolchain.
+- Alertas de producción: `xmind@2.2.33` y su dependencia transitiva `uuid@3.4.0` (GHSA-w5hq-g745-h8pq). La ruta descrita por el aviso afecta a UUID v3/v5/v6 cuando se suministra un búfer. El código inspeccionado del SDK usa `require('uuid/v4')` y llama `v4()` sin búfer; esto reduce la exposición identificada, pero no elimina la alerta del árbol. La propuesta npm de sustituir `xmind` por 0.5.0 supone un cambio mayor y no se ha aceptado.
+- No hay avisos altos/críticos en el informe actual. No equivale a un árbol libre de vulnerabilidades; queda pendiente la decisión documentada sobre el riesgo moderado residual antes de publicar.
+
+## 16. Auditoría de licencias — 2026-11-11
+
+Workflow reproducible [43053653465](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43053653465), `license-checker@25.0.1`, `npm ci --ignore-scripts`, ejecutado en Ubuntu y Windows. Ambos jobs terminaron success. Artefactos: Ubuntu `13869797169`, Windows `13871485171`.
+
+- En cada plataforma: 120 dependencias de producción y 246 dependencias instaladas en total.
+- Producción: 114 MIT, 2 ISC, 1 BSD-2-Clause, 1 BSD-3-Clause, `jszip@3.10.1` (`MIT OR GPL-3.0-or-later`) y `pako@1.0.11` (`MIT AND Zlib`).
+- Desarrollo/optional: además aparecen Apache-2.0 (16), BlueOak-1.0.0 (1), MPL-2.0 (2), más los paquetes de licencias permisivas ya presentes en producción. MPL-2.0 corresponde a `lightningcss@1.33.0` y al binario de plataforma; no aparece en el inventario de producción.
+- La expresión de JSZip permite optar por MIT; debe conservarse la atribución y el texto MIT. Pako declara MIT AND Zlib, por lo que deben respetarse ambas condiciones y conservarse sus avisos. Antes de release se debe verificar que los avisos/licencias de terceros queden disponibles junto al paquete distribuido.
+- `license-checker` etiqueta el paquete raíz privado como UNLICENSED en el JSON bruto; se excluye de los recuentos de terceros. El repositorio declara MIT en `package.json` y contiene `LICENSE`.
+- Los informes completos JSON son los artefactos citados; el resumen y la evaluación están en `docs/third-party-license-audit-2026-11-11.md`.
+
+La auditoría de vulnerabilidades y el inventario de licencias están ejecutados y documentados. Esto no constituye asesoramiento jurídico ni una aceptación automática de riesgos: las obligaciones de avisos de terceros y el riesgo moderado residual siguen siendo puntos de control de release.
