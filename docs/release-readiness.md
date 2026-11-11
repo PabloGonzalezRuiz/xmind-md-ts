@@ -14,7 +14,7 @@ AUD-010 prepara la documentación de usuario, ejemplos reproducibles y criterios
 - `package.json` declara `private: true`, por lo que npm impide publicar el paquete en el registro.
 - La versión de paquete es `0.1.0`; no debe presentarse como una versión estable 1.0.
 - No hay todavía un archivo de licencia en la raíz. La licencia del SDK XMind no determina la licencia de este proyecto.
-- Una ejecución de instalación de dependencias registró 15 avisos de vulnerabilidad (14 moderadas y 1 alta); aún no se ha realizado la clasificación individual ni una auditoría de dependencias específica para release.
+- La instalación de dependencias del workflow [43011667426](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43011667426) registró 15 avisos de vulnerabilidad (14 moderadas y 1 alta); aún no se ha realizado la clasificación individual ni una auditoría de dependencias específica para release.
 - El SDK `xmind@2.2.33` está fijado, pero es una dependencia antigua y el adaptador no ofrece importación/round-trip ni mapea todas las capacidades del IR.
 
 Por estos motivos no se debe publicar todavía un paquete npm ni etiquetar una release estable como 1.0.0.
