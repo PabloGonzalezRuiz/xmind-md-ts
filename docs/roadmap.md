@@ -4,7 +4,7 @@ Las fases se ejecutan secuencialmente. Al terminar una tarea/fase se presenta el
 
 ## Estado de fases
 
-AUD-010 fue autorizada el 2026-11-11. Se están preparando la guía de usuario, ejemplos ejecutables y una puerta CI que valida los ejemplos con la CLI compilada. La publicación npm está bloqueada mientras el paquete mantenga `private: true`; además, no hay licencia del proyecto declarada. Ver [preparación de distribución](release-readiness.md).
+AUD-010 fue autorizada el 2026-11-11. Guía, ejemplos y empaquetado están implementados. CI 43012605756 pasa en Ubuntu/Windows (124/124 pruebas por sistema, ejemplos y paquete instalado). El workflow 43012600819 publica un artefacto temporal instalable. La release pública sigue bloqueada por `private: true`, ausencia de licencia raíz y revisión de vulnerabilidades. Ver [preparación de distribución](release-readiness.md).
 
 | Fase | Alcance | Resultado verificable | Estado |
 |---|---|---|---|
@@ -34,7 +34,7 @@ AUD-010 fue autorizada el 2026-11-11. Se están preparando la guía de usuario, 
 | AUD-007 | Exportador XMind inicial | Completada y verificada |
 | AUD-008 | Exportador SVG | Completada y verificada |
 | AUD-009 | Validación de paquetes con XMind Desktop | Completada y verificada: apertura, visualización, guardado y reapertura confirmados por el usuario; versión/SO no registrados |
-| AUD-010 | Documentación de usuario y publicación | En curso: guía de usuario, ejemplos y comprobación reproducible; falta CI y cerrar las decisiones de licencia/canal de distribución |
+| AUD-010 | Documentación de usuario y publicación | En curso: guía, ejemplos, CI y artefacto instalable verificados; release pública pendiente de licencia, auditoría de vulnerabilidades y canal |
 | AUD-011 | Visor web | Pendiente |
 | AUD-013 | Corregir derivación de nombre de salida y formato de errores de exportación en CLI | Completada y verificada; CI 43003867274, 124/124 pruebas Ubuntu/Windows |
 
