@@ -13,7 +13,7 @@ AUD-010 prepara la documentación de usuario, ejemplos reproducibles y criterios
 - El ejecutable CLI está compilado en `dist/src/cli/main.js` y el lanzador es `bin/xmind-md.js`.
 - `package.json` declara `private: true`, por lo que npm impide publicar el paquete en el registro.
 - La versión de paquete es `0.1.0`; no debe presentarse como una versión estable 1.0.
-- No hay todavía un archivo de licencia en la raíz. La licencia del SDK XMind no determina la licencia de este proyecto.
+- El proyecto incorpora `LICENSE` con licencia MIT y titularidad `Copyright (c) 2026 Pablo González Ruiz`. `package.json` declara `"license": "MIT"` y el paquete incluye el archivo `LICENSE`. Esta licencia cubre el código y la documentación de este repositorio; no altera las licencias de dependencias de terceros.
 - La instalación de dependencias del workflow [43011667426](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43011667426) registró 15 avisos de vulnerabilidad (14 moderadas y 1 alta); aún no se ha realizado la clasificación individual ni una auditoría de dependencias específica para release.
 - El SDK `xmind@2.2.33` está fijado, pero es una dependencia antigua y el adaptador no ofrece importación/round-trip ni mapea todas las capacidades del IR.
 
@@ -30,13 +30,13 @@ Este mecanismo es un artefacto temporal de CI, no una release permanente ni una 
 1. Mantener el código fuente y los ejemplos en GitHub.
 2. Generar desde un commit verificado un paquete reproducible que incluya CLI compilada, lanzador, schema IR y metadatos necesarios.
 3. Probar el paquete empaquetado en un entorno limpio con Node.js 24: instalación, `--help`, `--version`, validación de ejemplo y exportación JSON/XMind/SVG.
-4. Decidir y añadir explícitamente la licencia del proyecto.
+4. Revisar las licencias de dependencias de terceros y sus avisos, sin asumir que quedan cubiertas por la MIT del proyecto.
 5. Decidir el canal de distribución: GitHub Release con artefacto adjunto, npm público o ambos.
 6. Solo después, fijar versión/tag, changelog, notas de release, checksums y política de soporte.
 
 ## Criterios de aceptación de una release
 
-- [ ] Licencia del proyecto elegida y archivo LICENSE incorporado.
+- [x] Licencia MIT del proyecto elegida y archivo LICENSE incorporado.
 - [ ] Política de versionado y compatibilidad IR documentada.
 - [ ] Versión del paquete y tag coincidentes.
 - [ ] Paquete construido desde un SHA identificado.
@@ -49,4 +49,4 @@ Este mecanismo es un artefacto temporal de CI, no una release permanente ni una 
 
 ## Restricciones de esta tarea
 
-AUD-010 ya dispone de guía, ejemplos, verificación CI y artefacto instalable temporal. La release pública permanece bloqueada hasta decidir la licencia, revisar las vulnerabilidades reportadas y decidir el canal de publicación. La autorización de AUD-010 no implica elegir una licencia legal ni publicar en npm o crear una release pública sin una decisión explícita sobre esos puntos. No modificar `main`, fusionar ramas ni crear una release estable por inferencia.
+AUD-010 ya dispone de guía, ejemplos, verificación CI y artefacto instalable temporal. La licencia del proyecto ya está decidida (MIT, Pablo González Ruiz). La release pública permanece bloqueada hasta revisar las vulnerabilidades reportadas, decidir el canal de publicación y completar los demás criterios de aceptación. La incorporación de la licencia no autoriza por sí sola a publicar en npm ni a crear una release pública. No modificar `main`, fusionar ramas ni crear una release estable por inferencia.
