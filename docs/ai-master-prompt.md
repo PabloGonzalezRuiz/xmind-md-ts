@@ -13,12 +13,12 @@ No conviertas línea por línea el proyecto Python anterior. Reutiliza requisito
 ## Estado actual confirmado
 
 - Rama de trabajo: feature/aud-003-runtime-schema.
-- Código probado: 980279a6e61a990769e9884ea1fc51888d5bf054.
-- HEAD auditado antes de esta sincronización documental: 8a8b28953ac29d7bcd5d3707f19b484d8834915c; los commits de esta auditoría posteriores a ese SHA son solo documentales. Consultar GitHub para el HEAD actual.
-- CI general [42989195843](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195843): Ubuntu y Windows, 118/118 pruebas en cada sistema; formato, lint, tipos generados, typecheck, build y smoke test CLI correctos.
-- Probe SDK XMind [42989195787](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195787): Ubuntu y Windows, correcto.
-- AUD-001 a AUD-008 están completadas y verificadas en la rama activa.
-- Pendientes: AUD-009 (validación XMind Desktop), AUD-010 (documentación de usuario/publicación), AUD-011 (visor web) y AUD-013 (dos defectos de CLI detectados por revisión estática).
+- Último código y pruebas verificados: fe1d3e510a76719f12d4eeaf0e081304720196b8.
+- HEAD actual verificado tras AUD-013: fe1d3e510a76719f12d4eeaf0e081304720196b8. Consultar GitHub antes de continuar para detectar commits posteriores.
+- CI AUD-013 [43003867274](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867274): Ubuntu y Windows, 124/124 pruebas en cada sistema; formato, lint, tipos generados, typecheck, build y smoke test CLI correctos.
+- Probe SDK XMind AUD-013 [43003867447](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867447): Ubuntu y Windows, correcto.
+- AUD-001 a AUD-008 y AUD-013 están completadas y verificadas en la rama activa.
+- Pendientes: AUD-009 (validación XMind Desktop), AUD-010 (documentación de usuario/publicación) y AUD-011 (visor web).
 - main sigue en 6aca81b59dbfcfc13034e7e1115c70f7691c5035 y no contiene el desarrollo. No fusionar, abrir PR ni crear release sin autorización expresa.
 
 El estado completo, las limitaciones, el backlog y la historia están en docs/project-audit-and-continuation.md y docs/technical-audit-2026-11-11.md.
@@ -72,12 +72,13 @@ npm start -- --help
 
 CI corre en Ubuntu y Windows. Incluye formato, lint, comprobación de tipos generados, typecheck, tests, build y smoke test CLI. El workflow separado .github/workflows/xmind-sdk-probe.yml comprueba el SDK.
 
-## Incidencias detectadas pendientes
+## Incidencias corregidas
 
-AUD-013:
-1. En src/cli/main.ts, el patrón usado para quitar la extensión de la ruta de entrada de exportaciones XMind/SVG está escapado de más. Para rutas normales como mapa.md no elimina .md, por lo que el nombre predeterminado queda como mapa.md.xmind/mapa.md.svg.
-2. Los mensajes de error de XMindExportError y SvgExportError interpolan la secuencia literal \\n en vez de un salto de línea real.
-3. Añadir pruebas de CLI sin --output para Markdown y JSON, en Windows y POSIX, y pruebas de formato de stderr. No corregir sin registrar los cambios y verificar CI.
+AUD-013 (completada y verificada):
+1. La derivación de salida XMind/SVG elimina la extensión final con un patrón que reconoce separadores POSIX y Windows.
+2. Los errores XMind/SVG terminan con un salto de línea real en stderr.
+3. Se añadieron pruebas de CLI para exportación por defecto desde Markdown y JSON, además de pruebas de formato de stderr.
+4. CI 43003867274: 124/124 pruebas en Ubuntu y Windows; probe SDK 43003867447 correcto en ambos.
 
 ## Protocolo de trabajo
 
@@ -87,7 +88,7 @@ AUD-013:
 4. Consultar CI y logs de ambos sistemas antes de declarar un estado.
 5. Trabajar en la rama activa salvo autorización; no modificar main, fusionar ramas ni crear PR/release sin autorización.
 6. Cambios pequeños y verificables: pruebas, formato, lint, typecheck, build, revisión de diff y actualización documental.
-7. No comenzar AUD-009, AUD-010, AUD-011 ni AUD-013 hasta que el usuario autorice expresamente la tarea concreta.
+7. No comenzar AUD-009, AUD-010 ni AUD-011 hasta que el usuario autorice expresamente la tarea concreta.
 8. Al terminar una tarea, actualizar auditoría, roadmap, README y documentación funcional aplicable; registrar SHA exacto y run IDs.
 
 ## Fuentes de verdad
