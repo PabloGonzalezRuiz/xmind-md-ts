@@ -33,7 +33,7 @@ El trabajo está distribuido en ramas de características. No hay pull requests 
 
 ## 2. Ramas, commits y política de integración
 
-| Rama | HEAD auditado | Propósito / estado |
+| Rama | HEAD funcional verificado | Propósito / estado |
 |---|---|---|
 | `main` | `6aca81b59dbfcfc13034e7e1115c70f7691c5035` | Contiene documentación base y contrato IR; no contiene la implementación TypeScript |
 | `feature/phase-3-project-scaffold` | `43a006096aa65f72c73b5ec20ab3d457fe698019` | Scaffold, configuración, dependencias, tests y CI |

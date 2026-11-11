@@ -88,9 +88,11 @@ xmind-md export <archivo.md|archivo.json> --format svg [--output <archivo.svg>] 
 
 Si se omite `--output`, se genera un `.svg` junto a la entrada (o `map.svg` para stdin). La salida SVG requiere una ruta de archivo y no se escribe en stdout.
 
+## 7. Visor web futuro
+
 El visor consumirá el IR serializado. Se evaluarán bibliotecas según su modelo de datos, licencia, accesibilidad, interacción, rendimiento y compatibilidad con mapas complejos. No se acoplará el IR al modelo de una biblioteca de visualización.
 
-## 8. Visor web futuro
+## 8. Validación de XMind
 
 Niveles separados:
 
