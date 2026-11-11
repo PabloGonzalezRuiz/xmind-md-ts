@@ -29,7 +29,7 @@ Scripts:
 - npm test / npm run test:watch: Vitest.
 - npm run generate:types: genera spec/ir-v1.types.ts desde el JSON Schema.
 - npm run check:generated-types: comprueba que los tipos versionados coinciden con el generador.
-- npm run verify: formato, lint, tipos generados, typecheck, tests, build y comprobación de ejemplos mediante la CLI compilada.
+- npm run verify: formato, lint, tipos generados, typecheck, tests, build, validación de ejemplos y empaquetado/instalación de prueba.
 
 Usa npm ci; no edites manualmente package-lock.json ni spec/ir-v1.types.ts.
 
