@@ -281,7 +281,7 @@ async function run(options: Options): Promise<void> {
       options.output ??
       (options.input === '-'
         ? `map${extension}`
-        : options.input.replace(/\\.[^.\\/]+$/, '') + extension);
+        : options.input.replace(/\.[^./\\]+$/, '') + extension);
     if (options.input !== '-' && resolve(options.input) === resolve(outputPath)) {
       throw new UsageError('La ruta de salida no puede sobrescribir el archivo de entrada.');
     }
@@ -343,11 +343,11 @@ async function main(): Promise<void> {
       process.exitCode = EXIT.usage;
     } else if (error instanceof XMindExportError) {
       reportDiagnostics(error.diagnostics);
-      process.stderr.write(`Error de exportación XMind: ${error.message}\\n`);
+      process.stderr.write(`Error de exportación XMind: ${error.message}\n`);
       process.exitCode = EXIT.invalid;
     } else if (error instanceof SvgExportError) {
       reportDiagnostics(error.diagnostics);
-      process.stderr.write(`Error de exportación SVG: ${error.message}\\n`);
+      process.stderr.write(`Error de exportación SVG: ${error.message}\n`);
       process.exitCode = EXIT.invalid;
     } else if (error instanceof InputError) {
       if (error.message !== 'El documento no supera la validación.') {
