@@ -198,8 +198,6 @@ function exportTopicTree(
       features.markers += 1;
     }
 
-
-
     exportTopicTree(
       topicApi,
       sdkId,
