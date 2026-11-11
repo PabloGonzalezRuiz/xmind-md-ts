@@ -25,7 +25,7 @@ Código probado: 980279a6e61a990769e9884ea1fc51888d5bf054.
 - En cada sistema: 11 archivos de test, 118/118 pruebas correctas.
 - Pasos correctos: instalación reproducible, formato, lint, generación/sincronización de tipos, typecheck, tests, build y smoke test CLI.
 - Probe SDK [42989195787](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195787): Ubuntu y Windows completados con éxito; instalación aislada, generación e inspección del paquete.
-- HEAD actual de rama feature/aud-003-runtime-schema: 8a8b28953ac29d7bcd5d3707f19b484d8834915c. Los dos commits posteriores al código probado solo modifican documentación; no se ha observado una ejecución CI posterior para ese HEAD documental.
+- HEAD auditado antes de esta sincronización documental: 8a8b28953ac29d7bcd5d3707f19b484d8834915c. Los commits posteriores de esta auditoría son solo documentales; no se ha observado una ejecución CI posterior para el HEAD documental actual.
 
 No se ha ejecutado npm run verify en una máquina local durante esta auditoría. La evidencia indicada corresponde a los logs de GitHub Actions.
 
