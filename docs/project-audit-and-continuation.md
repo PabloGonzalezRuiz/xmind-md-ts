@@ -5,12 +5,12 @@
 > **Última auditoría:** 2026-11-11  
 > **Repositorio:** https://github.com/PabloGonzalezRuiz/xmind-md-ts  
 > **Rama de trabajo auditada:** `feature/aud-003-runtime-schema`  
-> **HEAD de código probado:** `69878d693dd2b0883c3d326de4395aaf477c0ca4` (AUD-007; CI general [42985540873](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42985540873) y probe SDK [42985540716](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42985540716), ambos verdes en Ubuntu y Windows)  
+> **HEAD de código probado:** `980279a6e61a990769e9884ea1fc51888d5bf054` (AUD-008; CI general [42989195843](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195843) y probe SDK [42989195787](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195787), ambos verdes en Ubuntu y Windows)  
 > **Rama principal:** `main` — `6aca81b59dbfcfc13034e7e1115c70f7691c5035`
 
 ## 1. Resumen ejecutivo
 
-El proyecto tiene definido el contrato IR v1.0.0 y dispone de parser Markdown, validación estructural y semántica, motor de estilos, adaptador JSON, CLI y un **exportador XMind inicial**. La exportación genera paquetes `.xmind` con límites documentados; todavía no existe adaptador SVG ni visor y la apertura/guardado en XMind Desktop no se ha validado.
+El proyecto tiene definido el contrato IR v1.0.0 y dispone de parser Markdown, validación estructural y semántica, motor de estilos, adaptadores JSON/XMind/SVG y CLI. Los exportadores XMind y SVG generan sus respectivos artefactos con límites documentados. Todavía no existe visor web y la apertura/guardado en XMind Desktop no se ha validado.
 
 El trabajo está distribuido en ramas de características. No hay pull requests abiertos y no se ha integrado el desarrollo de las fases 3–7 en `main`. No se debe confundir que una fase esté implementada y verificada en su rama con que esté integrada en la rama principal.
 
@@ -26,8 +26,8 @@ El trabajo está distribuido en ramas de características. No hay pull requests 
 | JSON Schema en ejecución | Completada y verificada (AUD-003) | Ajv 8 Draft 2020-12; 15 casos SC definidos; pipeline estructural-semántico; tipos generados desde el schema; comprobación de sincronización y CI verde en HEAD `957ae096359cfa9d62ddbe70883bfa2020efe5ed` |
 | Adaptador JSON y CLI | Completada y verificada (AUD-005) | `src/adapters/json/json-adapter.ts`; comandos `parse`, `validate` y `export`; bin `xmind-md`; CI Ubuntu/Windows [42856600346](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42856600346) |
 | Evaluación SDK XMind (AUD-006) | Completada y verificada | `xmind@2.2.33`; prueba aislada Node 24 en Ubuntu/Windows; decisión ADR-0001 |
-| Adaptador XMind (AUD-007) | Completada y verificada | `src/adapters/xmind/xmind-adapter.ts`; exportación CLI `--format xmind`; matriz de capacidades y diagnósticos; 111 pruebas; CI Ubuntu/Windows verde |
-| Adaptador SVG | Pendiente | No existe renderizador |
+| Adaptador XMind (AUD-007) | Completada y verificada | `src/adapters/xmind/xmind-adapter.ts`; exportación CLI `--format xmind`; matriz de capacidades y diagnósticos; 111 pruebas en cierre AUD-007; CI Ubuntu/Windows verde |
+| Adaptador SVG (AUD-008) | Completada y verificada | `src/adapters/svg/svg-adapter.ts`; CLI `--format svg`; SVG determinista con IR íntegro en metadatos; 118 pruebas; CI Ubuntu/Windows verde |
 | Validación en XMind Desktop | Pendiente | No hay pruebas de apertura/guardado ni corpus real |
 | Visor web | Pendiente | No existe aplicación web ni pruebas Playwright |
 
@@ -40,7 +40,7 @@ El trabajo está distribuido en ramas de características. No hay pull requests 
 | `feature/phase-4-markdown-parser` | `d31892ba0895f513b8b19a284de929623d10af6b` | Parser Markdown y pruebas |
 | `feature/phase-5-semantic-validation` | `954216e99a13106d88ba72652460047d826b9c55` | Validador semántico, IDs deterministas y pruebas |
 | `feature/phase-6-style-engine` | `21dae3248be2963ccc77b00b79dffd1afd92a98d` | Catálogo y motor de estilos; AUD-001 y AUD-002 verificadas |
-| `feature/aud-003-runtime-schema` | `69878d693dd2b0883c3d326de4395aaf477c0ca4` | Ajv runtime, corpus parser/IR, adaptadores JSON y XMind, CLI; AUD-003 a AUD-007 verificadas |
+| `feature/aud-003-runtime-schema` | `980279a6e61a990769e9884ea1fc51888d5bf054` | Ajv runtime, corpus parser/IR, adaptadores JSON, XMind y SVG, CLI; AUD-003 a AUD-008 verificadas |
 
 Las ramas de fase están encadenadas por orden de desarrollo y contienen cambios acumulados. No hay PRs abiertos ni issues registrados en el repositorio en el momento de esta auditoría. **No fusionar ni reescribir `main` sin autorización expresa.**
 
@@ -64,13 +64,14 @@ Las ramas de fase están encadenadas por orden de desarrollo y contienen cambios
 - `src/styles/style-engine.ts`: resolución por capas, herencia de StyleSets, roles, estilos con nombre, overrides, runs y procedencia.
 - `src/adapters/json/json-adapter.ts`: serialización determinista del IR validado a JSON, sin mutar el documento.
 - `src/adapters/xmind/xmind-adapter.ts`: exportador encapsulado con `xmind@2.2.33`, modos `strict`/`compatible`, notas, marcadores, hipervínculos, etiquetas aproximadas y resúmenes; diagnósticos para propiedades no soportadas.
-- `src/cli/main.ts`: comandos `parse`, `validate` y `export` JSON/XMind, stdin/stdout, diagnósticos y códigos de salida.
+- `src/adapters/svg/svg-adapter.ts`: renderizador SVG determinista; jerarquía, relaciones, límites, resúmenes, estilos mapeables, enlaces filtrados y metadatos IR completos; modos `strict`/`compatible` para assets no dibujados.
+- `src/cli/main.ts`: comandos `parse`, `validate` y `export` JSON/XMind/SVG, stdin/stdout, diagnósticos y códigos de salida.
 - `bin/xmind-md.js`: punto de entrada del ejecutable `xmind-md`.
 - `scripts/probe-xmind-sdk.js`: prueba aislada reproducible de generación/inspección del paquete `xmind@2.2.33`; no es dependencia ni código de producción.
 - `.github/workflows/xmind-sdk-probe.yml`: ejecuta la prueba del SDK en Node 24 sobre Ubuntu y Windows.
 - `package.json` y `package-lock.json`: dependencia exacta `xmind@2.2.33` y dependencias transitivas fijadas.
 
-No existen todavía adaptadores XMind/SVG ni aplicación `viewer/`.
+No existe todavía aplicación `viewer/`. La validación con XMind Desktop continúa pendiente.
 
 ### 3.3 Toolchain y CI
 
@@ -125,7 +126,7 @@ Los IDs de tarea son permanentes. Cambiar el orden o el alcance exige actualizar
 | AUD-005 | P1 | Implementar adaptador JSON y CLI | Comandos de parse, validate y export JSON; códigos de salida; rutas Windows; ejecución local y CI | Completada y verificada |
 | AUD-006 | P1 | Evaluar SDK oficial XMind y decidir estrategia | Informe de API, formatos, Node, licencia, actividad, cobertura, dependencias y prueba mínima en Ubuntu/Windows | Completada y verificada |
 | AUD-007 | P1 | Implementar exportador XMind inicial | Paquete generado, matriz de capacidades y diagnósticos de pérdidas; estructura ZIP/JSON comprobada; CI Ubuntu/Windows verde | Completada y verificada |
-| AUD-008 | P2 | Implementar adaptador SVG | SVG válido, renderizado determinista, metadatos semánticos y pruebas visuales/estructurales | Pendiente |
+| AUD-008 | P2 | Implementar adaptador SVG | SVG autocontenido y determinista; metadatos IR; jerarquía, relaciones, límites, resúmenes, estilos y enlaces; pruebas y CI Ubuntu/Windows | Completada y verificada |
 | AUD-009 | P2 | Crear corpus real y validar con XMind Desktop | Fixtures de referencia abiertos y guardados en versión Desktop identificada; informe de fidelidad | Pendiente |
 | AUD-010 | P2 | Documentación de usuario y publicación | Instalación, gramática, ejemplos, CLI, limitaciones, releases y artefactos | Pendiente |
 | AUD-011 | P3 | Diseñar e implementar visor web | Arquitectura aprobada, IR consumido sin duplicar semántica, accesibilidad y pruebas Playwright | Pendiente |
@@ -166,7 +167,7 @@ Al iniciar una sesión de trabajo:
 
 ### Primera acción de continuación
 
-**AUD-001 a AUD-007 están completadas y verificadas.** La siguiente tarea del backlog es AUD-008 (adaptador SVG), pendiente de autorización. AUD-009 (validación real en XMind Desktop) sigue pendiente y no debe confundirse con la validación estructural del ZIP.
+**AUD-001 a AUD-008 están completadas y verificadas.** La siguiente tarea del backlog es AUD-009 (corpus real y validación de apertura/guardado en XMind Desktop), pendiente de autorización. Esta validación de escritorio es independiente de la generación estructural de los paquetes XMind.
 
 ## 8. Registro de sesiones
 
@@ -195,3 +196,6 @@ Al iniciar una sesión de trabajo:
 
 
 | 2026-11-11 | AUD-007: primera implementación del adaptador XMind | Añadido `xmind@2.2.33`, adaptador aislado, exportación CLI `--format xmind`, modos strict/compatible, diagnósticos para pérdidas y pruebas iniciales. La primera CI detectó lockfile incompleto (corregido) y formato (corregido por Prettier en la rama). Pendiente CI de HEAD posterior a los arreglos, revisión de cobertura y cierre | Ejecutar CI completa en Ubuntu/Windows, corregir fallos, eliminar workflow temporal de formato y completar documentación |
+
+
+| 2026-11-11 | AUD-008: adaptador SVG y cierre | Añadido `src/adapters/svg/svg-adapter.ts`, exportación CLI `--format svg`, geometría determinista, temas y metadatos accesibles, relaciones, límites, resúmenes, estilos mapeables y metadatos XML con el IR completo. Los assets no se dibujan: strict detiene y compatible informa. Se filtran esquemas de hipervínculo no permitidos y se escapan caracteres para XML 1.0. Añadidas pruebas de determinismo, jerarquía, estilos, metadatos, assets, enlaces y CLI. CI [42989195843](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195843) verde en Ubuntu y Windows; 11 archivos de test y 118 pruebas. Probe SDK [42989195787](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195787) también verde. HEAD de código `980279a6e61a990769e9884ea1fc51888d5bf054`. `main` sigue en `6aca81b59dbfcfc13034e7e1115c70f7691c5035` | Solicitar autorización para AUD-009 |

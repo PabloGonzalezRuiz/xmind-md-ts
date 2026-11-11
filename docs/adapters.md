@@ -48,17 +48,49 @@ La CLI valida el IR estructural y semánticamente antes de exportar. Si no se in
 
 Implementado en `src/adapters/json/json-adapter.ts`: `serializeIrJson(ir)` serializa el IR validado para inspección, pruebas, intercambio y consumo por herramientas externas. La serialización es determinista, versionada por `irVersion` y no modifica el documento. La validación JSON Schema y semántica se ejecuta antes, en el pipeline.
 
-## 6. Adaptador SVG
+## 6. Adaptador SVG (AUD-008)
 
-Renderiza el IR como SVG autocontenido o con recursos referenciados según una política documentada. Debe preservar metadatos semánticos (IDs, jerarquía, texto y propiedades recuperables) cuando sea posible.
+Implementado en `src/adapters/svg/svg-adapter.ts`. Recibe el IR ya validado, no depende del parser y no modifica el documento. Produce un SVG UTF-8 autocontenido, con geometría y orden deterministas para un mismo IR y versión del renderizador.
 
-SVG no es la fuente de verdad. La reconstrucción exacta del Markdown original requiere conservar la fuente original o metadatos suficientes; un SVG gráfico convencional no preserva comentarios, orden de directivas ni sintaxis exacta.
+### Representación visual
 
-## 7. Visor web futuro
+| Elemento IR | Estado | Tratamiento |
+|---|---|---|
+| Hoja, jerarquía y títulos | mapped | Árbol horizontal con conectores curvos, cajas de tamaño calculado y ajuste de líneas |
+| Identidad de temas | native | `id` SVG estable y `data-ir-id`/`data-ir-type` |
+| Etiquetas y marcadores | mapped | Línea secundaria bajo el título |
+| Hipervínculos | mapped | Enlaces relativos y esquemas `http`, `https`, `mailto` y `tel`; se omiten esquemas no permitidos con `SVG_HYPERLINK_OMITTED` |
+| Relaciones | mapped | Curvas entre los bordes de los nodos, etiqueta y flechas configurables |
+| Boundaries | approximate | Rectángulo envolvente de los temas indicados; si no son contiguos puede incluir temas intermedios |
+| Summaries | approximate | Corchete y etiqueta alrededor del rango geométrico |
+| Colores, tipografía y formas | mapped | Colores, fuente, tamaño, peso, estilo, decoración, alineación, forma, radio, opacidad y trazos admitidos |
+| Padding personalizado | approximate | Se conserva en el IR embebido; se emite `SVG_PADDING_APPROXIMATE` |
+| Sombras activadas | unsupported visualmente | Se conservan en el IR; se emite `SVG_SHADOW_NOT_RENDERED` |
+| Contenido y notas | mapped semánticamente | Texto accesible en `<desc>` del tema y contenido íntegro en metadatos; no se representa como cuerpo visible del nodo |
+| Assets/imágenes | unsupported visualmente | No se dibujan; strict bloquea y compatible continúa con `SVG_ASSETS_NOT_RENDERED`; las referencias permanecen en metadatos |
+
+El SVG raíz incluye `<title>`, `<desc>` y un elemento `<metadata id="xmind-md-ir">` que contiene el IR completo serializado. Los elementos de tema, relación, límite y resumen conservan identificadores y tipo mediante atributos de datos. Esto permite recuperar el IR, pero no reconstruir la sintaxis Markdown original a partir de un SVG convencional.
+
+El diseño utiliza métricas tipográficas aproximadas para calcular cajas y saltos de línea. La geometría del SVG es determinista; la apariencia final de los glifos puede variar según las fuentes instaladas y el motor SVG. Los caracteres incompatibles con XML 1.0 se excluyen del texto visible; el IR original se mantiene en los metadatos JSON escapados.
+
+### Política de exportación
+
+- `strict` (predeterminado): detiene la exportación cuando existen assets que no pueden dibujarse.
+- `compatible`: permite el SVG con omisiones visuales diagnosticadas.
+- Los diagnósticos del motor de estilos y las aproximaciones de padding/sombras se notifican en stderr.
+- Los hipervínculos con esquemas no permitidos se omiten del enlace SVG aunque el IR original se conserve en metadatos.
+
+### Integración CLI SVG
+
+```text
+xmind-md export <archivo.md|archivo.json> --format svg [--output <archivo.svg>] [--export-mode strict|compatible]
+```
+
+Si se omite `--output`, se genera un `.svg` junto a la entrada (o `map.svg` para stdin). La salida SVG requiere una ruta de archivo y no se escribe en stdout.
 
 El visor consumirá el IR serializado. Se evaluarán bibliotecas según su modelo de datos, licencia, accesibilidad, interacción, rendimiento y compatibilidad con mapas complejos. No se acoplará el IR al modelo de una biblioteca de visualización.
 
-## 8. Validación de XMind
+## 8. Visor web futuro
 
 Niveles separados:
 

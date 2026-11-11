@@ -85,3 +85,16 @@ xmind-md export .\mapa.md --format xmind --export-mode compatible
 ```
 
 El modo `strict` es el predeterminado y detiene la exportación cuando el IR contiene elementos que el adaptador no puede representar. `compatible` debe solicitarse expresamente y genera el paquete parcial junto con diagnósticos de pérdidas. La matriz completa está en [Adaptadores de salida](adapters.md).
+
+
+## Exportación SVG
+
+El comando `export` admite `--format svg` desde Markdown o IR JSON:
+
+```powershell
+xmind-md export .\mapa.md --format svg
+xmind-md export .\mapa.md --format svg --output .\salida\mapa.svg
+xmind-md export .\mapa.md --format svg --export-mode compatible
+```
+
+Por defecto se aplica `strict`: la exportación se detiene si el IR contiene assets que no se dibujan. `compatible` genera el SVG y comunica las omisiones. El IR completo se conserva dentro de `<metadata>`; las notas y el contenido también se exponen como descripciones accesibles de los temas. La matriz de capacidades y las limitaciones están en [Adaptadores de salida](adapters.md).

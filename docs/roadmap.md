@@ -12,14 +12,14 @@ Las fases se ejecutan secuencialmente. Al terminar cada fase se presenta el resu
 | 6 | Motor de estilos | Catálogo tipado, conjuntos heredados, roles, estilos, precedencia, fusión y procedencia | Implementación en rama de trabajo; AUD-001/002 verificadas |
 | 7 | Adaptador JSON y CLI | Comandos parse, validate y export JSON; códigos de salida y rutas Windows; ejecución local y CI en Ubuntu/Windows | Completada y verificada |
 | 8 | Evaluación e integración XMind | AUD-006 evaluación del SDK y AUD-007 exportador inicial, CLI, matriz de capacidades y pruebas estructurales | Completada y verificada; validación Desktop pendiente en fase 10 |
-| 9 | Adaptador SVG | Renderizado y metadatos semánticos | Pendiente |
+| 9 | Adaptador SVG | Exportador SVG, CLI, metadatos IR, estilos, relaciones, límites, resúmenes y pruebas estructurales | Completada y verificada (AUD-008) |
 | 10 | Corpus XMind y validación Desktop | Pruebas estructurales y visuales documentadas | Pendiente |
 | 11 | Documentación de usuario y publicación | Guía, ejemplos, releases y artefactos | Pendiente |
 | 12 | Visor web TypeScript | Aplicación web que consume el IR, con pruebas Playwright | Pendiente |
 
 ## Verificación transversal del contrato IR
 
-Las auditorías AUD-001 a AUD-007 están completadas y verificadas en `feature/aud-003-runtime-schema`. El exportador XMind inicial usa `xmind@2.2.33`, valida el IR, genera paquetes `.xmind` y documenta diagnósticos y pérdidas. CI general y prueba SDK pasan en Ubuntu y Windows (Node 24). `main` permanece en `6aca81b59dbfcfc13034e7e1115c70f7691c5035`. La apertura/guardado en XMind Desktop sigue pendiente de AUD-009.
+Las auditorías AUD-001 a AUD-008 están completadas y verificadas en `feature/aud-003-runtime-schema`. El exportador XMind inicial usa `xmind@2.2.33`; el adaptador SVG genera gráficos autocontenidos con el IR completo en metadatos. CI general y prueba SDK pasan en Ubuntu y Windows (Node 24). `main` permanece en `6aca81b59dbfcfc13034e7e1115c70f7691c5035`. La apertura/guardado en XMind Desktop sigue pendiente de AUD-009.
 
 ## Registro operativo
 
