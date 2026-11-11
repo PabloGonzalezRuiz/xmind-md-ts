@@ -16,7 +16,9 @@ function run(command, args, description, options = {}) {
   });
   if (result.status !== 0) {
     process.stderr.write(result.stderr || result.stdout);
-    throw new Error(`Falló ${description} (exit ${result.status}).`);
+    throw new Error(
+      `Falló ${description} (exit ${result.status}).`,
+    );
   }
   return result.stdout;
 }
@@ -53,7 +55,9 @@ try {
     [installedCli, 'validate', join(packageRoot, 'examples', 'quick-start.md')],
     'validación del ejemplo desde la CLI instalada',
   );
-  process.stdout.write('OK: paquete npm empaquetado e instalado en un directorio limpio.\n');
+  process.stdout.write(
+    'OK: paquete npm empaquetado e instalado en un directorio limpio.\n',
+  );
 } finally {
   rmSync(outputDirectory, { recursive: true, force: true });
 }
