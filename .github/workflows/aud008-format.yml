@@ -1,0 +1,40 @@
+name: AUD-008 temporary formatter
+
+on:
+  push:
+    branches:
+      - feature/aud-003-runtime-schema
+
+permissions:
+  contents: read
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx prettier --write src/adapters/svg/svg-adapter.ts src/cli/main.ts test/svg-adapter.test.ts test/cli.test.ts
+      - name: Emit formatted source for controlled commit
+        shell: bash
+        run: |
+          echo "BEGIN_SVG_ADAPTER"
+          base64 -w0 src/adapters/svg/svg-adapter.ts
+          echo
+          echo "END_SVG_ADAPTER"
+          echo "BEGIN_CLI"
+          base64 -w0 src/cli/main.ts
+          echo
+          echo "END_CLI"
+          echo "BEGIN_SVG_TEST"
+          base64 -w0 test/svg-adapter.test.ts
+          echo
+          echo "END_SVG_TEST"
+          echo "BEGIN_CLI_TEST"
+          base64 -w0 test/cli.test.ts
+          echo
+          echo "END_CLI_TEST"
