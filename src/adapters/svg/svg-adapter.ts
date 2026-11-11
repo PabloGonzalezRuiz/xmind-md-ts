@@ -111,15 +111,17 @@ function safeColor(value: JsonValue | undefined, fallback: string): string {
 }
 
 function isSafeHyperlink(value: string): boolean {
+  const normalized = value.trim();
   if (
-    Array.from(value).some((character) => {
+    !normalized ||
+    Array.from(normalized).some((character) => {
       const code = character.charCodeAt(0);
       return code < 32 || code === 127;
     })
   ) {
     return false;
   }
-  const scheme = value.match(/^([a-z][a-z0-9+.-]*):/i)?.[1]?.toLowerCase();
+  const scheme = normalized.match(/^([a-z][a-z0-9+.-]*):/i)?.[1]?.toLowerCase();
   return !scheme || ['http', 'https', 'mailto', 'tel'].includes(scheme);
 }
 
