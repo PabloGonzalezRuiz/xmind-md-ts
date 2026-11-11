@@ -180,10 +180,7 @@ function topicDescription(topic: Topic): string {
 }
 
 function baseNodeHeight(lines: string[], hasMetadata: boolean, lineHeight: number): number {
-  return Math.max(
-    52,
-    NODE_PADDING_Y * 2 + lines.length * lineHeight + (hasMetadata ? 18 : 0),
-  );
+  return Math.max(52, NODE_PADDING_Y * 2 + lines.length * lineHeight + (hasMetadata ? 18 : 0));
 }
 
 function createLayout(
@@ -195,10 +192,16 @@ function createLayout(
   const values = styles.get(topic.id);
   const fontSize = Math.min(24, Math.max(10, lengthInPixels(values?.fontSize, DEFAULT_FONT_SIZE)));
   const lineHeight = Math.max(16, fontSize * 1.35);
-  const lines = wrapText(topic.title || '(sin título)', Math.max(12, Math.floor(26 * (14 / fontSize))));
+  const lines = wrapText(
+    topic.title || '(sin título)',
+    Math.max(12, Math.floor(26 * (14 / fontSize))),
+  );
   const width = Math.min(
     MAX_NODE_WIDTH,
-    Math.max(MIN_NODE_WIDTH, Math.max(...lines.map((line) => line.length), 1) * fontSize * 0.62 + NODE_PADDING_X * 2),
+    Math.max(
+      MIN_NODE_WIDTH,
+      Math.max(...lines.map((line) => line.length), 1) * fontSize * 0.62 + NODE_PADDING_X * 2,
+    ),
   );
   widths[depth] = Math.max(widths[depth] ?? 0, width);
   const metadata = Boolean(topic.labels?.length || topic.markers?.length);
@@ -278,7 +281,10 @@ function renderNode(node: TopicLayout, styles: Map<string, StyleValues>): string
   const textX = textAnchor === 'start' ? node.x + NODE_PADDING_X : node.x + node.width / 2;
   const textWidth = Math.max(1, node.width - NODE_PADDING_X * 2);
   const textHeight = node.lines.length * node.lineHeight;
-  const metadata = [...(topic.labels ?? []), ...(topic.markers ?? []).map((marker) => `◆ ${marker}`)];
+  const metadata = [
+    ...(topic.labels ?? []),
+    ...(topic.markers ?? []).map((marker) => `◆ ${marker}`),
+  ];
   const metadataText = metadata.join(' · ');
   const contentHeight = textHeight + (metadataText ? 18 : 0);
   const textTop = node.y - contentHeight / 2 + fontSize * 0.85;
@@ -345,7 +351,9 @@ function renderBoundary(
   positions: Map<string, TopicLayout>,
   styles: Map<string, StyleValues>,
 ): string {
-  const selected = boundary.topicIds.map((id) => positions.get(id)).filter((item) => item !== undefined);
+  const selected = boundary.topicIds
+    .map((id) => positions.get(id))
+    .filter((item) => item !== undefined);
   if (!selected.length) return '';
   const bounds = selected.map(nodeBounds);
   const left = Math.min(...bounds.map((item) => item.x)) - 16;
@@ -369,7 +377,9 @@ function renderSummary(
   styles: Map<string, StyleValues>,
   diagramWidth: number,
 ): string {
-  const selected = summary.topicIds.map((id) => positions.get(id)).filter((item) => item !== undefined);
+  const selected = summary.topicIds
+    .map((id) => positions.get(id))
+    .filter((item) => item !== undefined);
   if (!selected.length) return '';
   const values = styles.get(summary.id);
   const stroke = safeColor(values?.stroke ?? values?.color, '#7C3AED');
@@ -421,13 +431,7 @@ export async function exportSvgFile(
 
   const styleResult = resolveIrStyles(document);
   for (const diagnostic of styleResult.diagnostics) {
-    addDiagnostic(
-      diagnostics,
-      diagnostic.code,
-      'warning',
-      diagnostic.message,
-      diagnostic.path,
-    );
+    addDiagnostic(diagnostics, diagnostic.code, 'warning', diagnostic.message, diagnostic.path);
   }
   const styles = styleMap(styleResult.styles);
   const mapStyle = styles.get(document.sheet.id);

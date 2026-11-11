@@ -4,10 +4,7 @@ import { join } from 'node:path';
 
 import { afterEach, describe, expect, it } from 'vitest';
 
-import {
-  exportSvgFile,
-  SvgExportError,
-} from '../src/adapters/svg/svg-adapter.js';
+import { exportSvgFile, SvgExportError } from '../src/adapters/svg/svg-adapter.js';
 import { parseMarkdown } from '../src/index.js';
 
 let directory = '';
