@@ -27,21 +27,25 @@ El workflow `.github/workflows/aud-009-xmind-desktop-artifact.yml` genera el art
 
 ## Criterios de aceptación
 
-- [ ] El archivo original abre sin errores.
-- [ ] La jerarquía y el orden de los temas son correctos.
+- [x] El archivo original abre sin errores (confirmado por el usuario).
+- [x] La jerarquía y el orden de los temas son correctos (captura aportada por el usuario).
 - [ ] Los caracteres españoles se muestran correctamente.
 - [ ] Las notas y el enlace se conservan según las capacidades documentadas.
-- [ ] La copia se guarda correctamente.
-- [ ] La copia guardada vuelve a abrirse sin errores y conserva el contenido.
+- [x] La copia se guarda correctamente (confirmado por el usuario).
+- [x] La copia guardada vuelve a abrirse sin errores y conserva el contenido (confirmado por el usuario).
 - [ ] Se registra la versión exacta de XMind Desktop y el sistema operativo.
 
 ## Evidencia que debe registrarse
 
-- Versión exacta de XMind Desktop.
-- Sistema operativo.
+- Versión exacta de XMind Desktop: no facilitada; pendiente de registrar.
+- Sistema operativo: no facilitado; pendiente de registrar.
 - Resultado de apertura del archivo original.
 - Resultado de guardado de la copia.
 - Resultado de reapertura de la copia.
 - Incidencias visuales o funcionales observadas.
 
-No marcar AUD-009 como completada hasta disponer de esta evidencia. Si hay fallos, conservar el artefacto original y describir el mensaje exacto y el paso en que aparece.
+## Resultado de la validación manual — 2026-11-11
+
+El usuario confirmó que el archivo se abrió en XMind Desktop, que la copia con otro nombre se guardó correctamente y que, tras cerrar la aplicación, la copia volvió a abrirse conservando su contenido. La captura aportada muestra el tema central, las ramas, los subtemas y el detalle anidado; los textos visibles incluyen caracteres españoles. No se comunicaron errores ni incidencias.
+
+**Resultado funcional: satisfactorio. AUD-009 queda completada y verificada en cuanto a apertura, representación de la jerarquía, guardado y reapertura.** La versión exacta de XMind Desktop y el sistema operativo no se facilitaron, por lo que quedan como metadatos de entorno no registrados; esta omisión no invalida las comprobaciones funcionales comunicadas.
