@@ -18,7 +18,7 @@ AUD-010 fue autorizada el 2026-11-11. Guía, ejemplos y empaquetado están imple
 | 8 | Evaluación e integración XMind | SDK evaluado, decisión ADR, exportador XMind y diagnósticos | Completada; AUD-006/007 verificadas |
 | 9 | Adaptador SVG | SVG autocontenido, determinista y con metadatos IR | Completada; AUD-008 verificada |
 | 10 | Corpus XMind y validación Desktop | Abrir, inspeccionar, guardar y reabrir artefactos en XMind Desktop | Completada; apertura, jerarquía, guardado y reapertura confirmados por el usuario; versión/SO no registrados; AUD-009 |
-| 11 | Documentación de usuario y publicación | Guía de instalación/uso, ejemplos, limitaciones, releases y artefactos | Pendiente; AUD-010 |
+| 11 | Documentación de usuario y publicación | Guía de instalación/uso, ejemplos, limitaciones, releases y artefactos | En curso; guía, ejemplos, CI y artefacto instalable verificados; release pública pendiente de decisiones de licencia y seguridad; AUD-010 |
 | 12 | Visor web TypeScript | Aplicación web que consume IR, accesibilidad y pruebas Playwright | Pendiente; AUD-011 |
 
 ## Auditorías transversales
