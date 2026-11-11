@@ -1,0 +1,65 @@
+name: AUD-010 · Dependency security audit
+
+on:
+  push:
+    branches:
+      - feature/aud-003-runtime-schema
+    paths:
+      - package.json
+      - package-lock.json
+      - .github/workflows/aud-010-dependency-audit.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aud-010-dependency-audit-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    name: npm audit (Node.js 24)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install locked dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Generate complete npm audit report
+        shell: bash
+        run: |
+          npm audit --json > npm-audit.json || true
+          node --input-type=commonjs <<'NODE'
+          const fs = require('node:fs');
+          const report = JSON.parse(fs.readFileSync('npm-audit.json', 'utf8'));
+          const counts = report.metadata?.vulnerabilities ?? {};
+          console.log('npm audit summary');
+          console.log(JSON.stringify(counts, null, 2));
+          for (const [name, item] of Object.entries(report.vulnerabilities ?? {})) {
+            console.log([
+              name,
+              'severity=' + item.severity,
+              'direct=' + item.isDirect,
+              'range=' + item.range,
+              'fixAvailable=' + JSON.stringify(item.fixAvailable),
+              'via=' + JSON.stringify(item.via.map(v => typeof v === 'string' ? v : { title: v.title, range: v.range, url: v.url }))
+            ].join(' | '));
+          }
+          NODE
+
+      - name: Upload machine-readable audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: aud-010-npm-audit
+          path: npm-audit.json
+          if-no-files-found: error
+          retention-days: 30
