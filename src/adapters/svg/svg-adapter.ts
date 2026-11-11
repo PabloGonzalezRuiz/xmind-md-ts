@@ -111,7 +111,7 @@ function safeColor(value: JsonValue | undefined, fallback: string): string {
 }
 
 function isSafeHyperlink(value: string): boolean {
-  if (/[\\u0000-\\u001F\\u007F]/.test(value)) return false;
+  if (/[\u0000-\u001F\u007F]/.test(value)) return false;
   const scheme = value.match(/^([a-z][a-z0-9+.-]*):/i)?.[1]?.toLowerCase();
   return !scheme || ['http', 'https', 'mailto', 'tel'].includes(scheme);
 }
