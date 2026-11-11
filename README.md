@@ -8,7 +8,7 @@ No es una traducción línea por línea del proyecto Python anterior. Reutiliza 
 
 Rama de trabajo: **feature/aud-003-runtime-schema**.
 
-**Implementado y verificado en la rama de trabajo:** contrato IR v1.0.0, parser Markdown, validación estructural y semántica, motor de estilos, corpus de conformidad, adaptador JSON, CLI, exportador XMind inicial y exportador SVG.
+**Implementado y verificado en la rama de trabajo:** contrato IR v1.0.0, parser Markdown, validación estructural y semántica, motor de estilos, corpus de conformidad, adaptador JSON, CLI, exportador XMind inicial y exportador SVG. AUD-009 confirmó manualmente apertura, guardado y reapertura en XMind Desktop.
 
 - CI AUD-013: [43003867274](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867274), 124/124 pruebas en Ubuntu y Windows.
 - Prueba aislada del SDK XMind: [42989195787](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195787), Ubuntu y Windows.
@@ -16,7 +16,7 @@ Rama de trabajo: **feature/aud-003-runtime-schema**.
 - HEAD observado tras preparar el workflow AUD-009 y antes de la última sincronización documental: c8295b031551a7a421fa3b7f550dceb99b865651. Desde el último código probado solo se han añadido fixture, documentación y workflow; no se ha modificado el código de la aplicación.
 - main permanece en 6aca81b59dbfcfc13034e7e1115c70f7691c5035; el desarrollo no está integrado.
 
-**Validación Desktop completada:** AUD-009. El workflow [43009405102](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43009405102) generó y publicó el artefacto; el usuario confirmó que XMind Desktop abre el archivo, muestra la jerarquía, permite guardar una copia y volver a abrirla conservando el contenido. La versión exacta de XMind Desktop y el sistema operativo no quedaron registrados. La validación cubre apertura, estructura visible y persistencia; no equivale a una certificación exhaustiva de todas las funciones o estilos de XMind. Quedan AUD-010 (documentación final/publicación) y AUD-011 (visor web), pendientes de autorización.
+**Validación Desktop completada:** AUD-009. El workflow [43009405102](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43009405102) generó y publicó el artefacto; el usuario confirmó que XMind Desktop abre el archivo, muestra la jerarquía, permite guardar una copia y volver a abrirla conservando el contenido. La versión exacta de XMind Desktop y el sistema operativo no quedaron registrados. La validación cubre apertura, estructura visible y persistencia; no equivale a una certificación exhaustiva de todas las funciones o estilos de XMind. AUD-010 está en curso: guía, ejemplos reproducibles y preparación de distribución. AUD-011 (visor web) permanece pendiente.
 
 AUD-013 está corregida y verificada: la CLI deriva correctamente los nombres de salida XMind/SVG cuando se omite --output y los mensajes de error terminan con saltos de línea reales. Hay pruebas de regresión para entradas Markdown y JSON, y para ambos errores; CI pasa en Ubuntu y Windows.
 
@@ -30,6 +30,13 @@ AUD-013 está corregida y verificada: la CLI deriva correctamente los nombres de
 - Los adaptadores generan JSON, XMind y SVG con diagnósticos explícitos de pérdidas.
 - La CLI funciona en Windows y Linux.
 - Las pruebas de conformidad detectan regresiones.
+
+## Empezar a usarlo
+
+- [Guía de usuario](docs/user-guide.md): instalación desde el repositorio, validación y exportación.
+- [Ejemplo de inicio rápido](examples/quick-start.md).
+- [Ejemplo con notas y estilos](examples/with-notes-and-styles.md).
+- [Preparación de distribución y releases](docs/release-readiness.md): estado real y requisitos pendientes antes de publicar.
 
 ## Documentación y fuentes de verdad
 
