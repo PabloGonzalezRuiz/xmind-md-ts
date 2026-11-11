@@ -4,7 +4,7 @@ Las fases se ejecutan secuencialmente. Al terminar una tarea/fase se presenta el
 
 ## Estado de fases
 
-AUD-010 fue autorizada el 2026-11-11. Guía, ejemplos y empaquetado están implementados. CI 43012605756 pasa en Ubuntu/Windows (124/124 pruebas por sistema, ejemplos y paquete instalado). El workflow 43012600819 publica un artefacto temporal instalable. La release pública sigue bloqueada por `private: true`, ausencia de licencia raíz y revisión de vulnerabilidades. Ver [preparación de distribución](release-readiness.md).
+AUD-010 fue autorizada el 2026-11-11. Guía, ejemplos y empaquetado están implementados. CI 43012605756 pasa en Ubuntu/Windows (124/124 pruebas por sistema, ejemplos y paquete instalado). El workflow 43012600819 publica un artefacto temporal instalable. El canal acordado es GitHub Releases; npm queda aplazado. `private: true` se mantiene porque no se publicará en npm. La primera release pública sigue pendiente de auditoría de vulnerabilidades y criterios de aceptación. La licencia MIT ya está incorporada. Ver [preparación de distribución](release-readiness.md).
 
 | Fase | Alcance | Resultado verificable | Estado |
 |---|---|---|---|
@@ -34,7 +34,7 @@ AUD-010 fue autorizada el 2026-11-11. Guía, ejemplos y empaquetado están imple
 | AUD-007 | Exportador XMind inicial | Completada y verificada |
 | AUD-008 | Exportador SVG | Completada y verificada |
 | AUD-009 | Validación de paquetes con XMind Desktop | Completada y verificada: apertura, visualización, guardado y reapertura confirmados por el usuario; versión/SO no registrados |
-| AUD-010 | Documentación de usuario y publicación | En curso: guía, ejemplos, CI y artefacto instalable verificados; release pública pendiente de auditoría de vulnerabilidades y canal; licencia MIT incorporada |
+| AUD-010 | Documentación de usuario y publicación | En curso: guía, ejemplos, CI y artefacto instalable verificados; release pública pendiente de auditoría de vulnerabilidades y preparación del workflow de GitHub Releases; licencia MIT incorporada, canal acordado |
 | AUD-011 | Visor web | Pendiente |
 | AUD-013 | Corregir derivación de nombre de salida y formato de errores de exportación en CLI | Completada y verificada; CI 43003867274, 124/124 pruebas Ubuntu/Windows |
 
