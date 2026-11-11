@@ -13,10 +13,10 @@ Rama de trabajo: **feature/aud-003-runtime-schema**.
 - CI AUD-013: [43003867274](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867274), 124/124 pruebas en Ubuntu y Windows.
 - Prueba aislada del SDK XMind: [42989195787](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195787), Ubuntu y Windows.
 - Código probado: fe1d3e510a76719f12d4eeaf0e081304720196b8.
-- HEAD auditado antes de esta sincronización documental: 8a8b28953ac29d7bcd5d3707f19b484d8834915c. Los commits posteriores de esta auditoría solo modifican documentación; consulta GitHub para el HEAD actual de la rama.
+- HEAD actual tras preparar AUD-009: 323caef1df653fc569a169acda87a1f6ae088d66. Desde el último código probado solo se han añadido fixture, documentación y workflow; no se ha modificado el código de la aplicación.
 - main permanece en 6aca81b59dbfcfc13034e7e1115c70f7691c5035; el desarrollo no está integrado.
 
-**Pendiente:** validación de apertura/guardado en XMind Desktop, documentación final/publicación y visor web. Generar un paquete XMind válido estructuralmente no demuestra que XMind Desktop lo abra, lo guarde o lo represente fielmente.
+**En curso:** AUD-009 prepara un artefacto XMind descargable mediante GitHub Actions para validar apertura, guardado y reapertura en XMind Desktop. La validación de escritorio sigue pendiente de evidencia real. Después quedan AUD-010 (documentación final/publicación) y AUD-011 (visor web). Generar un paquete XMind válido estructuralmente no demuestra que XMind Desktop lo abra, lo guarde o lo represente fielmente.
 
 AUD-013 está corregida y verificada: la CLI deriva correctamente los nombres de salida XMind/SVG cuando se omite --output y los mensajes de error terminan con saltos de línea reales. Hay pruebas de regresión para entradas Markdown y JSON, y para ambos errores; CI pasa en Ubuntu y Windows.
 
@@ -45,6 +45,7 @@ AUD-013 está corregida y verificada: la CLI deriva correctamente los nombres de
 - [Sistema de estilos](docs/style-system.md)
 - [Adaptadores y matriz de capacidades](docs/adapters.md)
 - [CLI](docs/cli.md)
+- [Procedimiento de aceptación XMind Desktop (AUD-009)](docs/aud-009-xmind-desktop-validation.md)
 - [Calidad y pruebas](docs/quality-and-testing.md)
 - [Desarrollo local y GitHub Actions](docs/development.md)
 - [Hoja de ruta](docs/roadmap.md)
