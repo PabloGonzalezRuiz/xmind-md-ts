@@ -1,0 +1,73 @@
+name: AUD-009 · XMind Desktop artifact
+
+on:
+  push:
+    branches: ['feature/aud-003-runtime-schema']
+    paths:
+      - '.github/workflows/aud-009-xmind-desktop-artifact.yml'
+      - 'fixtures/aud-009-desktop-validation.md'
+      - 'src/**'
+      - 'spec/**'
+      - 'package.json'
+      - 'package-lock.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aud-009-xmind-desktop-artifact-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    name: Generate Desktop acceptance artifact
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run complete quality gate and build
+        run: npm run verify
+
+      - name: Generate XMind file using the compiled CLI
+        run: |
+          mkdir -p artifacts/aud-009
+          npm start -- export fixtures/aud-009-desktop-validation.md \
+            --format xmind \
+            --export-mode compatible \
+            --output artifacts/aud-009/aud-009-desktop-validation.xmind
+          unzip -t artifacts/aud-009/aud-009-desktop-validation.xmind
+          sha256sum artifacts/aud-009/aud-009-desktop-validation.xmind \
+            > artifacts/aud-009/SHA256SUMS.txt
+          cat > artifacts/aud-009/README.txt <<'EOF'
+          AUD-009 — XMind Desktop acceptance
+
+          1. Verify the SHA-256 hash against SHA256SUMS.txt.
+          2. Open aud-009-desktop-validation.xmind in XMind Desktop.
+          3. Check hierarchy, order, Spanish characters, notes and hyperlink.
+          4. Save a copy under a different filename.
+          5. Close XMind Desktop completely.
+          6. Reopen the saved copy and confirm that its content is preserved.
+
+          Record the exact XMind Desktop version, operating system, and the
+          results of opening, saving and reopening. Do not overwrite the
+          original artifact. CI package validation is not Desktop validation.
+          EOF
+
+      - name: Upload XMind Desktop acceptance artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aud-009-xmind-desktop-validation
+          path: artifacts/aud-009/
+          if-no-files-found: error
+          retention-days: 14
