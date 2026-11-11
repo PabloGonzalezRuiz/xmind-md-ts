@@ -2,7 +2,12 @@ import { createRequire } from 'node:module';
 import { basename, dirname, resolve } from 'node:path';
 import { mkdir } from 'node:fs/promises';
 
-import type { Asset, ContentBlock, IrDocument, Topic as IrTopic } from '../../../spec/ir-v1.types.js';
+import type {
+  Asset,
+  ContentBlock,
+  IrDocument,
+  Topic as IrTopic,
+} from '../../../spec/ir-v1.types.js';
 
 export type XMindExportMode = 'strict' | 'compatible';
 export type XMindDiagnosticSeverity = 'warning' | 'error';
@@ -111,10 +116,7 @@ function collectAssets(document: IrDocument): Map<string, Asset> {
   return new Map(document.assets.map((asset) => [asset.id, asset]));
 }
 
-function markerValue(
-  markerName: string,
-  marker: SdkMarkerConstructor,
-): unknown | undefined {
+function markerValue(markerName: string, marker: SdkMarkerConstructor): unknown | undefined {
   const normalized = markerName.toLowerCase();
   for (const group of marker.groups()) {
     const name = marker.names(group).find((candidate) => candidate.toLowerCase() === normalized);
@@ -157,7 +159,13 @@ function exportTopicTree(
     topicApi.on(parentSdkId).add(options);
     const sdkId = topicApi.cid();
     if (!sdkId) {
-      addDiagnostic(diagnostics, 'XMIND_TOPIC_ID_MISSING', 'error', 'El SDK no devolvió el ID del tema creado.', topicPath);
+      addDiagnostic(
+        diagnostics,
+        'XMIND_TOPIC_ID_MISSING',
+        'error',
+        'El SDK no devolvió el ID del tema creado.',
+        topicPath,
+      );
       return;
     }
     topicIds.set(topic.id, sdkId);
@@ -287,7 +295,8 @@ export async function exportXMindFile(
       'styleSets',
     );
   }
-  const imageCount = countImageBlocks(document.sheet.rootTopic.content) +
+  const imageCount =
+    countImageBlocks(document.sheet.rootTopic.content) +
     document.sheet.rootTopic.children.reduce(
       (sum, topic) => sum + countImageBlocks(topic.content),
       0,
@@ -360,7 +369,9 @@ export async function exportXMindFile(
 
   const errors = diagnostics.filter((diagnostic) => diagnostic.severity === 'error');
   if (mode === 'strict' && errors.length) {
-    const summary = errors.map((diagnostic) => `${diagnostic.code}: ${diagnostic.message}`).join('\n');
+    const summary = errors
+      .map((diagnostic) => `${diagnostic.code}: ${diagnostic.message}`)
+      .join('\n');
     throw new XMindExportError(
       `La exportación estricta se ha detenido por características no soportadas:\n${summary}`,
       diagnostics,

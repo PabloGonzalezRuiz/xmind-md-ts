@@ -273,7 +273,8 @@ async function run(options: Options): Promise<void> {
   }
 
   if (options.command === 'export' && options.format === 'xmind') {
-    const outputPath = options.output ??
+    const outputPath =
+      options.output ??
       (options.input === '-' ? 'map.xmind' : options.input.replace(/\\.[^.\\/]+$/, '') + '.xmind');
     if (options.input !== '-' && resolve(options.input) === resolve(outputPath)) {
       throw new UsageError('La ruta de salida no puede sobrescribir el archivo de entrada.');
