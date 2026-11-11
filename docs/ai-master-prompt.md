@@ -14,7 +14,7 @@ No conviertas línea por línea el proyecto Python anterior. Reutiliza requisito
 
 - Rama de trabajo: feature/aud-003-runtime-schema.
 - Código probado: 980279a6e61a990769e9884ea1fc51888d5bf054.
-- HEAD actual: 8a8b28953ac29d7bcd5d3707f19b484d8834915c; los dos commits posteriores al código probado son exclusivamente documentales.
+- HEAD auditado antes de esta sincronización documental: 8a8b28953ac29d7bcd5d3707f19b484d8834915c; los commits de esta auditoría posteriores a ese SHA son solo documentales. Consultar GitHub para el HEAD actual.
 - CI general [42989195843](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195843): Ubuntu y Windows, 118/118 pruebas en cada sistema; formato, lint, tipos generados, typecheck, build y smoke test CLI correctos.
 - Probe SDK XMind [42989195787](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195787): Ubuntu y Windows, correcto.
 - AUD-001 a AUD-008 están completadas y verificadas en la rama activa.
