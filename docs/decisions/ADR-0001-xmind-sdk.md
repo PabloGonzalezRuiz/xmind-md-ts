@@ -1,6 +1,6 @@
 # ADR-0001: estrategia de integración del SDK oficial XMind
 
-- **Estado:** Aceptada provisionalmente; implementada en AUD-007 y pendiente de validación Desktop
+- **Estado:** Aceptada para el exportador inicial; implementada en AUD-007 y validada funcionalmente en XMind Desktop en AUD-009
 - **Fecha:** 2026-11-11
 - **Tarea:** AUD-006
 - **Candidato:** paquete npm `xmind@2.2.33`
@@ -47,7 +47,7 @@ No se utilizará `addLabel()` en el adaptador. Se mantendrá una prueba de regre
 
 Adoptar una estrategia **SDK-first provisional** para AUD-007:
 
-1. Utilizar `xmind@2.2.33` como backend del primer exportador, sujeto a la validación posterior en XMind Desktop.
+1. Utilizar `xmind@2.2.33` como backend del primer exportador, validado funcionalmente en XMind Desktop para apertura, guardado y reapertura, sin garantizar cobertura completa de capacidades.
 2. Añadirlo como dependencia de producción en AUD-007 y fijar la versión exacta `2.2.33` (realizado).
 3. Encapsular todas las llamadas en el adaptador XMind. No exponer tipos del SDK en el parser, IR, CLI ni API pública.
 4. Validar el IR antes de mapearlo y el workbook antes de guardar.
@@ -59,7 +59,7 @@ Adoptar una estrategia **SDK-first provisional** para AUD-007:
 ## Riesgos y condiciones pendientes
 
 - El paquete no recibe actualizaciones frecuentes; fijar versión y ejecutar CI de compatibilidad.
-- La CI valida generación estructural del paquete en Ubuntu y Windows, no la apertura/guardado en XMind Desktop.
+- La CI valida generación estructural del paquete en Ubuntu y Windows. Además, AUD-009 confirmó manualmente apertura, guardado y reapertura en XMind Desktop; no se registró la versión exacta de Desktop ni el sistema operativo.
 - No se ha demostrado fidelidad visual ni compatibilidad con todas las versiones de XMind Desktop.
 - Las estructuras de contenido del IR (listas, tablas, código, citas y runs) requieren una política explícita de mapeo o rechazo.
 - Las relaciones y límites requieren validar rangos, IDs y puntos de control.
