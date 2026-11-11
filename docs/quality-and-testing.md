@@ -1,49 +1,70 @@
 # Calidad, pruebas y diagnóstico
 
-## 1. Puertas de calidad
+## 1. Puerta de calidad
 
-Cada cambio debe superar, según el alcance: Prettier, ESLint, typecheck, pruebas unitarias, integración, build, validación JSON Schema y validación semántica. Los comandos se establecerán en package.json durante la fase 3.
+El comando local completo es:
 
-## 2. Contrato IR v1
+    npm ci
+    npm run verify
 
-La fuente normativa se materializa en `spec/ir-v1.schema.json` y `spec/ir-v1.types.ts`; ambos deben comprobar su equivalencia automáticamente. Los fixtures de `spec/fixtures/` y los casos de `spec/conformance/` son independientes de la implementación. Nunca se mantienen dos contratos manuales divergentes sin pruebas.
+npm run verify ejecuta:
+1. npm run format:check
+2. npm run lint
+3. npm run check:generated-types
+4. npm run typecheck
+5. npm test
+6. npm run build
 
-La matriz de casos está en `spec/conformance/README.md`. La suite Vitest ya cubre los invariantes semánticos implementados; los casos pendientes de validación JSON Schema deberán conectarse a un validador de esquema en una fase específica. Pruebas de conformidad obligatorias:
-- Fixture mínimo válido.
-- Rechazo de versión IR desconocida.
-- Rechazo de propiedades desconocidas en objetos del núcleo.
-- Aceptación y conservación de extensiones namespaced.
-- Detección semántica de IDs duplicados.
-- Detección de referencias a topics/assets inexistentes.
-- Rechazo de relaciones autorreferentes.
-- Detección de ciclos en conjuntos de estilos.
-- Verificación de orden y determinismo de serialización.
-- Validación de alineaciones de tabla y número de columnas.
+El workflow .github/workflows/ci.yml ejecuta las mismas comprobaciones en Ubuntu y Windows y añade un smoke test de la CLI compilada. La prueba aislada del SDK XMind tiene workflow independiente.
 
-JSON Schema no sustituye al validador semántico: las referencias cruzadas y la unicidad global requieren recorrido del documento.
+## 2. Estado de verificación más reciente
+
+Código probado: 980279a6e61a990769e9884ea1fc51888d5bf054.
+
+- CI general [42989195843](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195843): dos jobs completados con éxito, Ubuntu y Windows.
+- En cada sistema: 11 archivos de test, 118/118 pruebas correctas.
+- Pasos correctos: instalación reproducible, formato, lint, generación/sincronización de tipos, typecheck, tests, build y smoke test CLI.
+- Probe SDK [42989195787](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42989195787): Ubuntu y Windows completados con éxito; instalación aislada, generación e inspección del paquete.
+- HEAD actual de rama feature/aud-003-runtime-schema: 8a8b28953ac29d7bcd5d3707f19b484d8834915c. Los dos commits posteriores al código probado solo modifican documentación; no se ha observado una ejecución CI posterior para ese HEAD documental.
+
+No se ha ejecutado npm run verify en una máquina local durante esta auditoría. La evidencia indicada corresponde a los logs de GitHub Actions.
 
 ## 3. Pruebas por capas
 
-- Parser: gramática válida, inválida, ubicación y escapes.
-- IR: schema, tipos, serialización y versionado.
-- Validación: IDs globalmente únicos (excepto el namespace separado del documento), referencias, ciclos de estilos, tablas, URI, límites y rutas de assets configuradas.
+- Parser: CommonMark, GFM, front matter, directivas, bloques, posiciones de origen, modos compatible/strict y códigos de diagnóstico.
+- IR: fixture mínimo, JSON Schema, tipos generados, serialización y versionado.
+- Validación estructural: quince casos SC definidos (SC-001…SC-005 y SC-101…SC-110), URI, rutas de instancia y no mutación.
+- Validación semántica: SEM-001…SEM-018, IDs, referencias, relaciones, ciclos, tablas, límites y rutas de assets.
+- Estilos: precedencia, herencia, roles, estilos nombrados, overrides, validadores y procedencia.
+- CLI: argumentos, stdin/stdout, formatos, rutas, códigos de salida, generación XMind/SVG y smoke test compilado.
+- XMind: validación del workbook, ZIP y JSON interno; el probe aislado prueba SDK en Ubuntu/Windows.
+- SVG: estructura, determinismo, jerarquía, relaciones, límites, resúmenes, estilos, enlaces, metadata y assets omitidos.
 
-La API `validateIrDocument(input, options)` está exportada desde `src/index.ts`. Recibe `unknown`, devuelve `valid` y diagnósticos (`code`, `severity`, `message`, `path` y posición de origen cuando existe), y no modifica la entrada. Los límites por defecto son 100 niveles, 100.000 temas, 250.000 bloques y 10.000 assets; pueden ajustarse. `assetRootDirectory` activa la comprobación de contención de rutas relativas.
-- Estilos: cascada, herencia, overrides y procedencia.
-- Adaptadores: salida, capacidades, pérdidas y errores.
-- CLI: códigos de salida, rutas, opciones y Windows/Linux.
-- Visor: interacción, accesibilidad y mapas grandes.
+## 4. Contrato IR y generación de tipos
 
-## 4. Corpus de referencia
+La fuente de verdad estructural es spec/ir-v1.schema.json (Draft 2020-12). spec/ir-v1.types.ts es generado por scripts/generate-ir-types.js; no editarlo a mano. El generador falla ante keywords estructurales no admitidas y el check de sincronización evita drift en CI.
 
-Mantener fixtures pequeños, independientes y legibles: mapa mínimo, jerarquía profunda, contenido estructurado, estilos, notas, relaciones, boundaries, summaries, assets, mapa combinado e inputs inválidos.
+TypeScript no representa restricciones como formatos URI, patrones, longitudes, rangos, arrays únicos ni todas las reglas de objetos cerrados. Ajv las aplica en runtime. El validador semántico comprueba invariantes globales que JSON Schema no cubre.
 
-Comparar semántica y propiedades, no bytes completos del ZIP XMind, ya que metadatos y empaquetado pueden variar.
+## 5. Matriz de conformidad
 
-## 5. Conformidad entre implementaciones
+- SC: quince casos estructurales descritos en spec/conformance/README.md.
+- SEM: dieciocho casos semánticos.
+- PAR: fixtures positivos, negativos y de diagnóstico en test/fixtures/markdown/.
+- Adaptadores: pruebas por formato y pruebas de CLI.
 
-Si se compara con el proyecto Python, ambos motores consumen los mismos fixtures y producen IR equivalentes conforme al contrato. Ninguna implementación se toma automáticamente como verdad de la otra.
+No inventar IDs de conformidad que no estén definidos en la matriz.
 
-## 6. Diagnóstico y afirmaciones
+## 6. Límites de evidencia y defectos conocidos
 
-Los diagnósticos tienen código estable, severidad, mensaje, archivo/ubicación y contexto. Distinguir typecheck, lint, tests ejecutados, build, validación estructural, apertura en XMind Desktop y fidelidad visual. No afirmar un nivel a partir de otro.
+- CI verde demuestra que el código compila y que las pruebas automatizadas pasan en esos runners; no demuestra fidelidad visual ni apertura/guardado en XMind Desktop.
+- El SDK XMind 2.2.33 es antiguo, fijado y encapsulado; revisar su cadena de dependencias.
+- El exportador XMind no representa todavía relaciones, boundaries, StyleSets/overrides ni assets binarios; varias estructuras se aplanan a notas. Ver matriz en docs/adapters.md.
+- SVG no dibuja assets ni sombras; el contenido se conserva en metadata y descripciones accesibles; padding puede aproximarse.
+- AUD-013: el nombre de salida XMind/SVG por defecto no elimina correctamente la extensión de entrada; los errores de exportación escriben una secuencia \\n literal. No hay pruebas dedicadas a esos dos comportamientos todavía.
+
+## 7. Diagnósticos y afirmaciones
+
+Los diagnósticos deben conservar código estable, severidad, mensaje, ruta y posición cuando exista. Diferenciar claramente typecheck, lint, pruebas ejecutadas, build, validación JSON Schema, validación semántica, inspección ZIP/JSON, apertura/guardado en XMind Desktop y fidelidad visual.
+
+No afirmar un nivel de verificación basándose en otro.
