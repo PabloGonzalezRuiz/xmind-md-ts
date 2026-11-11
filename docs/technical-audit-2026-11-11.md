@@ -237,7 +237,7 @@ En una conversación nueva, ejecutar este orden:
 3. Consultar en GitHub el HEAD real de main y feature/aud-003-runtime-schema; no reutilizar los SHA del informe como HEAD actual.
 4. Revisar los commits posteriores al último SHA con CI verde y distinguir cambios de código de cambios documentales.
 5. Consultar los runs 42989195843 y 42989195787 como evidencia histórica de AUD-008.
-6. Revisar el backlog. AUD-009 está autorizada y en curso; no iniciar AUD-010 ni AUD-011 sin autorización expresa.
+6. Revisar el backlog. AUD-009 está completada; AUD-010 está autorizada y en curso; AUD-011 requiere autorización expresa.
 7. No fusionar ramas, abrir PR, modificar main ni crear release sin autorización.
 8. Al terminar cualquier tarea, actualizar este informe, el registro de continuidad, el roadmap, README y los documentos técnicos afectados.
 9. Registrar SHA exacto de código probado, SHA documental, run IDs, matriz de sistemas, número de pruebas y limitaciones.
@@ -254,7 +254,7 @@ La incidencia registrada en la auditoría inicial se resolvió en la rama activa
 - CI [43003867274](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867274): 11 archivos y 124/124 pruebas en Ubuntu y Windows. Formato, lint, tipos generados, typecheck, build y smoke test correctos.
 - Probe SDK [43003867447](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867447): Ubuntu y Windows correctos.
 
-AUD-013 queda **completada y verificada**. Las tareas aún pendientes son AUD-009 (XMind Desktop), AUD-010 (documentación de usuario y publicación) y AUD-011 (visor web). No se ha modificado `main` ni se ha creado una release o PR.
+AUD-013 y AUD-009 quedan **completadas y verificadas**. AUD-010 está autorizada y en curso; AUD-011 (visor web) sigue pendiente. No se ha modificado `main` ni se ha creado una release o PR.
 
 
 ## 12. Seguimiento posterior: AUD-009 completada
