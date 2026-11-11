@@ -12,6 +12,12 @@ let directory: string;
 let markdownPath: string;
 let jsonPath: string;
 
+
+async function writeJsonInput(): Promise<void> {
+  const ir = parseMarkdown('# Mapa de prueba\n\n## Rama A\n');
+  await writeFile(jsonPath, JSON.stringify(ir));
+}
+
 function execute(args: string[], input?: string) {
   return spawnSync(process.execPath, ['--import', 'tsx', cliPath, ...args], {
     cwd: process.cwd(),
@@ -97,10 +103,7 @@ describe('CLI', () => {
   });
 
   it('deriva la salida XMind desde JSON sin --output', async () => {
-    await writeFile(
-      jsonPath,
-      JSON.stringify(parseMarkdown('# Mapa de prueba\n\n## Rama A\n')),
-    );
+    await writeJsonInput();
     const outputPath = jsonPath.replace(/\.json$/, '.xmind');
     const result = execute(['export', jsonPath, '--format', 'xmind']);
 
@@ -111,10 +114,7 @@ describe('CLI', () => {
   });
 
   it('deriva la salida SVG desde JSON sin --output', async () => {
-    await writeFile(
-      jsonPath,
-      JSON.stringify(parseMarkdown('# Mapa de prueba\n\n## Rama A\n')),
-    );
+    await writeJsonInput();
     const outputPath = jsonPath.replace(/\.json$/, '.svg');
     const result = execute(['export', jsonPath, '--format', 'svg']);
 
