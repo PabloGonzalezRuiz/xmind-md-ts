@@ -38,6 +38,7 @@ interface TopicLayout {
   lines: string[];
   width: number;
   height: number;
+  lineHeight: number;
   subtreeHeight: number;
   x: number;
   y: number;
@@ -178,10 +179,10 @@ function topicDescription(topic: Topic): string {
   return sections.join('\n\n');
 }
 
-function baseNodeHeight(lines: string[], hasMetadata: boolean): number {
+function baseNodeHeight(lines: string[], hasMetadata: boolean, lineHeight: number): number {
   return Math.max(
     52,
-    NODE_PADDING_Y * 2 + lines.length * 19 + (hasMetadata ? 18 : 0),
+    NODE_PADDING_Y * 2 + lines.length * lineHeight + (hasMetadata ? 18 : 0),
   );
 }
 
@@ -189,17 +190,20 @@ function createLayout(
   topic: Topic,
   depth: number,
   widths: number[],
-  fontSize: number,
+  styles: Map<string, StyleValues>,
 ): TopicLayout {
-  const lines = wrapText(topic.title || '(sin título)', 26);
+  const values = styles.get(topic.id);
+  const fontSize = Math.min(24, Math.max(10, lengthInPixels(values?.fontSize, DEFAULT_FONT_SIZE)));
+  const lineHeight = Math.max(16, fontSize * 1.35);
+  const lines = wrapText(topic.title || '(sin título)', Math.max(12, Math.floor(26 * (14 / fontSize))));
   const width = Math.min(
     MAX_NODE_WIDTH,
     Math.max(MIN_NODE_WIDTH, Math.max(...lines.map((line) => line.length), 1) * fontSize * 0.62 + NODE_PADDING_X * 2),
   );
   widths[depth] = Math.max(widths[depth] ?? 0, width);
   const metadata = Boolean(topic.labels?.length || topic.markers?.length);
-  const height = baseNodeHeight(lines, metadata);
-  const children = topic.children.map((child) => createLayout(child, depth + 1, widths, fontSize));
+  const height = baseNodeHeight(lines, metadata, lineHeight);
+  const children = topic.children.map((child) => createLayout(child, depth + 1, widths, styles));
   const childrenHeight =
     children.reduce((total, child) => total + child.subtreeHeight, 0) +
     Math.max(0, children.length - 1) * VERTICAL_GAP;
@@ -209,6 +213,7 @@ function createLayout(
     lines,
     width,
     height,
+    lineHeight,
     subtreeHeight: Math.max(height, childrenHeight),
     x: 0,
     y: 0,
@@ -243,6 +248,10 @@ function nodeBounds(node: TopicLayout): Bounds {
   };
 }
 
+function asBoolean(value: JsonValue | undefined, fallback: boolean): boolean {
+  return typeof value === 'boolean' ? value : fallback;
+}
+
 function lineStyle(values: StyleValues | undefined): string {
   const style = asString(values?.lineStyle, 'solid');
   if (style === 'dashed') return '6 4';
@@ -261,14 +270,14 @@ function renderNode(node: TopicLayout, styles: Map<string, StyleValues>): string
   const stroke = safeColor(values?.stroke, '#64748B');
   const color = safeColor(values?.color, '#1F2937');
   const fontFamily = asString(values?.fontFamily, 'sans-serif');
-  const fontSize = lengthInPixels(values?.fontSize, DEFAULT_FONT_SIZE);
+  const fontSize = Math.min(24, Math.max(10, lengthInPixels(values?.fontSize, DEFAULT_FONT_SIZE)));
   const strokeWidth = asNumber(values?.strokeWidth, 1.5);
   const opacity = asNumber(values?.opacity, 1);
   const radius = lengthInPixels(values?.borderRadius, 8);
   const textAnchor = asString(values?.textAlign, 'center') === 'left' ? 'start' : 'middle';
   const textX = textAnchor === 'start' ? node.x + NODE_PADDING_X : node.x + node.width / 2;
   const textWidth = Math.max(1, node.width - NODE_PADDING_X * 2);
-  const textHeight = node.lines.length * 19;
+  const textHeight = node.lines.length * node.lineHeight;
   const metadata = [...(topic.labels ?? []), ...(topic.markers ?? []).map((marker) => `◆ ${marker}`)];
   const metadataText = metadata.join(' · ');
   const contentHeight = textHeight + (metadataText ? 18 : 0);
@@ -286,7 +295,7 @@ function renderNode(node: TopicLayout, styles: Map<string, StyleValues>): string
   const textMarkup = node.lines
     .map(
       (line, index) =>
-        `<tspan x="${textX}" y="${textTop + index * 19}">${escapeXml(line)}</tspan>`,
+        `<tspan x="${textX}" y="${textTop + index * node.lineHeight}">${escapeXml(line)}</tspan>`,
     )
     .join('');
   const labelY = textTop + textHeight + 2;
@@ -328,7 +337,7 @@ function renderRelationship(
   const label = relationship.label
     ? `<text x="${(startX + endX) / 2 + 28}" y="${(source.y + target.y) / 2 - 30}" font-size="11" text-anchor="middle" fill="${stroke}">${escapeXml(relationship.label)}</text>`
     : '';
-  return `<g id="${xmlId(relationship.id)}" data-ir-id="${escapeXml(relationship.id)}" data-ir-type="relationship"><title>${escapeXml(relationship.label ?? relationship.kind ?? 'Relación')}</title><path d="${path}" fill="none" stroke="${stroke}" stroke-width="${width}" ${dash ? `stroke-dasharray="${dash}"` : ''} marker-end="${asString(values?.arrowEnd, 'true') === 'false' ? '' : 'url(#arrow)'}" />${label}</g>`;
+  return `<g id="${xmlId(relationship.id)}" data-ir-id="${escapeXml(relationship.id)}" data-ir-type="relationship"><title>${escapeXml(relationship.label ?? relationship.kind ?? 'Relación')}</title><path d="${path}" fill="none" stroke="${stroke}" stroke-width="${width}" ${dash ? `stroke-dasharray="${dash}"` : ''} ${asBoolean(values?.arrowEnd, true) ? 'marker-end="url(#arrow)"' : ''} />${label}</g>`;
 }
 
 function renderBoundary(
@@ -364,7 +373,7 @@ function renderSummary(
   if (!selected.length) return '';
   const values = styles.get(summary.id);
   const stroke = safeColor(values?.stroke ?? values?.color, '#7C3AED');
-  const x = diagramWidth - PADDING - 24;
+  const x = diagramWidth - PADDING - 96;
   const top = Math.min(...selected.map((node) => node.y - node.height / 2));
   const bottom = Math.max(...selected.map((node) => node.y + node.height / 2));
   const middle = (top + bottom) / 2;
@@ -422,9 +431,8 @@ export async function exportSvgFile(
   }
   const styles = styleMap(styleResult.styles);
   const mapStyle = styles.get(document.sheet.id);
-  const fontSize = lengthInPixels(mapStyle?.fontSize, DEFAULT_FONT_SIZE);
   const widths: number[] = [];
-  const root = createLayout(document.sheet.rootTopic, 0, widths, fontSize);
+  const root = createLayout(document.sheet.rootTopic, 0, widths, styles);
   const xPositions: number[] = [];
   let nextX = PADDING;
   widths.forEach((width, depth) => {
@@ -434,7 +442,10 @@ export async function exportSvgFile(
   assignPositions(root, PADDING, xPositions);
   const nodes = flattenTopics(root);
   const positions = new Map(nodes.map((node) => [node.topic.id, node]));
-  const totalWidth = Math.max(320, nextX - HORIZONTAL_GAP + PADDING);
+  const totalWidth = Math.max(
+    320,
+    nextX - HORIZONTAL_GAP + PADDING + (document.sheet.summaries.length ? 180 : 0),
+  );
   const totalHeight = Math.max(180, root.subtreeHeight + PADDING * 2);
   const background = safeColor(mapStyle?.backgroundColor, '#FFFFFF');
 
