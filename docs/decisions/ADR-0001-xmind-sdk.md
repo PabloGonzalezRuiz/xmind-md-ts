@@ -1,6 +1,6 @@
 # ADR-0001: estrategia de integración del SDK oficial XMind
 
-- **Estado:** Aceptada provisionalmente para AUD-007
+- **Estado:** Aceptada provisionalmente; implementada en AUD-007 y pendiente de validación Desktop
 - **Fecha:** 2026-11-11
 - **Tarea:** AUD-006
 - **Candidato:** paquete npm `xmind@2.2.33`
@@ -48,7 +48,7 @@ No se utilizará `addLabel()` en el adaptador. Se mantendrá una prueba de regre
 Adoptar una estrategia **SDK-first provisional** para AUD-007:
 
 1. Utilizar `xmind@2.2.33` como backend del primer exportador, sujeto a la validación posterior en XMind Desktop.
-2. Añadirlo como dependencia solo al iniciar AUD-007 y fijar la versión exacta.
+2. Añadirlo como dependencia de producción en AUD-007 y fijar la versión exacta `2.2.33` (realizado).
 3. Encapsular todas las llamadas en el adaptador XMind. No exponer tipos del SDK en el parser, IR, CLI ni API pública.
 4. Validar el IR antes de mapearlo y el workbook antes de guardar.
 5. Mantener una matriz de capacidades y diagnósticos por propiedad.
@@ -59,13 +59,17 @@ Adoptar una estrategia **SDK-first provisional** para AUD-007:
 ## Riesgos y condiciones pendientes
 
 - El paquete no recibe actualizaciones frecuentes; fijar versión y ejecutar CI de compatibilidad.
-- La prueba técnica valida el ZIP y el JSON interno, no la apertura/guardado en XMind Desktop.
+- La CI valida generación estructural del paquete en Ubuntu y Windows, no la apertura/guardado en XMind Desktop.
 - No se ha demostrado fidelidad visual ni compatibilidad con todas las versiones de XMind Desktop.
 - Las estructuras de contenido del IR (listas, tablas, código, citas y runs) requieren una política explícita de mapeo o rechazo.
 - Las relaciones y límites requieren validar rangos, IDs y puntos de control.
 
 ## Evidencia reproducible
 
+- Exportador de producción: `src/adapters/xmind/xmind-adapter.ts`.
+- CLI: `xmind-md export <archivo.md|archivo.json> --format xmind`.
+- CI general AUD-007: https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42985540873 (Ubuntu y Windows, 111 pruebas).
+- Probe SDK AUD-007: https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42985540716 (Ubuntu y Windows).
 - Script: `scripts/probe-xmind-sdk.js`
 - Workflow: `.github/workflows/xmind-sdk-probe.yml`
 - Prueba SDK: https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/42982529970

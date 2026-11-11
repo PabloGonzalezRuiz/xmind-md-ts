@@ -42,7 +42,7 @@ node dist/src/cli/main.js export .\documentos\mapa.md --format json --output .\s
 node dist/src/cli/main.js export .\salida\mapa.json
 ```
 
-La exportación acepta Markdown o IR JSON, valida el resultado y serializa el IR con indentación de dos espacios y salto de línea final. JSON es el único formato disponible en esta tarea.
+La exportación acepta Markdown o IR JSON, valida el resultado y serializa el IR con indentación de dos espacios y salto de línea final.
 
 ## Entrada y salida estándar
 
