@@ -87,7 +87,10 @@ describe('CLI', () => {
       let inputPath = markdownPath;
       let basePath = markdownPath.slice(0, -'.md'.length);
       if (source === 'JSON') {
-        await writeFile(jsonPath, JSON.stringify(parseMarkdown('# Mapa de prueba\n\n## Rama A\n')));
+        await writeFile(
+          jsonPath,
+          JSON.stringify(parseMarkdown('# Mapa de prueba\n\n## Rama A\n')),
+        );
         inputPath = jsonPath;
         basePath = jsonPath.slice(0, -'.json'.length);
       }
@@ -103,7 +106,7 @@ describe('CLI', () => {
           '<svg xmlns="http://www.w3.org/2000/svg"',
         );
       }
-        expect(result.stdout).toContain(outputPath);
+      expect(result.stdout).toContain(outputPath);
     },
   );
 
