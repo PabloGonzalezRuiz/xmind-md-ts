@@ -18,10 +18,11 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "verify": "npm run format:check && npm run lint && npm run check:generated-types && npm run typecheck && npm test && npm run build && npm run verify:examples",
+    "verify": "npm run format:check && npm run lint && npm run check:generated-types && npm run typecheck && npm test && npm run build && npm run verify:examples && npm run verify:package",
     "generate:types": "node scripts/generate-ir-types.js",
     "check:generated-types": "node scripts/generate-ir-types.js --check",
-    "verify:examples": "node scripts/verify-examples.js"
+    "verify:examples": "node scripts/verify-examples.js",
+    "verify:package": "node scripts/verify-package.js"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
@@ -46,5 +47,13 @@
   },
   "bin": {
     "xmind-md": "./bin/xmind-md.js"
-  }
+  },
+  "files": [
+    "bin/",
+    "dist/",
+    "docs/",
+    "examples/",
+    "spec/ir-v1.schema.json",
+    "README.md"
+  ]
 }
