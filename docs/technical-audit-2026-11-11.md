@@ -242,3 +242,16 @@ En una conversación nueva, ejecutar este orden:
 8. Al terminar cualquier tarea, actualizar este informe, el registro de continuidad, el roadmap, README y los documentos técnicos afectados.
 9. Registrar SHA exacto de código probado, SHA documental, run IDs, matriz de sistemas, número de pruebas y limitaciones.
 10. No afirmar que XMind Desktop abre un archivo basándose solo en un ZIP generado correctamente en CI.
+## 11. Seguimiento posterior: AUD-013 corregida y verificada
+
+La incidencia registrada en la auditoría inicial se resolvió en la rama activa `feature/aud-003-runtime-schema`.
+
+- Código de corrección: `f3a9ed8081e1c55a62888550e586b6ee8dc98c7e`.
+- HEAD de código y pruebas verificado: `fe1d3e510a76719f12d4eeaf0e081304720196b8`.
+- Derivación XMind/SVG: se elimina la extensión final con un patrón compatible con separadores POSIX y Windows.
+- stderr: los errores XMind y SVG terminan con un salto de línea real.
+- Regresiones: exportación sin `--output` desde Markdown y JSON para XMind y SVG; formato de stderr para ambos errores.
+- CI [43003867274](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867274): 11 archivos y 124/124 pruebas en Ubuntu y Windows. Formato, lint, tipos generados, typecheck, build y smoke test correctos.
+- Probe SDK [43003867447](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43003867447): Ubuntu y Windows correctos.
+
+AUD-013 queda **completada y verificada**. Las tareas aún pendientes son AUD-009 (XMind Desktop), AUD-010 (documentación de usuario y publicación) y AUD-011 (visor web). No se ha modificado `main` ni se ha creado una release o PR.
