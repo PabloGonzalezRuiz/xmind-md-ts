@@ -67,6 +67,9 @@ try {
   report.error = String((error && error.stack) || error);
 }
 
-await writeFile(\n  join(out, 'generator-prototype-report.json'),\n  JSON.stringify(report, null, 2) + '\n',\n);
+await writeFile(
+  join(out, 'generator-prototype-report.json'),
+  JSON.stringify(report, null, 2) + '\n',
+);
 console.log(JSON.stringify(report, null, 2));
 if (report.result !== 'pass') process.exitCode = 1;
