@@ -5,8 +5,8 @@ La CLI coordina el parser Markdown, el pipeline de validación y los adaptadores
 ## Requisitos
 
 - Node.js 24 o posterior.
-- Dependencias instaladas con npm ci.
-- Proyecto compilado con npm run build.
+- Para usar la release instalada, basta con Node.js y la CLI disponible en PATH.
+- Para ejecutar desde el código fuente, instala dependencias con npm ci y compila con npm run build.
 
 ## Comandos
 
@@ -87,7 +87,7 @@ Cuando se exporta a XMind o SVG sin indicar --output, la CLI elimina la extensi�
 
 La derivación reconoce separadores de directorio POSIX y Windows. Los mensajes de error de exportación XMind y SVG se escriben en stderr terminados por un salto de línea real.
 
-Estos comportamientos están cubiertos por pruebas de regresión para entradas Markdown y JSON, ejecutadas en Ubuntu y Windows en AUD-013. La CI de referencia está enlazada en docs/project-audit-and-continuation.md.
+Estos comportamientos están cubiertos por pruebas de regresión para entradas Markdown y JSON, ejecutadas en Ubuntu y Windows en AUD-013. La evidencia de CI se conserva en los registros de GitHub Actions del repositorio.
 
 ## Límites de interoperabilidad
 

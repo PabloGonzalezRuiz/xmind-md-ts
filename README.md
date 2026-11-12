@@ -60,7 +60,6 @@ xmind-md export .\\examples\\quick-start.md --format svg --output .\\salida\\qui
 - [Versionado y compatibilidad](docs/versioning-and-compatibility.md)
 - [ADR-0001: SDK oficial XMind](docs/decisions/ADR-0001-xmind-sdk.md)
 - [Changelog](CHANGELOG.md)
-- [Estado de preparación de distribución](docs/release-readiness.md)
 
 ## Desarrollo desde el repositorio
 
