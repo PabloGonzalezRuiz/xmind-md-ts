@@ -55,3 +55,20 @@ Los otros diez registros moderados corresponden a `eslint@10.14.0`, `@eslint/js@
 ## Estado
 
 **Actividad 3 de AUD-010: evaluación completada.** La rama no recibió cambios de dependencias ni código. La CI del commit auditado pasó en Ubuntu y Windows. La publicación sigue bloqueada hasta resolver los hallazgos de distribución DP-001–DP-006 y obtener una decisión expresa sobre el riesgo PROD-SEC-001. No crear tags, releases ni publicar sin autorización.
+
+
+## Reevaluación autorizada de PROD-SEC-001 — 2026-11-12
+
+**Alcance:** análisis de alcanzabilidad y opciones de mitigación; no se modifican dependencias ni código, ni se autoriza publicación.
+
+- HEAD de referencia al iniciar: `7629800a0cfa60e2f7106360c1c918f364834435`.
+- `package.json` mantiene `xmind@2.2.33` como dependencia de producción.
+- La fuente primaria [GHSA-w5hq-g745-h8pq](https://github.com/advisories/GHSA-w5hq-g745-h8pq) identifica la falta de comprobación de límites al pasar un búfer externo a los métodos `v3()`, `v5()` y `v6()`; `uuid@3.4.0` está en el rango afectado. Versiones corregidas: `11.1.1`, `12.0.1` y `13.0.1` en sus respectivas líneas.
+- Inspección directa de [`xmind-sdk-js@v2.2.33/src/core/base.ts`](https://github.com/xmindltd/xmind-sdk-js/blob/v2.2.33/src/core/base.ts): `const v4 = require('uuid/v4')` y getter `id` que ejecuta `v4()` sin argumentos. Este uso no satisface la precondición del advisory.
+- **Conclusión de alcanzabilidad acotada:** la ruta de creación de identificadores comprobada no alcanza el comportamiento vulnerable; esto **no** demuestra ausencia de todas las posibles rutas transitivas o futuras, ni elimina el hallazgo de composición de dependencias.
+- **Opción A (preferida a medio plazo):** reemplazar o adaptar el SDK XMind por una implementación compatible y mantenida, sin `uuid@3.4.0`, validando formato ZIP/content.json, pruebas Ubuntu/Windows y smoke en XMind Desktop. Requiere fase de ingeniería independiente y pruebas; no es una actualización trivial.
+- **Opción B:** fork/parche compatible del SDK que preserve la semántica `uuid/v4` y elimine la dependencia vulnerable. Requiere auditoría de licencia, mantenimiento y pruebas de compatibilidad.
+- **Opción C:** aceptación formal, expresa y temporal del riesgo residual para la versión CLI actual, documentando la ruta comprobada, la limitación de alcance y un plazo de revisión. No constituye corrección de la dependencia y no se infiere automáticamente de esta evaluación.
+- **Descartado sin pruebas:** override de `uuid` a versión mayor; el import legado `uuid/v4` del SDK puede dejar de resolver. Tampoco se recomienda `npm audit fix --force`.
+
+**Decisión técnica:** no aplicar cambios automáticos de dependencias. Mantener **PROD-SEC-001 abierto** y publicación en **NO-GO** hasta decisión expresa del responsable sobre mitigación o aceptación del riesgo. El workflow publicador de GitHub Releases permanece fuera de alcance y sin autorización.
