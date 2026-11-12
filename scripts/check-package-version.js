@@ -1,4 +1,6 @@
+import console from 'node:console';
 import { readFile } from 'node:fs/promises';
+import { URL } from 'node:url';
 
 const packagePath = new URL('../package.json', import.meta.url);
 const entryPath = new URL('../src/index.ts', import.meta.url);
