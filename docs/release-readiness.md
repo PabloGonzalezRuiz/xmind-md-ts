@@ -120,3 +120,15 @@ La inspección del tarball real se registra en [distribution-package-audit-2026-
 
 - [x] Inspección real del tarball, manifiesto, metadatos npm, inventario de ficheros, CLI, ejemplos y dependencias directas.
 - [ ] Resolver DP-001 a DP-006 y reconstruir el artefacto desde el SHA exacto de publicación.
+
+
+## AUD-010 — revisión de licencias y avisos de terceros — 2026-11-12
+
+Actividad 2 completada. Evidencias y razonamiento: [third-party-notices-audit-2026-11-12.md](third-party-notices-audit-2026-11-12.md).
+
+- Se han contrastado los 120 paquetes de producción con el inventario de licencias ejecutado en Ubuntu y Windows.
+- Se adopta la alternativa MIT para JSZip `3.10.1`; Pako `1.0.11` permanece bajo MIT **y** Zlib, con el aviso Zlib preservado en sus fuentes.
+- El tarball real no contiene `node_modules` ni código de dependencias vendorizado; declara las dependencias para instalación separada. Incluye la licencia MIT del proyecto. En este alcance, no se considera que la falta de `THIRD-PARTY-NOTICES` sea un bloqueo legal demostrado. El informe recomienda repetir la revisión si se incorpora código/bundles/binarios de terceros.
+- No se modificaron dependencias, código ni paquete distribuido.
+
+**Estado:** revisión de licencias/avisos completada. Pendiente actividad 3: reevaluar vulnerabilidades moderadas residuales y documentar aceptación/mitigación. No publicar sin autorización expresa.

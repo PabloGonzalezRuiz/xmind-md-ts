@@ -72,3 +72,13 @@ Los dos paquetes MPL-2.0 son `lightningcss@1.33.0` y el binario de plataforma (`
 **Estado: inventario reproducible completado.**
 
 La auditoría se considera ejecutada en ambos sistemas. La incorporación/verificación de avisos de terceros en el paquete final sigue siendo criterio de release y se mantiene pendiente dentro de AUD-010.
+
+
+## Addendum — revisión de avisos y expresiones compuestas — 2026-11-12
+
+La revisión del artefacto real y de los ficheros de licencia originales se documenta en [third-party-notices-audit-2026-11-12.md](third-party-notices-audit-2026-11-12.md).
+
+- JSZip `3.10.1` permite elegir entre MIT y GPL-3.0-or-later; el proyecto adopta expresamente la alternativa MIT y conserva su atribución.
+- Pako `1.0.11` exige considerar MIT **y** Zlib. Su fichero raíz `LICENSE` contiene MIT; el aviso Zlib se conserva en los encabezados de `lib/zlib/` y en su README. Una futura generación agregada de avisos debe contemplar ambos.
+- El tarball inspeccionado no incluye `node_modules` ni código de dependencias empaquetado; las dependencias se instalan separadamente. Por ello, la ausencia de `THIRD-PARTY-NOTICES` no se considera un bloqueo demostrado para este artefacto concreto. Se recomienda mantener el registro y repetir la auditoría si se distribuye código de terceros integrado.
+- Se confirma que las 120 dependencias de producción tienen un fichero de licencia identificado en el inventario automatizado. El paquete raíz se excluye del recuento de terceros: su `UNLICENSED` en la salida de `license-checker` deriva de `private: true`, no de la licencia declarada MIT.

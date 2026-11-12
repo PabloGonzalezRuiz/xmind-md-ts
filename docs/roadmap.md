@@ -117,3 +117,10 @@ Pendiente: prueba integral final del paquete y avisos de terceros/riesgo residua
 ## AUD-010 — auditoría del paquete de distribución — 2026-11-12
 
 Actividad 1 ejecutada. Informe: [distribution-package-audit-2026-11-12.md](distribution-package-audit-2026-11-12.md). El tarball real y su checksum se inspeccionaron. La estructura CLI es válida, pero se detectaron seis puntos previos a distribución (artefacto desfasado en documentación, allowlist demasiado amplia, source maps sin fuentes, API root no declarada, notas de pruebas obsoletas y guía de instalación no adaptada a GitHub Releases). No se modificó el paquete; queda pendiente decidir y aplicar correcciones antes de reconstruir el candidato final.
+
+
+## AUD-010 — revisión de licencias y avisos de terceros — 2026-11-12
+
+Actividad 2 completada. Informe: [docs/third-party-notices-audit-2026-11-12.md](third-party-notices-audit-2026-11-12.md). Se contrastó el inventario de 120 dependencias de producción y el tarball real. JSZip se utilizará bajo la alternativa MIT; Pako conserva las obligaciones MIT y Zlib. El artefacto no incorpora `node_modules` ni código de dependencias vendorizado, por lo que no se considera bloqueante la ausencia de un `THIRD-PARTY-NOTICES` en este candidato concreto. No se alteró el paquete.
+
+**Siguiente actividad propuesta (3):** reevaluar las vulnerabilidades moderadas residuales, separando runtime/producción de herramientas de desarrollo, verificando advisories y rutas de dependencia, y dejando documentada la decisión de mitigación o aceptación. Requiere autorización expresa antes de comenzar.

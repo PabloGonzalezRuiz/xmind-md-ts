@@ -372,3 +372,14 @@ Además, se incorpora `scripts/check-package-version.js` como comprobación auto
 - CI del HEAD actual `352652fd96442872169400f5464657f44ffe3a5f`: [43212070056](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43212070056), success Ubuntu/Windows, 129/129 pruebas por sistema.
 - Hallazgos DP-001–DP-006: candidato documentalmente desfasado; documentación operativa incluida sin allowlist; source maps sin fuentes TS; API de importación root no declarada; changelog con recuento 124 obsoleto; guía de usuario no explica instalación desde el tarball.
 - No se cambió el contenido del paquete ni se publicó nada. Próximo paso, tras autorización: revisar avisos/licencias de terceros. Las correcciones DP-001–DP-006 deberán resolverse antes de considerar final el candidato de distribución.
+
+
+## Continuidad AUD-010 — revisión de licencias y avisos de terceros — 2026-11-12
+
+- HEAD de partida: `548a6525af252742bf344a16ac09ef68939ce9f3`, rama `feature/aud-003-runtime-schema`.
+- Informe: `docs/third-party-notices-audit-2026-11-12.md`.
+- Inventario de producción: 120 paquetes de terceros; 114 MIT, 2 ISC, 1 BSD-2-Clause, 1 BSD-3-Clause, 1 JSZip `MIT OR GPL-3.0-or-later`, 1 Pako `MIT AND Zlib`.
+- Se adopta MIT para JSZip. Para Pako deben preservarse MIT y Zlib; el aviso Zlib aparece en los módulos fuente y su README, no solo en el fichero raíz LICENSE.
+- El tarball auditado no incorpora `node_modules` ni implementaciones de dependencias; las dependencias se resuelven por separado. No se detecta una omisión de avisos respecto de código de terceros materialmente incluido en este artefacto.
+- Actividad 2 completada sin modificar dependencias, código de runtime ni paquete. No se creó tag, release, PR ni publicación npm; `main` sigue intacta.
+- Siguiente paso, pendiente de autorización: actividad 3, revisión actualizada de vulnerabilidades moderadas residuales, distinguiendo runtime/producción y desarrollo.
