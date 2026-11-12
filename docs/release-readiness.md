@@ -41,7 +41,7 @@ Este mecanismo es un artefacto temporal de CI, no una release permanente ni una 
 ## Criterios de aceptación de una release
 
 - [x] Licencia MIT del proyecto elegida y archivo LICENSE incorporado.
-- [ ] Política de versionado y compatibilidad IR documentada.
+- [x] Política de versionado y compatibilidad IR documentada y verificada por CI [43195892325](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43195892325) (Ubuntu/Windows, 129/129 pruebas por sistema).
 - [x] Auditoría actual de vulnerabilidades y licencias de dependencias ejecutada e inventariada; quedan riesgos moderados y avisos de terceros que deben resolverse/aceptarse antes de publicar.
 - [ ] Versión del paquete y tag coincidentes.
 - [ ] Paquete construido desde un SHA identificado.

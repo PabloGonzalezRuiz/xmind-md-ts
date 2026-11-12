@@ -47,4 +47,6 @@ Una migración major debe ser una transformación explícita y opt-in, con versi
 
 El JSON Schema `spec/ir-v1.schema.json` fija `irVersion` a `1.0.0`; el validador semántico aplica la misma restricción. Las pruebas de conformidad verifican el rechazo de `1.0.1`, `1.1.0` y `2.0.0`. La matriz también verifica el rechazo de campos de núcleo desconocidos y la aceptación de extensiones namespaced válidas.
 
-No se ha cambiado `package.json`, la versión CLI ni el contrato IR. Esta política no autoriza una release ni la publicación en npm.
+La comprobación automática de sincronización paquete/CLI se ejecuta mediante `npm run check:version` y forma parte de `npm run verify` y CI.
+
+Verificación: CI [43195892325](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43195892325), Ubuntu y Windows success, 129/129 pruebas por sistema. No se ha cambiado `package.json`, la versión CLI ni el contrato IR. Esta política no autoriza una release ni la publicación en npm.

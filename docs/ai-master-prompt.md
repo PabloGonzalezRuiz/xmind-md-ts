@@ -136,7 +136,7 @@ AUD-011 (visor web) sigue pendiente y no está autorizada. No modificar `main`, 
 - Política de versionado documentada en `docs/versioning-and-compatibility.md`; paquete `0.1.0` e IR `1.0.0` son independientes.
 - El único IR admitido actualmente es exactamente `1.0.0`. No inferir compatibilidad patch/minor ni migrar major de forma silenciosa.
 - Propiedades desconocidas del núcleo y valores desconocidos de discriminantes/enumeraciones se rechazan. Las extensiones namespaced válidas se conservan como datos opacos.
-- Pruebas nuevas: SC-111/SC-112 y casos semánticos para `1.0.1` y `1.1.0`. CI pendiente de ejecutar y verificar para el commit de esta actualización.
+- Pruebas nuevas: SC-111/SC-112 y casos semánticos para `1.0.1` y `1.1.0`. CI [43195892325](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43195892325) success en Ubuntu/Windows, 129/129 pruebas por sistema; `check:version` también pasa en ambos.
 - Próximo paso autorizado pendiente de confirmación: workflow seguro de GitHub Releases en modo de preparación/prueba. No publicar.
 
 La sincronización de versión paquete/CLI se comprueba con `npm run check:version` (`scripts/check-package-version.js`), integrado en `npm run verify` y en CI. Verificar siempre que esta comprobación pase antes de empaquetar.

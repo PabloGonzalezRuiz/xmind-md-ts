@@ -329,6 +329,7 @@ Actualizado tras la autorización del usuario, 2026-11-12.
 - Las versiones futuras patch/minor no se aceptarán por inferencia SemVer: requieren implementación coordinada y pruebas. Las migraciones major serán explícitas, opt-in y verificadas.
 - Pruebas añadidas: rechazo estructural y semántico de IR `1.0.1` y `1.1.0`, además del rechazo existente de `2.0.0`; matriz SC ampliada a SC-112.
 - Documentación normativa: `docs/versioning-and-compatibility.md`, `docs/ir-specification.md` y `docs/decisions.md`.
+- Se ha añadido `scripts/check-package-version.js`, integrado en `npm run verify` y CI. CI final [43195892325](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43195892325): success Ubuntu/Windows, 11 archivos de pruebas y 129/129 tests por sistema; incluye formato, lint, tipos generados, sincronización paquete/CLI, typecheck, build, CLI, ejemplos y paquete instalable. Auditoría de dependencias también success.
 - No se ha cambiado la versión del paquete ni el contrato IR; no se ha tocado `main`, no se ha creado PR ni release.
 
 **Siguiente paso dentro de AUD-010:** preparar y probar el workflow seguro de GitHub Releases, sin publicar una release. Requiere autorización expresa antes de comenzar.

@@ -318,6 +318,6 @@ La auditoría de vulnerabilidades y el inventario de licencias están ejecutados
 
 La política está definida en `docs/versioning-and-compatibility.md`. El paquete `0.1.0` y el IR `1.0.0` mantienen ciclos independientes. Solo `1.0.0` se admite actualmente; el validador estructural y el semántico rechazan versiones no registradas. Se documentan también las reglas para campos del núcleo, discriminantes, enumeraciones y extensiones namespaced. Las pruebas de conformidad añaden el rechazo de `1.0.1` y `1.1.0`; `2.0.0` ya estaba cubierto.
 
-No se ha incrementado ninguna versión ni se ha alterado el esquema IR vigente. Esta actualización requiere CI completa en Ubuntu y Windows antes de considerarse verificada.
+No se ha incrementado ninguna versión ni se ha alterado el esquema IR vigente. CI [43195892325](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43195892325) success en Ubuntu y Windows, con 129/129 pruebas por sistema, incluida la comprobación de sincronización paquete/CLI.
 
 La política también incluye un control automático de sincronización paquete/CLI: `scripts/check-package-version.js`, invocado por `npm run verify` y por CI en ambos sistemas. La ejecución de este cambio está pendiente.
