@@ -1,0 +1,39 @@
+name: AUD-010 xmind-generator isolated prototype
+on:
+  push:
+    branches: ['feature/aud-003-runtime-schema']
+    paths:
+      - 'scripts/probe-xmind-generator.js'
+      - '.github/workflows/aud-010-xmind-generator-prototype.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    name: Isolated generator (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+      - name: Install generator in isolated directory
+        shell: bash
+        run: npm install --prefix "$RUNNER_TEMP/xmind-generator-probe" --no-save --no-package-lock --no-audit --no-fund xmind-generator@1.0.1
+      - name: Test archive and document model
+        shell: bash
+        env:
+          XMIND_GENERATOR_PACKAGE: ${{ runner.temp }}/xmind-generator-probe/node_modules/xmind-generator
+          XMIND_GENERATOR_OUTPUT: ${{ runner.temp }}/xmind-generator-results
+        run: node scripts/probe-xmind-generator.js
+      - name: Upload prototype results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xmind-generator-prototype-${{ matrix.os }}
+          path: ${{ runner.temp }}/xmind-generator-results/
+          if-no-files-found: warn
