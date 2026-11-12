@@ -4,12 +4,14 @@ on:
     branches: [feature/aud-003-runtime-schema]
     paths:
       - '.github/workflows/aud-010-release-preflight.yml'
-      - 'docs/github-release-preflight.md'
-      - 'docs/release-readiness.md'
-      - 'docs/roadmap.md'
-      - 'README.md'
-      - 'docs/project-audit-and-continuation.md'
-      - 'docs/ai-master-prompt.md'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'src/**'
+      - 'spec/**'
+      - 'bin/**'
+      - 'scripts/**'
+      - 'examples/**'
+      - 'CHANGELOG.md'
   workflow_dispatch:
     inputs:
       release_tag:
