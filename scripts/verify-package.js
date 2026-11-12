@@ -84,7 +84,10 @@ try {
   const manifest = JSON.parse(
     readFileSync(join(installedRoot, 'dist', 'BUILD-MANIFEST.json'), 'utf8'),
   );
-  if (manifest.package !== 'xmind-md-ts' || manifest.version !== packedPackageJson.version) {
+  if (
+    manifest.package !== 'xmind-md-ts' ||
+    manifest.version !== packedPackageJson.version
+  ) {
     throw new Error('El manifiesto de build no coincide con el paquete instalado.');
   }
   if (!manifest.sourceCommit || manifest.sourceCommit === 'unknown') {

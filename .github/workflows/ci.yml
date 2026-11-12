@@ -34,9 +34,6 @@ jobs:
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
 
-      - name: Print canonical formatting for package verifier
-        run: npx prettier scripts/verify-package.js
-
       - name: Check formatting
         run: npm run format:check
 
