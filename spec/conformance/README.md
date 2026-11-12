@@ -1,6 +1,6 @@
 # Casos de conformidad IR v1.0.0
 
-Estos casos forman la matriz normativa de conformidad IR v1.0.0. Los casos semánticos se ejercitan mediante Vitest en `test/semantic-validator.test.ts`; los estructurales definidos se ejecutan contra JSON Schema Draft 2020-12 mediante `test/schema-validator.test.ts`. La matriz define quince casos estructurales: SC-001…SC-005 y SC-101…SC-110; no define SC-006…SC-100. El corpus de sintaxis Markdown del parser está en `test/fixtures/markdown/` y se ejecuta desde `test/markdown-conformance.test.ts`. El fixture IR mínimo de referencia es `../fixtures/ir-v1-minimal.json`.
+Estos casos forman la matriz normativa de conformidad IR v1.0.0. Los casos semánticos se ejercitan mediante Vitest en `test/semantic-validator.test.ts`; los estructurales definidos se ejecutan contra JSON Schema Draft 2020-12 mediante `test/schema-validator.test.ts`. La matriz define diecisiete casos estructurales: SC-001…SC-005 y SC-101…SC-112; no define SC-006…SC-100. El corpus de sintaxis Markdown del parser está en `test/fixtures/markdown/` y se ejecuta desde `test/markdown-conformance.test.ts`. El fixture IR mínimo de referencia es `../fixtures/ir-v1-minimal.json`.
 
 ## A. Casos que debe aceptar JSON Schema
 
@@ -26,6 +26,8 @@ Estos casos forman la matriz normativa de conformidad IR v1.0.0. Los casos semá
 | SC-108 | ID vacío, con espacios o de más de 128 caracteres | Restricción local |
 | SC-109 | Lista sin elementos o tabla sin filas | Restricción local |
 | SC-110 | Extensión con namespace que no cumple el patrón | Namespace inválido |
+| SC-111 | `irVersion` con patch no soportado (`1.0.1`) | Solo está implementado `1.0.0` |
+| SC-112 | `irVersion` con minor no soportado (`1.1.0`) | No se presume compatibilidad por SemVer |
 
 ## C. Casos que requieren validador semántico
 
@@ -60,7 +62,7 @@ JSON Schema no puede garantizar por sí solo estas invariantes de todo el docume
 - Extensiones desconocidas se conservan en modo compatible.
 - Una versión major desconocida se rechaza antes de interpretar el contenido.
 
-Los casos SEM-001 a SEM-018 tienen cobertura automatizada en Vitest. Los quince casos SC definidos tienen cobertura automatizada contra JSON Schema. No se considera que existan casos SC-006…SC-100 mientras no se incorporen explícitamente a esta matriz.
+Los casos SEM-001 a SEM-018 tienen cobertura automatizada en Vitest. Los diecisiete casos SC definidos tienen cobertura automatizada contra JSON Schema. No se considera que existan casos SC-006…SC-100 mientras no se incorporen explícitamente a esta matriz.
 
 ## E. Corpus de conformidad del parser Markdown
 

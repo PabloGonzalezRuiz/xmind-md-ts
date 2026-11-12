@@ -63,3 +63,17 @@ Este registro contiene decisiones normativas del IR v1.0.0, decisiones de arquit
 - Restricciones geométricas y fidelidad de boundaries/summaries por adaptador.
 - Migraciones entre versiones major del IR.
 - Estrategia del visor web y biblioteca de visualización.
+
+## Decisiones de versionado y compatibilidad
+
+| ID | Decisión | Estado | Motivo / consecuencia |
+|---|---|---|---|
+| VER-001 | El paquete y el contrato IR tienen versiones independientes | Acordada | El ciclo de publicación del compilador no fuerza una versión del formato |
+| VER-002 | Solo IR `1.0.0` se considera admitido actualmente | Implementada | Schema y validador rechazan versiones no registradas |
+| VER-003 | Campos del núcleo y valores discriminantes desconocidos se rechazan | Implementada en IR v1 | Evita pérdida o reinterpretación silenciosa |
+| VER-004 | Extensiones namespaced desconocidas se conservan como JSON opaco en round-trip | Contrato documentado | El consumidor no debe interpretarlas ni modificarlas |
+| VER-005 | Migraciones entre major son explícitas, opt-in y probadas | Política acordada; migradores pendientes | Evita cambios de significado silenciosos |
+| VER-006 | La versión del paquete es la fuente de la versión CLI | Pendiente de automatización | Evitar divergencia entre `package.json` y CLI |
+
+No se incrementa ninguna versión por el mero hecho de documentar esta política. Cada futura versión IR deberá actualizar coordinadamente esquema, tipos, validadores, fixtures, conformidad, documentación y pruebas.
+

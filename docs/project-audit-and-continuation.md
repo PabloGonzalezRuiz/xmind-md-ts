@@ -318,3 +318,17 @@ Pendiente, en orden:
 4. Completar revisión de riesgos residuales, avisos de terceros y criterios de release; presentar informe y pedir autorización expresa antes de publicar.
 
 AUD-011 (visor web) continúa pendiente y no autorizada. No modificar `main`, abrir PR, fusionar ni crear una release pública sin autorización expresa.
+
+## Continuidad AUD-010 — política de versionado y compatibilidad IR
+
+Actualizado tras la autorización del usuario, 2026-11-12.
+
+- HEAD de partida: `c6c86e8dd1664b7a2fc210bc256e90274ef57903`.
+- Política aprobada: paquete e IR tienen versiones independientes; paquete actual `0.1.0`, IR admitido exactamente `1.0.0`.
+- El consumidor rechaza versiones IR no registradas, campos desconocidos del núcleo y discriminantes/enumeraciones desconocidos. Las extensiones namespaced válidas se tratan como JSON opaco y no se interpretan.
+- Las versiones futuras patch/minor no se aceptarán por inferencia SemVer: requieren implementación coordinada y pruebas. Las migraciones major serán explícitas, opt-in y verificadas.
+- Pruebas añadidas: rechazo estructural y semántico de IR `1.0.1` y `1.1.0`, además del rechazo existente de `2.0.0`; matriz SC ampliada a SC-112.
+- Documentación normativa: `docs/versioning-and-compatibility.md`, `docs/ir-specification.md` y `docs/decisions.md`.
+- No se ha cambiado la versión del paquete ni el contrato IR; no se ha tocado `main`, no se ha creado PR ni release.
+
+**Siguiente paso dentro de AUD-010:** preparar y probar el workflow seguro de GitHub Releases, sin publicar una release. Requiere autorización expresa antes de comenzar.

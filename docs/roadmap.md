@@ -92,3 +92,7 @@ Siguientes tareas de AUD-010:
 4. Revisión final de riesgos y criterios; solicitar autorización explícita antes de publicar.
 
 `main` permanece en `6aca81b59dbfcfc13034e7e1115c70f7691c5035`; la rama de desarrollo estaba 487 commits por delante y 0 por detrás en el SHA auditado. AUD-011 continúa pendiente y no autorizada. No abrir PR, fusionar ni publicar release.
+
+## Actualización AUD-010 — 2026-11-12
+
+La política de versionado y compatibilidad IR se ha documentado en `docs/versioning-and-compatibility.md`, registrada en `docs/decisions.md` y vinculada desde la especificación. El contrato admitido sigue siendo exactamente IR `1.0.0`; paquete `0.1.0`. La matriz estructural se amplía con SC-111/SC-112 y la validación semántica prueba el rechazo de versiones patch/minor no implementadas. Pendiente: CI Ubuntu/Windows de este cambio y revisión de sincronización documental. Después de verificar, solicitar autorización para el workflow seguro de GitHub Releases.

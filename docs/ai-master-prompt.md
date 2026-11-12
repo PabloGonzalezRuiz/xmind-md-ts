@@ -130,3 +130,11 @@ Esta sección prevalece sobre los SHA, recuentos y próximos pasos históricos a
 4. Resolver/documentar aceptación del riesgo moderado y asegurar avisos de terceros; revisión final y solicitud de autorización explícita para publicar.
 
 AUD-011 (visor web) sigue pendiente y no está autorizada. No modificar `main`, crear PR, fusionar ni publicar una release sin autorización expresa.
+
+## Estado AUD-010 actualizado — 2026-11-12
+
+- Política de versionado documentada en `docs/versioning-and-compatibility.md`; paquete `0.1.0` e IR `1.0.0` son independientes.
+- El único IR admitido actualmente es exactamente `1.0.0`. No inferir compatibilidad patch/minor ni migrar major de forma silenciosa.
+- Propiedades desconocidas del núcleo y valores desconocidos de discriminantes/enumeraciones se rechazan. Las extensiones namespaced válidas se conservan como datos opacos.
+- Pruebas nuevas: SC-111/SC-112 y casos semánticos para `1.0.1` y `1.1.0`. CI pendiente de ejecutar y verificar para el commit de esta actualización.
+- Próximo paso autorizado pendiente de confirmación: workflow seguro de GitHub Releases en modo de preparación/prueba. No publicar.

@@ -122,9 +122,27 @@ El esquema no pretende sustituir estas reglas semánticas.
 
 ## 11. Versionado y compatibilidad
 
-La versión `1.0.0` identifica este contrato. Cambios aditivos compatibles incrementan minor; correcciones sin cambio semántico incrementan patch; cambios incompatibles incrementan major. Un consumidor debe rechazar versiones major desconocidas. Las migraciones entre major serán funciones explícitas y probadas; nunca se reinterpreta un documento silenciosamente.
+La versión del contrato IR es independiente de la versión del paquete. El contrato actualmente implementado y admitido es **exactamente `1.0.0`**. El esquema JSON y el validador semántico rechazan cualquier otra versión, incluidas `1.0.1`, `1.1.0` y `2.0.0`. No se infiere compatibilidad por comparar números SemVer: cada versión IR admitida debe estar registrada explícitamente en el consumidor y cubierta por pruebas estructurales, semánticas y de serialización.
 
-El archivo Schema lleva su propio `$id` y `$schema`. La versión del contrato y la versión del paquete npm son independientes. Los tipos TypeScript se derivarán del esquema o se comprobarán automáticamente contra él; no se mantendrán dos definiciones divergentes a mano.
+Reglas de evolución:
+
+- **Patch IR (`1.0.x`)**: reservado para correcciones editoriales o de especificación que no alteren el significado ni la forma aceptada. La versión nueva solo se admite cuando el validador la incorpora expresamente.
+- **Minor IR (`1.x.0`)**: reservado para capacidades aditivas. No se promete que los consumidores anteriores acepten la nueva versión. Requiere esquema/artefacto versionado, tipos regenerados, política para campos y valores nuevos y pruebas de compatibilidad.
+- **Major IR (`x.0.0`)**: identifica cambios incompatibles. Requiere un contrato major separado y una migración explícita, opt-in, determinista y probada.
+- **Versión desconocida**: se rechaza antes de procesar el documento. No se adivina compatibilidad a partir de la cadena de versión.
+
+Reglas para datos desconocidos en IR v1:
+
+- Las propiedades de los objetos del núcleo son cerradas (`additionalProperties: false`): un campo de núcleo desconocido se rechaza.
+- Los discriminantes y valores enumerados desconocidos se rechazan; no se ignoran ni se convierten silenciosamente.
+- Las extensiones se alojan bajo namespaces explícitos y separados del núcleo. Un consumidor que no entienda una extensión puede conservar sus valores JSON al leer y volver a serializar el documento, pero no debe atribuirles semántica ni modificarlos.
+- Las extensiones no pueden reemplazar ni redefinir campos estándar. Su conservación no implica que un adaptador de destino las materialice.
+
+El paquete sigue SemVer de forma independiente. Mientras su versión sea `0.y.z`, el proyecto está en desarrollo inicial y no declara estabilidad pública; se incrementa patch para correcciones compatibles y minor para nuevas capacidades o cambios incompatibles previos a 1.0.0. A partir de `1.0.0`, se aplica SemVer: major para incompatibilidades públicas, minor para funcionalidades compatibles y patch para correcciones compatibles. La versión IR solo cambia cuando cambia el contrato.
+
+El archivo Schema lleva su propio `$id` y `$schema`. Los tipos TypeScript se derivan del esquema y su sincronización se comprueba automáticamente. La versión actual del paquete es `0.1.0`; la versión IR admitida es `1.0.0`.
+
+La política operativa completa se mantiene en [Política de versionado y compatibilidad](versioning-and-compatibility.md).
 
 ## 12. Exclusiones explícitas de v1
 

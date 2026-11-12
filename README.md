@@ -86,3 +86,7 @@ Este proyecto se distribuye bajo la licencia [MIT](LICENSE), Copyright (c) 2026 
 
 
 **Última comprobación técnica (2026-11-11):** código/workflows verificados en `e66a0da529cd249c54c6d922c80dfcdaa7f7fef4`; los commits documentales posteriores no cambian la aplicación. CI [43053653473](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43053653473), SDK probe [43053653384](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43053653384) y auditoría de licencias [43053653465](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43053653465) correctos en Ubuntu y Windows. Informe npm audit: artefacto `13870876663`; licencias: artefactos `13869797169` (Ubuntu) y `13871485171` (Windows), temporales hasta 2026-12-11. Próximo paso: política de versionado/compatibilidad IR; después workflow seguro de GitHub Releases y prueba integral, sin publicar hasta autorización expresa.
+
+## Versionado y compatibilidad
+
+El paquete y el contrato IR tienen versiones independientes. El paquete está en `0.1.0` y el único contrato IR admitido actualmente es `1.0.0`; las versiones IR no registradas se rechazan. Consulta la [política de versionado y compatibilidad](docs/versioning-and-compatibility.md) para las reglas de evolución, extensiones y migraciones.

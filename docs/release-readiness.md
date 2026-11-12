@@ -80,3 +80,7 @@ La rama `feature/aud-003-runtime-schema` tiene como SHA de código/workflows ver
 - El inventario y la clasificación están documentados en `docs/third-party-license-audit-2026-11-11.md`.
 
 La auditoría de seguridad/licencias se considera realizada, pero la release sigue bloqueada hasta decidir el riesgo moderado residual y asegurar los avisos de terceros. También siguen pendientes la política de versionado/compatibilidad IR, el workflow de GitHub Releases y la prueba integral final. npm continúa aplazado (`private: true`); canal acordado GitHub Releases. No crear una release pública sin autorización expresa.
+
+## Política de versionado y compatibilidad — 2026-11-12
+
+La política aprobada está en [docs/versioning-and-compatibility.md](versioning-and-compatibility.md). El paquete sigue en `0.1.0` y el IR admitido sigue siendo exactamente `1.0.0`; sus versiones son independientes. No se promete compatibilidad automática con versiones IR minor/patch futuras. La política de campos desconocidos, extensiones y migraciones está documentada y cubierta por la matriz de conformidad. La casilla de versionado solo se marcará como completada tras CI Ubuntu/Windows satisfactoria.

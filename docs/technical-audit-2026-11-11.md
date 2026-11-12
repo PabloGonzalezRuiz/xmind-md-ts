@@ -313,3 +313,9 @@ Workflow reproducible [43053653465](https://github.com/PabloGonzalezRuiz/xmind-m
 - Los informes completos JSON son los artefactos citados; el resumen y la evaluación están en `docs/third-party-license-audit-2026-11-11.md`.
 
 La auditoría de vulnerabilidades y el inventario de licencias están ejecutados y documentados. Esto no constituye asesoramiento jurídico ni una aceptación automática de riesgos: las obligaciones de avisos de terceros y el riesgo moderado residual siguen siendo puntos de control de release.
+
+## Actualización AUD-010 — versionado y compatibilidad (2026-11-12)
+
+La política está definida en `docs/versioning-and-compatibility.md`. El paquete `0.1.0` y el IR `1.0.0` mantienen ciclos independientes. Solo `1.0.0` se admite actualmente; el validador estructural y el semántico rechazan versiones no registradas. Se documentan también las reglas para campos del núcleo, discriminantes, enumeraciones y extensiones namespaced. Las pruebas de conformidad añaden el rechazo de `1.0.1` y `1.1.0`; `2.0.0` ya estaba cubierto.
+
+No se ha incrementado ninguna versión ni se ha alterado el esquema IR vigente. Esta actualización requiere CI completa en Ubuntu y Windows antes de considerarse verificada.

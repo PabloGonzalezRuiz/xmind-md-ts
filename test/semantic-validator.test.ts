@@ -41,6 +41,15 @@ describe('IR semantic validator', () => {
     expect(JSON.stringify(ir)).toBe(before);
   });
 
+  it.each(['1.0.1', '1.1.0', '2.0.0'])(
+    'rejects unsupported IR version %s rather than assuming SemVer compatibility',
+    (version) => {
+      const ir = validIr() as unknown as Record<string, unknown>;
+      ir.irVersion = version;
+      expect(codes(validateIrDocument(ir))).toContain('IR_VERSION_UNSUPPORTED');
+    },
+  );
+
   it('accepts IR produced by the Markdown parser', () => {
     const ir = parseMarkdown('# Root\n\n## Child {#child}\n\n![Diagram](images/map.png)');
 

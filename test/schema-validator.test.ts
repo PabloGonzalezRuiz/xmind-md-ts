@@ -35,6 +35,18 @@ const invalidCases: Array<[string, (ir: Record<string, unknown>) => void]> = [
     },
   ],
   [
+    'SC-111',
+    (ir) => {
+      ir.irVersion = '1.0.1';
+    },
+  ],
+  [
+    'SC-112',
+    (ir) => {
+      ir.irVersion = '1.1.0';
+    },
+  ],
+  [
     'SC-103',
     (ir) => {
       delete record(ir.sheet).rootTopic;
