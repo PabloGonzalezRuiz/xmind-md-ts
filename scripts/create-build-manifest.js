@@ -45,4 +45,4 @@ writeFileSync(
   `${JSON.stringify(manifest, null, 2)}\n`,
   'utf8',
 );
-process.stdout.write('Build manifest written to dist/BUILD-MANIFEST.json\n');
+process.stderr.write('Build manifest written to dist/BUILD-MANIFEST.json\n');
