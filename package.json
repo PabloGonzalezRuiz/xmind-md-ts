@@ -2,7 +2,7 @@
   "name": "xmind-md-ts",
   "version": "0.1.0",
   "private": true,
-  "description": "Compilador de Markdown enriquecido a mapas mentales XMind.",
+  "description": "CLI para convertir Markdown enriquecido en mapas mentales XMind, JSON y SVG.",
   "type": "module",
   "engines": {
     "node": ">=24.0.0"
@@ -52,12 +52,25 @@
   "files": [
     "bin/",
     "dist/",
-    "docs/",
+    "docs/adapters.md",
+    "docs/architecture.md",
+    "docs/aud-009-xmind-desktop-validation.md",
+    "docs/cli.md",
+    "docs/decisions/ADR-0001-xmind-sdk.md",
+    "docs/grammar.md",
+    "docs/ir-specification.md",
+    "docs/quality-and-testing.md",
+    "docs/schema-validation.md",
+    "docs/style-system.md",
+    "docs/user-guide.md",
+    "docs/versioning-and-compatibility.md",
     "examples/",
     "spec/ir-v1.schema.json",
     "README.md",
     "CHANGELOG.md",
     "LICENSE"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "exports": {},
+  "prepack": "node scripts/create-build-manifest.js"
 }

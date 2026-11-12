@@ -11,6 +11,10 @@ on:
       - 'bin/**'
       - 'scripts/**'
       - 'examples/**'
+      - 'docs/**'
+      - 'README.md'
+      - 'LICENSE'
+      - 'tsconfig*.json'
       - 'CHANGELOG.md'
   workflow_dispatch:
     inputs:

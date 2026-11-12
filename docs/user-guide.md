@@ -1,34 +1,67 @@
 # Guía de usuario
 
-Esta guía explica cómo preparar un documento Markdown, validarlo y exportarlo a JSON, XMind o SVG con XMind MD TS.
+Esta guía explica cómo instalar la CLI XMind MD TS desde un artefacto de GitHub Release, preparar documentos Markdown, validarlos y exportarlos a JSON, XMind o SVG.
+
+XMind MD TS se distribuye como **CLI exclusivamente**. El paquete no expone una API JavaScript/TypeScript pública para importar desde otros programas.
 
 ## 1. Requisitos
 
 - Node.js 24 o posterior.
 - npm, incluido con Node.js.
-- Git.
-- Para abrir el resultado XMind: XMind Desktop.
+- Para abrir los archivos generados en formato XMind: XMind Desktop.
 
-La versión actual se ejecuta desde el código fuente del repositorio. No hay todavía un paquete npm público ni un instalador independiente.
+## 2. Instalar desde GitHub Releases
 
-## 2. Obtener el proyecto
+Cuando exista una release oficial, descarga desde sus **Assets** el archivo `xmind-md-ts-0.1.0.tgz` y `SHA256SUMS.txt`. No descargues el código fuente (`Source code.zip` o `Source code.tar.gz`) como si fuera el paquete instalable.
 
-Clona el repositorio y entra en su directorio:
+En Windows PowerShell, sitúate en la carpeta de descarga y comprueba el hash:
+
+```powershell
+Get-FileHash .\\xmind-md-ts-0.1.0.tgz -Algorithm SHA256
+Get-Content .\\SHA256SUMS.txt
+```
+
+Compara el valor SHA-256 calculado con la línea correspondiente de `SHA256SUMS.txt`. Si no coincide, no instales el archivo.
+
+Instala la CLI globalmente desde el tarball local:
+
+```powershell
+npm install --global .\\xmind-md-ts-0.1.0.tgz
+```
+
+Comprueba la instalación:
+
+```powershell
+xmind-md --help
+xmind-md --version
+```
+
+En macOS/Linux, los comandos equivalentes son:
+
+```bash
+sha256sum -c SHA256SUMS.txt
+npm install --global ./xmind-md-ts-0.1.0.tgz
+xmind-md --help
+xmind-md --version
+```
+
+La instalación global puede requerir permisos de escritura sobre el directorio global de npm. También puedes instalar el tarball en un proyecto concreto omitiendo `--global` y ejecutar la CLI mediante `npx`.
+
+**Estado de publicación:** esta guía describe el procedimiento previsto para una release oficial. Mientras no exista una release publicada, no hay un tarball oficial que descargar; no se debe interpretar el artefacto temporal de GitHub Actions como una release.
+
+## 3. Ejecutar desde el código fuente (desarrollo)
+
+Para contribuir o ejecutar la rama de desarrollo, clona el repositorio:
 
 ```powershell
 git clone --branch feature/aud-003-runtime-schema https://github.com/PabloGonzalezRuiz/xmind-md-ts.git
 cd xmind-md-ts
-```
-
-Instala las dependencias exactas del lockfile, verifica el proyecto y compílalo:
-
-```powershell
 npm ci
 npm run verify
 npm run build
 ```
 
-La rama de desarrollo documentada es `feature/aud-003-runtime-schema`. Hasta que exista una publicación versionada, no debe suponerse que `main` contiene la implementación completa.
+Esta ruta es para desarrollo y verificación, no es el procedimiento de instalación de una release.
 
 ## 3. Crear un mapa desde Markdown
 
@@ -65,19 +98,19 @@ La gramática completa está en [grammar.md](grammar.md). Puedes partir de [exam
 Desde la raíz del repositorio:
 
 ```powershell
-npm start -- validate .\\examples\\quick-start.md
+xmind-md validate .\\examples\\quick-start.md
 ```
 
 Para validar un IR JSON:
 
 ```powershell
-npm start -- validate .\\salida\\mapa.json
+xmind-md validate .\\salida\\mapa.json
 ```
 
 La validación ejecuta primero JSON Schema Draft 2020-12 y después las reglas semánticas. Si el documento contiene imágenes con rutas relativas, limita su resolución al directorio esperado:
 
 ```powershell
-npm start -- validate .\\mapa.md --asset-root .\\recursos
+xmind-md validate .\\mapa.md --asset-root .\\recursos
 ```
 
 ## 5. Exportar
@@ -85,7 +118,7 @@ npm start -- validate .\\mapa.md --asset-root .\\recursos
 ### XMind
 
 ```powershell
-npm start -- export .\\examples\\quick-start.md --format xmind --output .\\salida\\quick-start.xmind
+xmind-md export .\\examples\\quick-start.md --format xmind --output .\\salida\\quick-start.xmind
 ```
 
 Abre el archivo resultante con XMind Desktop. Para una prueba de interoperabilidad sigue también el procedimiento de [AUD-009](aud-009-xmind-desktop-validation.md).
@@ -93,7 +126,7 @@ Abre el archivo resultante con XMind Desktop. Para una prueba de interoperabilid
 ### SVG
 
 ```powershell
-npm start -- export .\\examples\\quick-start.md --format svg --output .\\salida\\quick-start.svg
+xmind-md export .\\examples\\quick-start.md --format svg --output .\\salida\\quick-start.svg
 ```
 
 El SVG es autocontenido y puede abrirse en un navegador o editor compatible.
@@ -101,13 +134,13 @@ El SVG es autocontenido y puede abrirse en un navegador o editor compatible.
 ### JSON IR
 
 ```powershell
-npm start -- parse .\\examples\\quick-start.md --output .\\salida\\quick-start.json
+xmind-md parse .\\examples\\quick-start.md --output .\\salida\\quick-start.json
 ```
 
 También puedes exportar JSON validado con:
 
 ```powershell
-npm start -- export .\\examples\\quick-start.md --format json --output .\\salida\\quick-start.json
+xmind-md export .\\examples\\quick-start.md --format json --output .\\salida\\quick-start.json
 ```
 
 ## 6. Modos de compatibilidad
@@ -120,7 +153,7 @@ Hay dos decisiones distintas:
 Ejemplo de exportación XMind permitiendo pérdidas diagnosticadas:
 
 ```powershell
-npm start -- export .\\mapa.md --format xmind --export-mode compatible
+xmind-md export .\\mapa.md --format xmind --export-mode compatible
 ```
 
 El modo compatible no significa fidelidad completa: permite generar una salida parcial y comunica las pérdidas por stderr. Revisa siempre esos diagnósticos.
@@ -130,7 +163,7 @@ El modo compatible no significa fidelidad completa: permite generar una salida p
 Para leer desde stdin hay que declarar el formato:
 
 ```powershell
-Get-Content -Raw .\\mapa.md | npm start -- export - --input-format markdown --format json
+Get-Content -Raw .\\mapa.md | xmind-md export - --input-format markdown --format json
 ```
 
 JSON puede escribirse a stdout. XMind y SVG requieren una ruta de archivo.
@@ -138,8 +171,8 @@ JSON puede escribirse a stdout. XMind y SVG requieren una ruta de archivo.
 ## 8. Ayuda y códigos de salida
 
 ```powershell
-npm start -- --help
-npm start -- --version
+xmind-md --help
+xmind-md --version
 ```
 
 | Código | Significado |

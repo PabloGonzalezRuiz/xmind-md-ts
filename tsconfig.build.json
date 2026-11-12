@@ -3,11 +3,20 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "./dist",
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true
+    "declarationMap": false,
+    "sourceMap": false
   },
-  "include": ["src/**/*.ts", "spec/ir-v1.types.ts"],
-  "exclude": ["test", "dist", "node_modules"]
+  "include": [
+    "src/**/*.ts",
+    "spec/ir-v1.types.ts"
+  ],
+  "exclude": [
+    "test",
+    "dist",
+    "node_modules"
+  ]
 }
