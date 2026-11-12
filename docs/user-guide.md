@@ -63,7 +63,7 @@ npm run build
 
 Esta ruta es para desarrollo y verificación, no es el procedimiento de instalación de una release.
 
-## 3. Crear un mapa desde Markdown
+## 4. Crear un mapa desde Markdown
 
 Cada archivo representa una hoja y debe contener exactamente un encabezado H1. Los encabezados H2–H6 crean la jerarquía.
 
@@ -93,7 +93,7 @@ Comprobar el resultado.
 
 La gramática completa está en [grammar.md](grammar.md). Puedes partir de [examples/quick-start.md](../examples/quick-start.md).
 
-## 4. Validar antes de exportar
+## 5. Validar antes de exportar
 
 Desde la raíz del repositorio:
 
@@ -113,7 +113,7 @@ La validación ejecuta primero JSON Schema Draft 2020-12 y después las reglas s
 xmind-md validate .\\mapa.md --asset-root .\\recursos
 ```
 
-## 5. Exportar
+## 6. Exportar
 
 ### XMind
 
@@ -143,7 +143,7 @@ También puedes exportar JSON validado con:
 xmind-md export .\\examples\\quick-start.md --format json --output .\\salida\\quick-start.json
 ```
 
-## 6. Modos de compatibilidad
+## 7. Modos de compatibilidad
 
 Hay dos decisiones distintas:
 
@@ -158,7 +158,7 @@ xmind-md export .\\mapa.md --format xmind --export-mode compatible
 
 El modo compatible no significa fidelidad completa: permite generar una salida parcial y comunica las pérdidas por stderr. Revisa siempre esos diagnósticos.
 
-## 7. Entrada estándar
+## 8. Entrada estándar
 
 Para leer desde stdin hay que declarar el formato:
 
@@ -168,7 +168,7 @@ Get-Content -Raw .\\mapa.md | xmind-md export - --input-format markdown --format
 
 JSON puede escribirse a stdout. XMind y SVG requieren una ruta de archivo.
 
-## 8. Ayuda y códigos de salida
+## 9. Ayuda y códigos de salida
 
 ```powershell
 xmind-md --help
@@ -184,7 +184,7 @@ xmind-md --version
 
 Los diagnósticos se escriben en stderr; los resultados JSON pueden escribirse en stdout.
 
-## 9. Siguiente nivel
+## 10. Siguiente nivel
 
 - [Gramática Markdown](grammar.md): front matter, encabezados, contenido y directivas.
 - [Sistema de estilos](style-system.md): catálogo, herencia y precedencia.

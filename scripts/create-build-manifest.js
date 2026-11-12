@@ -41,7 +41,7 @@ const manifest = {
 
 writeFileSync(
   resolve(outputDirectory, 'BUILD-MANIFEST.json'),
-  `${JSON.stringify(manifest, null, 2)}\\n`,
+  `${JSON.stringify(manifest, null, 2)}\n`,
   'utf8',
 );
-process.stdout.write('Build manifest written to dist/BUILD-MANIFEST.json\\n');
+process.stdout.write('Build manifest written to dist/BUILD-MANIFEST.json\n');
