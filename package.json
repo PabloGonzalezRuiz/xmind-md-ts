@@ -23,7 +23,8 @@
     "check:generated-types": "node scripts/generate-ir-types.js --check",
     "verify:examples": "node scripts/verify-examples.js",
     "verify:package": "node scripts/verify-package.js",
-    "check:version": "node scripts/check-package-version.js"
+    "check:version": "node scripts/check-package-version.js",
+    "prepack": "node scripts/create-build-manifest.js"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
@@ -71,6 +72,5 @@
     "LICENSE"
   ],
   "license": "MIT",
-  "exports": {},
-  "prepack": "node scripts/create-build-manifest.js"
+  "exports": {}
 }
