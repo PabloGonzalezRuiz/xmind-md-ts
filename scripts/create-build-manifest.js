@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import process from 'node:process';
 
 const root = process.cwd();
 const packageJson = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8'));
