@@ -53,9 +53,7 @@ try {
     (file) => file.startsWith('docs/') && !allowedDocs.has(file),
   );
   if (unexpectedDocs.length > 0) {
-    throw new Error(
-      `El paquete incluye documentación no autorizada: ${unexpectedDocs.join(', ')}`,
-    );
+    throw new Error(`El paquete incluye documentación no autorizada: ${unexpectedDocs.join(', ')}`);
   }
   const sourceMaps = packagedFiles.filter((file) => file.endsWith('.map'));
   if (sourceMaps.length > 0) {
@@ -64,9 +62,7 @@ try {
   if (!packagedFiles.includes('dist/BUILD-MANIFEST.json')) {
     throw new Error('El paquete no incluye dist/BUILD-MANIFEST.json.');
   }
-  const packedPackageJson = JSON.parse(
-    readFileSync(join(packageRoot, 'package.json'), 'utf8'),
-  );
+  const packedPackageJson = JSON.parse(readFileSync(join(packageRoot, 'package.json'), 'utf8'));
   if (Object.keys(packedPackageJson.exports ?? {}).length !== 0) {
     throw new Error('El paquete debe permanecer explícitamente CLI-only (exports vacío).');
   }
@@ -84,10 +80,7 @@ try {
   const manifest = JSON.parse(
     readFileSync(join(installedRoot, 'dist', 'BUILD-MANIFEST.json'), 'utf8'),
   );
-  if (
-    manifest.package !== 'xmind-md-ts' ||
-    manifest.version !== packedPackageJson.version
-  ) {
+  if (manifest.package !== 'xmind-md-ts' || manifest.version !== packedPackageJson.version) {
     throw new Error('El manifiesto de build no coincide con el paquete instalado.');
   }
   if (!manifest.sourceCommit || manifest.sourceCommit === 'unknown') {
