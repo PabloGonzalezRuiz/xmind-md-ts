@@ -65,3 +65,12 @@ Investigación autorizada, **sin modificar el motor de exportación, dependencia
 **Recomendación:** priorizar `xmind-generator` para un prototipo de compatibilidad, mantener `xmindmark` como referencia semántica de PMD y reservar el generador ZIP/JSON propio para las funciones de fidelidad que no cubra la biblioteca.
 
 **No se ha probado aún** que xmind-generator elimine todos los advisories o reproduzca los estilos del usuario. **No se ha realizado migración.** No crear PR, merge, tags, releases ni publicar.
+
+## Prototipo aislado y hallazgo confirmado (2026-11-12)
+
+- Se añadieron `scripts/probe-xmind-generator.js` y `.github/workflows/aud-010-xmind-generator-prototype.yml` en la rama de trabajo. El workflow prueba Ubuntu y Windows con Node 24, sin modificar las dependencias del proyecto ni el adaptador de producción.
+- La primera ejecución [43291032629](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43291032629) detectó en Ubuntu un **fallo de empaquetado upstream**: la instalación aislada de `xmind-generator@1.0.1` añadió un solo paquete y el import falló con `ERR_MODULE_NOT_FOUND: Cannot find package 'jszip'`. El `package.json` upstream declara `jszip` como `devDependency`, aunque `src/internal/serializer.ts` lo importa en runtime. No puede asumirse que el paquete publicado sea autocontenido.
+- Para continuar el experimento se ha añadido una **solución temporal solo en el workflow**: instalar explícitamente `jszip@3.10.1` junto al generador en el directorio aislado. Esto **no corrige upstream** ni modifica `package.json` o `package-lock.json` del proyecto.
+- Otra diferencia detectada en el código upstream: `src/internal/common.ts` genera IDs UUID v4 mediante `Math.random()`, no un generador criptográficamente seguro. Debe valorarse la unicidad y el control de IDs si se adopta la biblioteca.
+- La prueba comprueba ZIP, `content.json`, notas, etiquetas múltiples, resúmenes y relaciones; los resultados del experimento con workaround deben verificarse en GitHub Actions antes de declararlo compatible. Aún no se ha ejecutado smoke manual de XMind Desktop.
+- **Estado:** investigación y prototipo aislado en marcha; PROD-SEC-001 no resuelto; publicación NO-GO.
