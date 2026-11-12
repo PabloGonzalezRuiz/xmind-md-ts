@@ -95,3 +95,20 @@ Se ha añadido `.github/workflows/aud-010-release-preflight.yml` y su diseño de
 El flujo tiene permisos `contents: read`, no conserva credenciales de checkout y no dispone de pasos de publicación. El modo automático de la rama de trabajo es dry-run. El modo con tag solo comprueba un tag ya existente, exige `v<package.json version>`, ejecución desde `main` y coincidencia exacta del SHA; no crea tags ni releases.
 
 **Estado:** workflow implementado; pendiente de ejecución real en GitHub Actions y revisión de logs/artefacto. No se ha creado ningún tag ni release. La política de publicación pública continúa bloqueada y requiere autorización expresa.
+
+
+## Verificación del workflow GitHub Release preflight — 2026-11-12
+
+<details>
+</details>
+
+- Workflow [43211658439](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43211658439): success. Artefacto `xmind-md-ts-release-candidate-0.1.0`, ID `13941362391`, temporal hasta 2026-12-12.
+- CI [43211658590](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43211658590): success en Ubuntu y Windows, 129/129 pruebas por sistema; auditoría npm correcta.
+- SDK probe [43211658454](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43211658454): success en ambos sistemas.
+- SHA fuente del artefacto: `2be69ed85ba22df524035e770d420ae117e72d94`.
+- SHA-256 del tarball: `b7abc4d2b1dc83af1130eb16b468bda532ee51e65b0c104f66b6fed69ec8137a`; comprobación independiente `sha256sum -c`: OK.
+- Digest del ZIP de Actions: `e6dbde3dcf1bde495d4f9c72c9a83ea3614d873022cc52962aa8ef6ae10776c4`.
+- El paquete se instaló en un directorio temporal limpio; CLI `--help`, `--version` y validación del ejemplo correctos.
+- Las acciones externas del preflight están fijadas a SHA completos revisados.
+
+**Resultado del paso 4:** implementación y dry-run read-only verificados. Pendiente de ejecutar el modo de validación de tag cuando exista una release autorizada en `main`; no se crea ni publica ninguna release en esta fase. El paso 5 (prueba integral final y revisión de distribución/avisos) sigue pendiente.

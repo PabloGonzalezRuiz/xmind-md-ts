@@ -97,3 +97,6 @@ La CI [43195892325](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/run
 ## AUD-010 — preparación segura de releases (2026-11-12)
 
 Se ha incorporado un workflow de preflight de GitHub Releases, documentado en [docs/github-release-preflight.md](docs/github-release-preflight.md). Solo genera un artefacto temporal verificable; no crea tags/releases ni publica en npm. Requiere CI satisfactoria y autorización expresa antes de cualquier publicación. La versión del paquete sigue en `0.1.0` y el contrato IR admitido en `1.0.0`.
+
+
+**Última verificación AUD-010 (2026-11-12):** preflight GitHub Releases [43211658439](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43211658439) success; CI [43211658590](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43211658590) success Ubuntu/Windows (129/129 pruebas por sistema); SDK probe [43211658454](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43211658454) success en ambos. Artefacto temporal ID `13941362391`; SHA-256 del tarball verificado `b7abc4d2b1dc83af1130eb16b468bda532ee51e65b0c104f66b6fed69ec8137a`. No se ha creado una release pública.

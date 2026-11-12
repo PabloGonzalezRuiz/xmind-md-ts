@@ -105,3 +105,10 @@ Se añade `check:version` a `npm run verify` y como paso explícito de CI para c
 Implementado `.github/workflows/aud-010-release-preflight.yml`, con permisos read-only, ejecución automática de dry-run en la rama de trabajo y modo manual opcional para validar un tag existente desde `main`. Comprueba la sincronización paquete/CLI, ejecuta `npm run verify`, empaqueta e instala el tarball en un directorio temporal, prueba la CLI, genera SHA-256/manifiesto y sube un artefacto temporal. No crea tags, releases ni publica en npm. Diseño: [docs/github-release-preflight.md](github-release-preflight.md).
 
 Pendiente: ejecutar y verificar el workflow en Actions, inspeccionar el artefacto y sus checksums, y completar la prueba integral de distribución. No publicar.
+
+
+## Resultado AUD-010 — workflow preflight — 2026-11-12
+
+Paso 4 completado en el alcance autorizado: workflow de preflight read-only implementado, acciones fijadas a SHA completos y dry-run verificado. Runs: preflight [43211658439](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43211658439), CI [43211658590](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43211658590), SDK probe [43211658454](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43211658454). CI: Ubuntu/Windows, 129/129 tests por sistema. Artefacto ID `13941362391`; tarball SHA-256 verificado: `b7abc4d2b1dc83af1130eb16b468bda532ee51e65b0c104f66b6fed69ec8137a`.
+
+Pendiente: prueba integral final del paquete y avisos de terceros/riesgo residual. No se han creado tags ni releases, no se ha publicado en npm y `main` permanece intacta. El modo de tag del preflight no se ha ejecutado por falta de tag/release autorizada.

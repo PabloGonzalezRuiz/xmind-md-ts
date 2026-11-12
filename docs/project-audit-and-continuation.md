@@ -346,3 +346,19 @@ Además, se incorpora `scripts/check-package-version.js` como comprobación auto
 - El artefacto previsto es temporal (30 días). No se crean tags, GitHub Releases ni publicaciones npm. No se modifica `main`.
 - Estado a la espera de CI: workflow implementado; falta ejecución en Actions, inspección de logs/artefacto y prueba integral final. No declarar AUD-010 cerrada hasta completar esos pasos.
 - Antes de cualquier publisher futuro, revisar y fijar acciones externas a SHA completo; el workflow de preflight conserva las referencias major usadas por la CI existente. La publicación debe ser un workflow/job separado con permiso write mínimo y aprobación de entorno.
+
+
+## Continuidad AUD-010 — resultado del preflight GitHub Releases — 2026-11-12
+
+- SHA del workflow preflight verificado: `2be69ed85ba22df524035e770d420ae117e72d94`.
+- Workflow [43211658439](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43211658439): success. Artifact `xmind-md-ts-release-candidate-0.1.0`, ID `13941362391`, expira 2026-12-12. ZIP digest SHA-256: `e6dbde3dcf1bde495d4f9c72c9a83ea3614d873022cc52962aa8ef6ae10776c4`.
+- Contenido descargado e inspeccionado: tarball, checksum, manifiesto y borrador de notas. `sha256sum -c SHA256SUMS.txt` devolvió OK. SHA-256 tarball: `b7abc4d2b1dc83af1130eb16b468bda532ee51e65b0c104f66b6fed69ec8137a`.
+- El manifiesto identifica package `0.1.0`, IR `1.0.0`, SHA fuente `2be69ed85ba22df524035e770d420ae117e72d94` y run `43211658439`.
+- CI [43211658590](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43211658590): success Ubuntu/Windows, 129/129 pruebas por sistema; job de auditoría de dependencias success.
+- Probe SDK [43211658454](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43211658454): success Ubuntu/Windows.
+- Actions fijadas a SHA completos revisados en el workflow preflight: checkout `fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09`, setup-node `249970729cb0ef3589644e2896645e5dc5ba9c38`, upload-artifact `ea165f8d65b6e75b540449e92b4886f43607fa02`.
+- Un primer ensayo detectó que el checksum usaba una ruta absoluta del runner; se corrigió para generar un nombre relativo y verificarlo dentro del propio workflow. El artefacto final se descargó y verificó independientemente.
+- El dry-run por push está probado. El modo de tag no se ejecutó porque no hay tag autorizado y no se ha modificado `main`. La ejecución manual `workflow_dispatch` queda pendiente hasta que el workflow exista en la rama por defecto.
+- No se ha creado tag, release, PR ni publicación npm. `main` permanece en `6aca81b59dbfcfc13034e7e1115c70f7691c5035`.
+
+**Estado AUD-010:** pasos 1–4 completados (auditoría/corrección segura, licencias, política IR/versión, workflow preflight). Pendiente paso 5: prueba integral final de distribución, avisos de terceros y evaluación/aceptación formal del riesgo moderado. Después, revisión final y solicitud expresa de autorización antes de cualquier publicación.

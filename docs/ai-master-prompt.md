@@ -145,3 +145,11 @@ La sincronización de versión paquete/CLI se comprueba con `npm run check:versi
 ## Continuidad AUD-010 — GitHub Release preflight — 2026-11-12
 
 Se ha implementado `.github/workflows/aud-010-release-preflight.yml`. Consultar `docs/github-release-preflight.md` para su diseño y restricciones. Es un workflow de solo lectura: prepara tarball, verifica instalación/CLI, genera SHA-256/manifiesto/notas y sube artefacto temporal. No crea tags, GitHub Releases ni publica en npm. El dry-run se ejecuta en `feature/aud-003-runtime-schema`; el modo de tag solo valida un tag existente desde `main`, con versión y SHA coincidentes. Pendiente: ejecución y verificación real en GitHub Actions y revisión del artefacto. No iniciar publicación sin autorización expresa; no modificar `main` ni fusionar ramas.
+
+
+## Resultado verificado del preflight AUD-010 — 2026-11-12
+
+- Preflight [43211658439](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43211658439) success; artefacto ID `13941362391`, SHA-256 tarball `b7abc4d2b1dc83af1130eb16b468bda532ee51e65b0c104f66b6fed69ec8137a`, verificado independientemente.
+- CI [43211658590](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43211658590) success Ubuntu/Windows, 129/129 pruebas por sistema; SDK probe [43211658454](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43211658454) success en ambos.
+- El preflight es read-only y sus acciones externas están fijadas a SHA completos. No crea tags/releases ni publica npm.
+- Paso 4 AUD-010 completado en el alcance autorizado. Pendiente paso 5: prueba integral final, revisión de avisos de terceros y riesgos residuales. No modificar `main` ni publicar sin autorización expresa.
