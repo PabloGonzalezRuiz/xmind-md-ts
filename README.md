@@ -10,7 +10,7 @@
 - Contrato IR: `1.0.0`.
 - Rama de trabajo: `feature/aud-003-runtime-schema`.
 - La validación automatizada incluye formato, lint, generación de tipos, typecheck, pruebas, compilación, ejemplos e instalación limpia del tarball.
-- La publicación pública en GitHub Releases está pendiente de completar las correcciones y autorizaciones documentadas en [preparación de distribución](docs/release-readiness.md).
+- La publicación pública en GitHub Releases sigue pendiente de las correcciones y autorizaciones finales; los artefactos temporales de Actions no son releases oficiales.
 - No se ha publicado el paquete en npm.
 
 ## Instalación desde GitHub Releases

@@ -18,7 +18,7 @@ Los cambios relevantes para usuarios se registran aquí. Las versiones publicada
 - Terminación de mensajes de error de exportación con salto de línea real.
 
 ### Validación
-- CI: 129/129 pruebas en Ubuntu y Windows (última ejecución verificada antes de esta corrección).
+- CI AUD-010 (2026-11-12): 129/129 pruebas en Ubuntu y Windows.
 - AUD-009: apertura, inspección de jerarquía, guardado y reapertura confirmados manualmente en XMind Desktop para el fixture de aceptación.
 
 ### Limitaciones conocidas
