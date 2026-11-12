@@ -132,3 +132,16 @@ Actividad 2 completada. Evidencias y razonamiento: [third-party-notices-audit-20
 - No se modificaron dependencias, código ni paquete distribuido.
 
 **Estado:** revisión de licencias/avisos completada. Pendiente actividad 3: reevaluar vulnerabilidades moderadas residuales y documentar aceptación/mitigación. No publicar sin autorización expresa.
+
+
+## AUD-010 — evaluación de vulnerabilidades residuales — 2026-11-12
+
+Actividad 3 completada. Informe: [security-dependency-audit-2026-11-12.md](security-dependency-audit-2026-11-12.md).
+
+- CI [43224408690](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43224408690): success Ubuntu/Windows; auditoría npm incluida.
+- Npm audit: 12 registros moderados, 0 altos, 0 críticos. Se agrupan en dos advisories: minimatch y uuid.
+- Runtime: `uuid@3.4.0` llega por `xmind@2.2.33`. El SDK XMind v2.2.33 inspeccionado llama a `uuid/v4` sin buffer externo; el advisory afecta a v3/v5/v6 con buffer/offset fuera de rango. No se fuerza un override mayor por riesgo de romper la ruta heredada `uuid/v4`. Se mantiene riesgo residual moderado y requiere aceptación explícita o mitigación compatible.
+- Desarrollo: `minimatch@10.2.6` y los registros propagados por ESLint/TypeScript ESLint están en dependencias de desarrollo; no entran en el runtime distribuido. No se aplican downgrades/overrides automáticos incompatibles.
+- No se han cambiado dependencias, código ni lockfile.
+
+**Bloqueo de publicación:** PROD-SEC-001 requiere decisión explícita. También siguen pendientes las correcciones DP-001–DP-006 del paquete de distribución. No publicar sin autorización.

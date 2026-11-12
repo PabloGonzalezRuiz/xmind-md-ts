@@ -124,3 +124,13 @@ Actividad 1 ejecutada. Informe: [distribution-package-audit-2026-11-12.md](distr
 Actividad 2 completada. Informe: [docs/third-party-notices-audit-2026-11-12.md](third-party-notices-audit-2026-11-12.md). Se contrastó el inventario de 120 dependencias de producción y el tarball real. JSZip se utilizará bajo la alternativa MIT; Pako conserva las obligaciones MIT y Zlib. El artefacto no incorpora `node_modules` ni código de dependencias vendorizado, por lo que no se considera bloqueante la ausencia de un `THIRD-PARTY-NOTICES` en este candidato concreto. No se alteró el paquete.
 
 **Siguiente actividad propuesta (3):** reevaluar las vulnerabilidades moderadas residuales, separando runtime/producción de herramientas de desarrollo, verificando advisories y rutas de dependencia, y dejando documentada la decisión de mitigación o aceptación. Requiere autorización expresa antes de comenzar.
+
+
+## AUD-010 — evaluación de vulnerabilidades residuales — 2026-11-12
+
+Actividad 3 completada. Informe: [docs/security-dependency-audit-2026-11-12.md](security-dependency-audit-2026-11-12.md). CI [43224408690](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43224408690) pasó en Ubuntu y Windows. Npm audit reporta 12 registros moderados, 0 altos y 0 críticos, correspondientes a dos advisories.
+
+- PROD-SEC-001: `uuid@3.4.0` transitiva de XMind. El SDK inspeccionado usa `uuid/v4` sin buffer externo; no se observa llamada a las funciones v3/v5/v6 afectadas. Sigue siendo riesgo residual en la dependencia runtime. No se fuerza un override incompatible.
+- DEV-SEC-001: `minimatch@10.2.6`, solo desarrollo y tooling ESLint/TypeScript ESLint. No afecta directamente al runtime distribuido.
+
+**Siguiente paso:** revisión final de AUD-010, incluyendo DP-001–DP-006 y decisión expresa sobre el riesgo runtime PROD-SEC-001. Requiere autorización antes de corregir el paquete o realizar cualquier publicación.

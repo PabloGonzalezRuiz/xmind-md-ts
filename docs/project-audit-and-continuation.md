@@ -383,3 +383,15 @@ Además, se incorpora `scripts/check-package-version.js` como comprobación auto
 - El tarball auditado no incorpora `node_modules` ni implementaciones de dependencias; las dependencias se resuelven por separado. No se detecta una omisión de avisos respecto de código de terceros materialmente incluido en este artefacto.
 - Actividad 2 completada sin modificar dependencias, código de runtime ni paquete. No se creó tag, release, PR ni publicación npm; `main` sigue intacta.
 - Siguiente paso, pendiente de autorización: actividad 3, revisión actualizada de vulnerabilidades moderadas residuales, distinguiendo runtime/producción y desarrollo.
+
+
+## Continuidad AUD-010 — evaluación de vulnerabilidades residuales — 2026-11-12
+
+- HEAD auditado: `9a88d707d3f1cf00d4aeee86381e8b5b1b28b26a`; commit documental de actividad 3 pendiente de CI.
+- Informe: `docs/security-dependency-audit-2026-11-12.md`.
+- CI [43224408690](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43224408690): success Ubuntu/Windows. Artefacto npm audit ID `13946637379`, SHA-256 ZIP `f2f3e4dc53786f9259a48e467822e4a67acf417b190710f2903f02f14f81e500`.
+- Resultado: 12 registros moderados, 0 altos/críticos. Dos advisories: GHSA-g3hv-75wg-m249 (minimatch) y GHSA-w5hq-g745-h8pq (uuid).
+- minimatch 10.2.6 está marcado dev-only; riesgo acotado a tooling de lint/CI. No se fuerza minimatch 11 incompatible con los rangos declarados por ESLint 10/TypeScript ESLint.
+- uuid 3.4.0 es runtime vía xmind 2.2.33. Inspección del tag exacto XMind v2.2.33: `src/core/base.ts` usa `require('uuid/v4')` y `v4()` sin buffer/offset externo; las funciones v3/v5/v6 afectadas no aparecen como llamadas del SDK en el código principal inspeccionado. El riesgo residual de presencia de componente vulnerable se mantiene y requiere aceptación expresa o mitigación compatible.
+- No se modificaron dependencias, código ni lockfile; no se aplicaron downgrades ni overrides.
+- Próximo paso: revisión final AUD-010 y resolución de DP-001–DP-006. No crear tag/release, PR ni publicar sin autorización expresa.
