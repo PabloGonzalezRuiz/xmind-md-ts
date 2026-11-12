@@ -23,7 +23,12 @@ for (const dep of ['uuid', 'jszip']) {
   }
 }
 
-const report = { package: metadata.name, version: metadata.version, resolution, result: 'pending' };
+const report = {
+  package: metadata.name,
+  version: metadata.version,
+  resolution,
+  result: 'pending',
+};
 try {
   const { Workbook, RootTopic, Topic, Summary, Relationship } = await import(
     pathToFileURL(join(root, 'lib/esm/exports.js')).href
@@ -52,10 +57,7 @@ try {
   }
   const sheets = JSON.parse(await zip.file('content.json').async('string'));
   assert.equal(sheets[0].rootTopic.title, 'Ley de prueba');
-  assert.deepEqual(sheets[0].rootTopic.children.attached[0].labels, [
-    'Artículo',
-    'Importante',
-  ]);
+  assert.deepEqual(sheets[0].rootTopic.children.attached[0].labels, ['Artículo', 'Importante']);
   assert.equal(sheets[0].rootTopic.children.attached[0].summaries.length, 1);
   assert.equal(sheets[0].relationships.length, 1);
   report.result = 'pass';
@@ -65,6 +67,6 @@ try {
   report.error = String((error && error.stack) || error);
 }
 
-await writeFile(join(out, 'generator-prototype-report.json'), JSON.stringify(report, null, 2) + '\n');
+await writeFile(\n  join(out, 'generator-prototype-report.json'),\n  JSON.stringify(report, null, 2) + '\n',\n);
 console.log(JSON.stringify(report, null, 2));
 if (report.result !== 'pass') process.exitCode = 1;
