@@ -414,3 +414,20 @@ Además, se incorpora `scripts/check-package-version.js` como comprobación auto
 ### Punto de reanudación
 
 Tras autorización expresa, corregir DP-002/003/004/005/006, añadir manifiesto de procedencia y revisar disparadores del preflight; reconstruir y volver a inspeccionar el tarball. Mantener PROD-SEC-001 como decisión separada y no publicar hasta que esté resuelto.
+
+
+## Continuidad AUD-010 — cierre de correcciones DP-001–DP-006 — 2026-11-12
+
+- Rama: `feature/aud-003-runtime-schema`.
+- Correcciones realizadas: allowlist de 12 documentos públicos, eliminación de source maps/declaration maps, alcance CLI-only explícito, changelog actualizado a 129/129, guía de instalación desde GitHub Release y manifiesto de procedencia.
+- Informe: [distribution-corrections-2026-11-12.md](distribution-corrections-2026-11-12.md).
+- Verificación: CI Ubuntu/Windows success; SDK probe success en ambos; distribución success; preflight read-only success.
+- Inspección independiente del tarball: 46 ficheros, 246,747 bytes descomprimidos, 12 documentos, cero source maps, cero enlaces Markdown locales rotos. SHA-256 externo coincide con el tarball. El manifiesto interno enlaza el commit y el run.
+- DP-001–DP-006: cerrados en el ámbito de distribución CLI.
+- Riesgo de seguridad independiente PROD-SEC-001: abierto. `uuid@3.4.0` sigue presente en runtime por `xmind@2.2.33`; requiere aceptación expresa o mitigación compatible antes de publicar.
+- No existe aún workflow publicador de GitHub Releases; el preflight es read-only.
+- No se ha creado tag, release, PR, merge ni publicación npm. `main` no se ha modificado.
+
+### Punto de reanudación
+
+La siguiente decisión es resolver PROD-SEC-001 y, con autorización separada, diseñar/validar el workflow publicador de GitHub Releases. Mantener la publicación en NO-GO mientras cualquiera de esos puntos siga pendiente.

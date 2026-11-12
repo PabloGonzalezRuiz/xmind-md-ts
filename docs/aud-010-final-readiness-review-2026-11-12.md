@@ -79,3 +79,18 @@ La siguiente tarea recomendada es una actividad correctiva específica para DP-0
 ## Corrección de estado tras registrar este informe
 
 El artefacto inspeccionado corresponde al HEAD `81e9ad95`. La documentación de esta revisión se ha añadido en el commit `e8a100b598dbebed65191558f0db9e373f5e96cb`, y `docs/` completo está incluido en `package.json`. En consecuencia, el tarball anterior ya no contiene el estado documental completo del HEAD actual. DP-001 queda **abierto de nuevo** hasta reconstruir el candidato después de terminar las correcciones restantes. No se ha generado otro artefacto porque DP-002/003/005/006 continúan pendientes.
+
+
+## Cierre de correcciones de distribución — 2026-11-12
+
+La actividad correctiva posterior a esta revisión ha cerrado DP-001–DP-006. Ver [informe de correcciones](distribution-corrections-2026-11-12.md).
+
+- El paquete contiene una allowlist de 12 documentos públicos y excluye los documentos internos.
+- El build no genera source maps ni declaration maps; el verificador impide empaquetarlos.
+- El alcance es CLI-only: `exports: {}` y `bin.xmind-md`, sin API pública de importación.
+- Changelog actualizado a 0.1.0 candidato no publicado y 129/129 pruebas por sistema.
+- Guía de instalación desde GitHub Release, comprobación SHA-256 y distinción frente a artefactos temporales.
+- Manifiesto interno de procedencia con commit y workflow run.
+- Inspección final: 46 ficheros, 12 documentos, cero source maps y cero enlaces Markdown locales rotos. CI Ubuntu/Windows, SDK probe, distribución y preflight read-only correctos.
+
+**El veredicto de publicación sigue siendo NO-GO** por PROD-SEC-001 (`uuid@3.4.0` runtime vía XMind) sin aceptación expresa/mitigación compatible y por no existir todavía un workflow publicador de GitHub Releases. No se ha creado tag, release, PR, merge ni publicación npm; `main` sigue intacta.

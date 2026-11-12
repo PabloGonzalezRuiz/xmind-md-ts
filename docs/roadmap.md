@@ -148,3 +148,18 @@ Actividad 4 completada. Informe: [docs/aud-010-final-readiness-review-2026-11-12
 - La publicación sigue NO-GO por defectos de empaquetado y por el riesgo runtime PROD-SEC-001 (`uuid@3.4.0`) sin aceptación expresa.
 
 Siguiente actividad propuesta: corrección documental y del empaquetado (DP-002/003/004/005/006), reconstrucción e inspección de un nuevo candidato. Requiere autorización expresa. Resolver PROD-SEC-001 por decisión separada antes de publicar.
+
+
+## Cierre de correcciones de distribución AUD-010 — 2026-11-12
+
+Completada la actividad correctiva DP-001–DP-006. Informe: [distribution-corrections-2026-11-12.md](distribution-corrections-2026-11-12.md).
+
+- Allowlist de 12 documentos públicos en `package.json`.
+- Build sin source maps/declaration maps.
+- Paquete CLI-only explícito (`exports: {}`, `bin.xmind-md`).
+- Changelog 0.1.0 candidato no publicado; 129/129 pruebas por plataforma.
+- Guía de instalación desde tarball de GitHub Release y verificación SHA-256.
+- Manifiesto de build interno con commit y run.
+- Verificación CI Ubuntu/Windows, SDK probe, distribución y preflight read-only correctos. El tarball inspeccionado: 46 ficheros, 12 docs, cero mapas y cero enlaces Markdown rotos.
+
+**Pendiente antes de publicación:** resolver PROD-SEC-001 (`uuid@3.4.0` runtime vía XMind) mediante aceptación expresa o mitigación compatible; diseñar y validar por separado el workflow publicador con permisos mínimos y aprobación. No publicar, crear tags ni releases sin autorización expresa.

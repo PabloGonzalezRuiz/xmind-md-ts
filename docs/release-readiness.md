@@ -160,3 +160,19 @@ Informe autoritativo: [aud-010-final-readiness-review-2026-11-12.md](aud-010-fin
 - PROD-SEC-001 (`uuid@3.4.0` transitiva de XMind) sigue pendiente de aceptación expresa o mitigación compatible.
 
 **Veredicto: NO-GO.** No crear tag ni publicar una GitHub Release hasta resolver los bloqueos enumerados en el informe. La actividad 4 de revisión final está completada; la siguiente actividad requiere autorización expresa.
+
+
+## Correcciones DP-001–DP-006 — 2026-11-12
+
+Actividad correctiva completada. Informe: [distribution-corrections-2026-11-12.md](distribution-corrections-2026-11-12.md).
+
+- DP-001 resuelto con manifiesto de procedencia dentro de `dist/BUILD-MANIFEST.json`, que enlaza commit y ejecución.
+- DP-002 resuelto: allowlist de 12 documentos públicos; excluye auditorías, prompt maestro y documentos de continuidad.
+- DP-003 resuelto: build sin source maps ni declaration maps; verificador rechaza `.map`.
+- DP-004 resuelto: paquete declarado CLI-only mediante `exports: {}` y `bin.xmind-md`; no se promete API de importación.
+- DP-005 resuelto: changelog identifica `0.1.0` como candidato no publicado y recoge 129/129 pruebas por plataforma.
+- DP-006 resuelto: README y guía explican descarga, verificación SHA-256 e instalación del tarball de GitHub Release, distinguiéndolo de los artefactos temporales.
+
+La verificación integral ha pasado en Ubuntu y Windows; el SDK probe, la distribución y el preflight read-only también han pasado. El tarball inspeccionado contiene 46 ficheros, 12 documentos permitidos, ningún source map y ningún enlace Markdown local roto. El manifiesto interno identifica commit y run de construcción.
+
+**NO-GO para publicación pública:** PROD-SEC-001 (`uuid@3.4.0` transitiva de XMind) sigue pendiente de aceptación expresa o mitigación compatible. Además, no existe todavía workflow publicador de GitHub Releases; solo preflight read-only. No se ha creado tag, release, PR ni publicación npm. `main` permanece intacta.
