@@ -142,7 +142,7 @@ Actividad 4 completada. Informe: [docs/aud-010-final-readiness-review-2026-11-12
 
 - HEAD revisado: `81e9ad95dd89e4fc765806e64c87e554c9c39460`; `main` permanece en `6aca81b59dbfcfc13034e7e1115c70f7691c5035`.
 - CI [43225888536](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43225888536), SDK probe [43225888541](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43225888541) y distribución [43225888690](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43225888690): success en Ubuntu/Windows donde aplica.
-- El tarball actual se generó desde el SHA exacto del run; DP-001 queda resuelto para este candidato. DP-002/003/005/006 continúan abiertos; DP-004 queda condicionado a documentar alcance CLI-only.
+- El tarball inspeccionado se generó desde el SHA exacto del run `81e9ad9`; no obstante, el commit documental `e8a100b` añade archivos/cambios bajo `docs/`, que se empaqueta íntegramente. DP-001 queda abierto hasta regenerar el candidato después de las correcciones. DP-002/003/005/006 continúan abiertos; DP-004 queda condicionado a documentar alcance CLI-only.
 - La prueba `verify-package` instala el tarball en un directorio limpio y prueba CLI `--help`, `--version` y validación de ejemplo.
 - No existe workflow de publicación de GitHub Releases; el preflight es read-only.
 - La publicación sigue NO-GO por defectos de empaquetado y por el riesgo runtime PROD-SEC-001 (`uuid@3.4.0`) sin aceptación expresa.

@@ -405,7 +405,7 @@ Además, se incorpora `scripts/check-package-version.js` como comprobación auto
 - SDK probe [43225888541](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43225888541): success Ubuntu/Windows.
 - Distribución [43225888690](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43225888690): success; artifact ID `13947289242`; ZIP SHA-256 `eebe554fea434ab05d8c6c3b205183bedccf7aef0526988c68c02af0ee888c56`; tarball SHA-256 `3dda161f34543f325aa48f1eaf362b975319c6c6f1615b1259dce20ff8d53272`.
 - El tarball contiene 81 entradas, 519,447 bytes descomprimidos, 24 documentos `docs/` y 24 source maps sin fuentes TS/sourceContent.
-- DP-001 resuelto para este artefacto: generado desde el SHA exacto del run. DP-002/003/005/006 siguen abiertos; DP-004 requiere confirmar CLI-only.
+- El artefacto inspeccionado se generó desde el SHA exacto `81e9ad9`, pero el commit de documentación `e8a100b` modifica `docs/`, directorio incluido por completo en el tarball. DP-001 queda abierto de nuevo hasta reconstruir tras las correcciones. DP-002/003/005/006 siguen abiertos; DP-004 requiere confirmar CLI-only.
 - El preflight de release usa permisos read-only, checkout sin persistencia de credenciales y acciones fijadas a SHA. No existe todavía workflow publicador; el modo tag y el dispatch manual no se han probado.
 - Riesgo de publicación PROD-SEC-001: `uuid@3.4.0` sigue presente en runtime a través de XMind; exige aceptación expresa o mitigación compatible.
 - Actividad 4 de AUD-010 completada. Ver [informe final](aud-010-final-readiness-review-2026-11-12.md). Veredicto NO-GO.

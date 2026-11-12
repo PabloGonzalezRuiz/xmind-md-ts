@@ -155,7 +155,7 @@ Informe autoritativo: [aud-010-final-readiness-review-2026-11-12.md](aud-010-fin
 - CI [43225888536](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43225888536): success Ubuntu/Windows; verificación de paquete e instalación limpia incluidas.
 - SDK probe [43225888541](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43225888541): success Ubuntu/Windows.
 - Distribución [43225888690](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43225888690): success; artefacto ID `13947289242`. Tarball SHA-256: `3dda161f34543f325aa48f1eaf362b975319c6c6f1615b1259dce20ff8d53272`.
-- DP-001 resuelto para este candidato: el run construyó desde el HEAD exacto. DP-002, DP-003, DP-005 y DP-006 siguen abiertos; DP-004 requiere declarar CLI-only.
+- El artefacto inspeccionado se construyó desde el HEAD exacto del run `81e9ad9`, pero la documentación añadida después en `e8a100b` también se incluye en `docs/`; DP-001 queda abierto de nuevo hasta reconstruir tras las correcciones. DP-002, DP-003, DP-005 y DP-006 siguen abiertos; DP-004 requiere declarar CLI-only.
 - No existe aún un workflow publicador de GitHub Releases; solo existe el preflight read-only.
 - PROD-SEC-001 (`uuid@3.4.0` transitiva de XMind) sigue pendiente de aceptación expresa o mitigación compatible.
 

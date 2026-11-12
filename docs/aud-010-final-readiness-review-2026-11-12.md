@@ -26,14 +26,14 @@ Se descargó y examinó el ZIP de Actions y el tarball real:
 
 | ID | Resultado de la revisión final | Estado |
 |---|---|---|
-| DP-001 | El candidato anterior quedó sustituido: el artefacto actual se generó en el run cuyo `head_sha` es exactamente `81e9ad95dd89e4fc765806e64c87e554c9c39460`. La sincronización de esta ejecución está demostrada por GitHub Actions. No obstante, el tarball no lleva manifiesto interno con SHA/run; conviene incorporarlo para consumidores externos. | Resuelto para el candidato actual; trazabilidad embebida mejorable |
+| DP-001 | El artefacto inspeccionado se construyó desde `81e9ad95dd89e4fc765806e64c87e554c9c39460`, que era el HEAD exacto del run. Sin embargo, esta revisión ha añadido documentación bajo `docs/` y actualizado `docs/release-readiness.md`, que también se empaqueta. El HEAD actual pasó a `e8a100b598dbebed65191558f0db9e373f5e96cb`; por tanto el tarball inspeccionado ya no representa todo el contenido documental del HEAD actual. Además, no incluye manifiesto interno de procedencia. | Abierto de nuevo para el HEAD actual; el candidato inspeccionado es válido como snapshot anterior |
 | DP-002 | `package.json` sigue incluyendo todo `docs/`. El tarball contiene 24 documentos, entre ellos prompt maestro, auditorías de seguridad/licencias, continuidad y documentos de trabajo. | Abierto |
 | DP-003 | El tarball contiene 24 source maps JS/declaraciones, pero no incluye los fuentes TypeScript originales; los mapas inspeccionados no tienen `sourcesContent` y apuntan a rutas ausentes. | Abierto |
 | DP-004 | El paquete declara `bin.xmind-md`, pero no `main`, `exports` ni `types` en la raíz. La documentación y el objetivo de distribución describen una CLI; no hay evidencia de una API de librería pública comprometida. | Condicionado: declarar explícitamente CLI-only; no añadir API sin decisión de producto |
 | DP-005 | `CHANGELOG.md` todavía indica 124/124 pruebas, mientras el CI actual valida el conjunto actualizado y pasa. También conserva el encabezado `Unreleased`. | Abierto |
 | DP-006 | `docs/user-guide.md` todavía indica que no hay instalador independiente y explica clonar la rama de desarrollo. El README exterior del artefacto sí da instrucciones básicas de instalación, pero no sustituye una guía versionada dentro del paquete. | Abierto |
 
-DP-001 deja de ser un bloqueo de sincronización para este artefacto concreto. DP-002, DP-003, DP-005 y DP-006 impiden considerar el tarball candidato final. DP-004 debe cerrarse mediante una decisión explícita de alcance/documentación; la recomendación actual es CLI-only.
+DP-001 se resolvió para el snapshot `81e9ad9`, pero volvió a abrirse al actualizar documentos que forman parte de `docs/` en el commit `e8a100b`. DP-002, DP-003, DP-005 y DP-006 también impiden considerar el tarball candidato final. DP-004 debe cerrarse mediante una decisión explícita de alcance/documentación; la recomendación actual es CLI-only.
 
 ## Workflow y controles de publicación
 
@@ -59,12 +59,13 @@ DP-001 deja de ser un bloqueo de sincronización para este artefacto concreto. D
 La CI, el probe del SDK y el empaquetado están verdes, y se ha inspeccionado el artefacto real del HEAD actual. Eso acredita la reproducibilidad de la construcción y la validez básica de la CLI, pero no corrige los defectos de contenido del tarball ni resuelve el riesgo de seguridad runtime.
 
 Bloqueos restantes:
-1. DP-002: allowlist de documentación incluida.
-2. DP-003: source maps sin fuentes.
-3. DP-005: recuento/estado de notas de versión obsoleto.
-4. DP-006: guía de instalación desde GitHub Release.
-5. DP-004: declarar formalmente el alcance CLI-only.
-6. PROD-SEC-001: decisión expresa sobre `uuid@3.4.0` o mitigación compatible.
+1. DP-001: regenerar el artefacto después de cerrar los cambios documentales.
+2. DP-002: allowlist de documentación incluida.
+3. DP-003: source maps sin fuentes.
+4. DP-005: recuento/estado de notas de versión obsoleto.
+5. DP-006: guía de instalación desde GitHub Release.
+6. DP-004: declarar formalmente el alcance CLI-only.
+7. PROD-SEC-001: decisión expresa sobre `uuid@3.4.0` o mitigación compatible.
 
 Mejoras recomendadas antes de publicar: incorporar manifiesto de build dentro del artefacto, actualizar disparadores del preflight para cubrir todos los ficheros documentales incluidos y preparar un publisher separado con acciones fijadas, permisos mínimos, aprobación y verificación de artefactos/attestation.
 
@@ -73,3 +74,8 @@ Mejoras recomendadas antes de publicar: incorporar manifiesto de build dentro de
 La actividad 4 de revisión final queda completada. No se han modificado código, dependencias, lockfile, manifiesto de paquete ni artefactos de distribución; solo se documenta el resultado. No se ha creado tag, release, PR ni publicación npm. `main` permanece intacta.
 
 La siguiente tarea recomendada es una actividad correctiva específica para DP-002/003/004/005/006 y regeneración del candidato. La decisión de riesgo PROD-SEC-001 debe resolverse por separado antes de autorizar una publicación.
+
+
+## Corrección de estado tras registrar este informe
+
+El artefacto inspeccionado corresponde al HEAD `81e9ad95`. La documentación de esta revisión se ha añadido en el commit `e8a100b598dbebed65191558f0db9e373f5e96cb`, y `docs/` completo está incluido en `package.json`. En consecuencia, el tarball anterior ya no contiene el estado documental completo del HEAD actual. DP-001 queda **abierto de nuevo** hasta reconstruir el candidato después de terminar las correcciones restantes. No se ha generado otro artefacto porque DP-002/003/005/006 continúan pendientes.
