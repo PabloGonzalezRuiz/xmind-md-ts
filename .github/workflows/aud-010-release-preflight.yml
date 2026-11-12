@@ -85,7 +85,7 @@ jobs:
           test "$INSTALLED_VERSION" = "$EXPECTED_VERSION"
           node "$CLI" validate "$PWD/examples/quick-start.md"
           cp CHANGELOG.md release-candidate/RELEASE-NOTES-DRAFT.md
-          sha256sum "$TARBALL" > release-candidate/SHA256SUMS.txt
+          (cd release-candidate && sha256sum "$FILENAME" > SHA256SUMS.txt && sha256sum -c SHA256SUMS.txt)
           node -e "const fs=require('node:fs'); const cp=require('node:child_process'); const p=require('./package.json'); const m={package:p.name,version:p.version,irContract:'1.0.0',sourceCommit:cp.execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),workflowRun:process.env.GITHUB_RUN_ID,artifactType:'temporary preflight artifact; not a published release'}; fs.writeFileSync('release-candidate/BUILD-MANIFEST.json',JSON.stringify(m,null,2)+'\\n')"
           echo "filename=$FILENAME" >> "$GITHUB_OUTPUT"
           echo "sha256=$(cut -d' ' -f1 release-candidate/SHA256SUMS.txt)" >> "$GITHUB_OUTPUT"
