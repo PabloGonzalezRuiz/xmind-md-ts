@@ -134,3 +134,17 @@ Actividad 3 completada. Informe: [docs/security-dependency-audit-2026-11-12.md](
 - DEV-SEC-001: `minimatch@10.2.6`, solo desarrollo y tooling ESLint/TypeScript ESLint. No afecta directamente al runtime distribuido.
 
 **Siguiente paso:** revisión final de AUD-010, incluyendo DP-001–DP-006 y decisión expresa sobre el riesgo runtime PROD-SEC-001. Requiere autorización antes de corregir el paquete o realizar cualquier publicación.
+
+
+## Cierre de revisión final AUD-010 — 2026-11-12
+
+Actividad 4 completada. Informe: [docs/aud-010-final-readiness-review-2026-11-12.md](aud-010-final-readiness-review-2026-11-12.md).
+
+- HEAD revisado: `81e9ad95dd89e4fc765806e64c87e554c9c39460`; `main` permanece en `6aca81b59dbfcfc13034e7e1115c70f7691c5035`.
+- CI [43225888536](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43225888536), SDK probe [43225888541](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43225888541) y distribución [43225888690](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43225888690): success en Ubuntu/Windows donde aplica.
+- El tarball actual se generó desde el SHA exacto del run; DP-001 queda resuelto para este candidato. DP-002/003/005/006 continúan abiertos; DP-004 queda condicionado a documentar alcance CLI-only.
+- La prueba `verify-package` instala el tarball en un directorio limpio y prueba CLI `--help`, `--version` y validación de ejemplo.
+- No existe workflow de publicación de GitHub Releases; el preflight es read-only.
+- La publicación sigue NO-GO por defectos de empaquetado y por el riesgo runtime PROD-SEC-001 (`uuid@3.4.0`) sin aceptación expresa.
+
+Siguiente actividad propuesta: corrección documental y del empaquetado (DP-002/003/004/005/006), reconstrucción e inspección de un nuevo candidato. Requiere autorización expresa. Resolver PROD-SEC-001 por decisión separada antes de publicar.

@@ -1,0 +1,75 @@
+# Revisión final de preparación de distribución — AUD-010 — 2026-11-12
+
+## Alcance y estado inspeccionado
+
+- Repositorio: `PabloGonzalezRuiz/xmind-md-ts`.
+- Rama: `feature/aud-003-runtime-schema`.
+- HEAD inspeccionado: `81e9ad95dd89e4fc765806e64c87e554c9c39460`.
+- `main` permanece en `6aca81b59dbfcfc13034e7e1115c70f7691c5035`.
+- CI [43225888536](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43225888536): success en Ubuntu y Windows. Incluye formato, lint, tipos generados, typecheck, pruebas, build, smoke CLI y verificación de instalación limpia del tarball.
+- SDK probe [43225888541](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43225888541): success en Ubuntu y Windows.
+- Distribución [43225888690](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43225888690): success; artefacto Actions `xmind-md-ts-distribution`, ID `13947289242`.
+- Los tres workflows corresponden exactamente al HEAD `81e9ad95dd89e4fc765806e64c87e554c9c39460`.
+
+## Inspección del artefacto más reciente
+
+Se descargó y examinó el ZIP de Actions y el tarball real:
+
+- ZIP de Actions: SHA-256 `eebe554fea434ab05d8c6c3b205183bedccf7aef0526988c68c02af0ee888c56`.
+- Tarball `xmind-md-ts-0.1.0.tgz`: SHA-256 `3dda161f34543f325aa48f1eaf362b975319c6c6f1615b1259dce20ff8d53272`.
+- Tarball: 81 entradas y 519,447 bytes descomprimidos.
+- Contiene CLI, código compilado, declaraciones TypeScript, schema IR, ejemplos, LICENSE, README, CHANGELOG y 24 documentos bajo `docs/`.
+- El artefacto exterior contiene `README.txt`, `SHA256SUMS.txt` y el tarball. No incluye un manifiesto de build que identifique el SHA de origen dentro del paquete.
+- `scripts/verify-package.js`, ejecutado dentro de `npm run verify`, empaqueta el proyecto, lo instala en un directorio temporal limpio y prueba `--help`, `--version` y la validación del ejemplo. El job CI pasó esos pasos.
+
+## Estado de DP-001 a DP-006
+
+| ID | Resultado de la revisión final | Estado |
+|---|---|---|
+| DP-001 | El candidato anterior quedó sustituido: el artefacto actual se generó en el run cuyo `head_sha` es exactamente `81e9ad95dd89e4fc765806e64c87e554c9c39460`. La sincronización de esta ejecución está demostrada por GitHub Actions. No obstante, el tarball no lleva manifiesto interno con SHA/run; conviene incorporarlo para consumidores externos. | Resuelto para el candidato actual; trazabilidad embebida mejorable |
+| DP-002 | `package.json` sigue incluyendo todo `docs/`. El tarball contiene 24 documentos, entre ellos prompt maestro, auditorías de seguridad/licencias, continuidad y documentos de trabajo. | Abierto |
+| DP-003 | El tarball contiene 24 source maps JS/declaraciones, pero no incluye los fuentes TypeScript originales; los mapas inspeccionados no tienen `sourcesContent` y apuntan a rutas ausentes. | Abierto |
+| DP-004 | El paquete declara `bin.xmind-md`, pero no `main`, `exports` ni `types` en la raíz. La documentación y el objetivo de distribución describen una CLI; no hay evidencia de una API de librería pública comprometida. | Condicionado: declarar explícitamente CLI-only; no añadir API sin decisión de producto |
+| DP-005 | `CHANGELOG.md` todavía indica 124/124 pruebas, mientras el CI actual valida el conjunto actualizado y pasa. También conserva el encabezado `Unreleased`. | Abierto |
+| DP-006 | `docs/user-guide.md` todavía indica que no hay instalador independiente y explica clonar la rama de desarrollo. El README exterior del artefacto sí da instrucciones básicas de instalación, pero no sustituye una guía versionada dentro del paquete. | Abierto |
+
+DP-001 deja de ser un bloqueo de sincronización para este artefacto concreto. DP-002, DP-003, DP-005 y DP-006 impiden considerar el tarball candidato final. DP-004 debe cerrarse mediante una decisión explícita de alcance/documentación; la recomendación actual es CLI-only.
+
+## Workflow y controles de publicación
+
+- Se encontraron seis workflows en el repositorio. Existe un preflight de GitHub Release, pero **no existe todavía un workflow publicador de GitHub Releases**.
+- `.github/workflows/aud-010-release-preflight.yml` es de solo lectura: `contents: read`, checkout con `persist-credentials: false`, sin token npm ni permisos de publicación. Sus acciones externas están fijadas a SHA completos.
+- El preflight genera un candidato temporal y puede validar un tag preexistente desde `main`; no crea tags, releases ni publica.
+- El dry-run por push se verificó en [43211658439](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43211658439). El modo de validación de tag y el despacho manual no se han probado; no hay tag autorizado.
+- El workflow de distribución de artefacto usa referencias major (`checkout@v5`, `setup-node@v6`, `upload-artifact@v4`) con permisos de solo lectura. No publica. Para un futuro publisher, se deben fijar todas las acciones externas a SHA completos, separar el job con permiso de escritura mínimo y requerir aprobación de entorno.
+- La documentación oficial de GitHub recomienda permisos mínimos y fijar acciones externas a SHA completos; también describe attestations para enlazar un artefacto con su repositorio, commit y workflow. Referencias: [seguridad de Actions](https://docs.github.com/en/actions/reference/security/secure-use), [sintaxis de permisos](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax) y [artifact attestations](https://docs.github.com/en/actions/concepts/security/artifact-attestations).
+
+## Riesgo de dependencias y licencias
+
+- La auditoría npm vigente registró 12 entradas moderadas, 0 altas y 0 críticas, agrupadas en dos advisories.
+- `minimatch` se mantiene como riesgo de desarrollo/tooling.
+- `uuid@3.4.0` sigue presente en runtime vía `xmind@2.2.33`. La ruta inspeccionada de XMind usa UUID v4 sin buffer externo, pero no se ha eliminado la dependencia vulnerable ni se ha aceptado formalmente el riesgo.
+- PROD-SEC-001 sigue siendo un bloqueo: se necesita aceptación expresa del riesgo o una mitigación compatible validada antes de publicar.
+- La revisión de licencias concluye que el tarball no incorpora `node_modules` ni código de dependencias vendorizado; la ausencia de `THIRD-PARTY-NOTICES` no se considera un bloqueo demostrado para la estructura actual. Se deben conservar las decisiones JSZip MIT y Pako MIT AND Zlib.
+
+## Veredicto
+
+**NO-GO para una GitHub Release pública.**
+
+La CI, el probe del SDK y el empaquetado están verdes, y se ha inspeccionado el artefacto real del HEAD actual. Eso acredita la reproducibilidad de la construcción y la validez básica de la CLI, pero no corrige los defectos de contenido del tarball ni resuelve el riesgo de seguridad runtime.
+
+Bloqueos restantes:
+1. DP-002: allowlist de documentación incluida.
+2. DP-003: source maps sin fuentes.
+3. DP-005: recuento/estado de notas de versión obsoleto.
+4. DP-006: guía de instalación desde GitHub Release.
+5. DP-004: declarar formalmente el alcance CLI-only.
+6. PROD-SEC-001: decisión expresa sobre `uuid@3.4.0` o mitigación compatible.
+
+Mejoras recomendadas antes de publicar: incorporar manifiesto de build dentro del artefacto, actualizar disparadores del preflight para cubrir todos los ficheros documentales incluidos y preparar un publisher separado con acciones fijadas, permisos mínimos, aprobación y verificación de artefactos/attestation.
+
+## Límites de esta actividad
+
+La actividad 4 de revisión final queda completada. No se han modificado código, dependencias, lockfile, manifiesto de paquete ni artefactos de distribución; solo se documenta el resultado. No se ha creado tag, release, PR ni publicación npm. `main` permanece intacta.
+
+La siguiente tarea recomendada es una actividad correctiva específica para DP-002/003/004/005/006 y regeneración del candidato. La decisión de riesgo PROD-SEC-001 debe resolverse por separado antes de autorizar una publicación.

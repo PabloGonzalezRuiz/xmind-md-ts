@@ -145,3 +145,18 @@ Actividad 3 completada. Informe: [security-dependency-audit-2026-11-12.md](secur
 - No se han cambiado dependencias, código ni lockfile.
 
 **Bloqueo de publicación:** PROD-SEC-001 requiere decisión explícita. También siguen pendientes las correcciones DP-001–DP-006 del paquete de distribución. No publicar sin autorización.
+
+
+## Revisión final AUD-010 — 2026-11-12
+
+Informe autoritativo: [aud-010-final-readiness-review-2026-11-12.md](aud-010-final-readiness-review-2026-11-12.md).
+
+- HEAD: `81e9ad95dd89e4fc765806e64c87e554c9c39460`; `main` sigue en `6aca81b59dbfcfc13034e7e1115c70f7691c5035`.
+- CI [43225888536](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43225888536): success Ubuntu/Windows; verificación de paquete e instalación limpia incluidas.
+- SDK probe [43225888541](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43225888541): success Ubuntu/Windows.
+- Distribución [43225888690](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43225888690): success; artefacto ID `13947289242`. Tarball SHA-256: `3dda161f34543f325aa48f1eaf362b975319c6c6f1615b1259dce20ff8d53272`.
+- DP-001 resuelto para este candidato: el run construyó desde el HEAD exacto. DP-002, DP-003, DP-005 y DP-006 siguen abiertos; DP-004 requiere declarar CLI-only.
+- No existe aún un workflow publicador de GitHub Releases; solo existe el preflight read-only.
+- PROD-SEC-001 (`uuid@3.4.0` transitiva de XMind) sigue pendiente de aceptación expresa o mitigación compatible.
+
+**Veredicto: NO-GO.** No crear tag ni publicar una GitHub Release hasta resolver los bloqueos enumerados en el informe. La actividad 4 de revisión final está completada; la siguiente actividad requiere autorización expresa.

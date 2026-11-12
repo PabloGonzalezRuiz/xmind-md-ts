@@ -395,3 +395,22 @@ Además, se incorpora `scripts/check-package-version.js` como comprobación auto
 - uuid 3.4.0 es runtime vía xmind 2.2.33. Inspección del tag exacto XMind v2.2.33: `src/core/base.ts` usa `require('uuid/v4')` y `v4()` sin buffer/offset externo; las funciones v3/v5/v6 afectadas no aparecen como llamadas del SDK en el código principal inspeccionado. El riesgo residual de presencia de componente vulnerable se mantiene y requiere aceptación expresa o mitigación compatible.
 - No se modificaron dependencias, código ni lockfile; no se aplicaron downgrades ni overrides.
 - Próximo paso: revisión final AUD-010 y resolución de DP-001–DP-006. No crear tag/release, PR ni publicar sin autorización expresa.
+
+
+## Continuidad AUD-010 — revisión final de preparación — 2026-11-12
+
+- Rama: `feature/aud-003-runtime-schema`; HEAD revisado: `81e9ad95dd89e4fc765806e64c87e554c9c39460`.
+- `main`: `6aca81b59dbfcfc13034e7e1115c70f7691c5035`, intacta.
+- CI [43225888536](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43225888536): success Ubuntu/Windows.
+- SDK probe [43225888541](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43225888541): success Ubuntu/Windows.
+- Distribución [43225888690](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43225888690): success; artifact ID `13947289242`; ZIP SHA-256 `eebe554fea434ab05d8c6c3b205183bedccf7aef0526988c68c02af0ee888c56`; tarball SHA-256 `3dda161f34543f325aa48f1eaf362b975319c6c6f1615b1259dce20ff8d53272`.
+- El tarball contiene 81 entradas, 519,447 bytes descomprimidos, 24 documentos `docs/` y 24 source maps sin fuentes TS/sourceContent.
+- DP-001 resuelto para este artefacto: generado desde el SHA exacto del run. DP-002/003/005/006 siguen abiertos; DP-004 requiere confirmar CLI-only.
+- El preflight de release usa permisos read-only, checkout sin persistencia de credenciales y acciones fijadas a SHA. No existe todavía workflow publicador; el modo tag y el dispatch manual no se han probado.
+- Riesgo de publicación PROD-SEC-001: `uuid@3.4.0` sigue presente en runtime a través de XMind; exige aceptación expresa o mitigación compatible.
+- Actividad 4 de AUD-010 completada. Ver [informe final](aud-010-final-readiness-review-2026-11-12.md). Veredicto NO-GO.
+- No se ha modificado código, dependencias, lockfile, package.json ni el paquete. No se creó tag, release, PR o publicación npm. `main` no se modificó.
+
+### Punto de reanudación
+
+Tras autorización expresa, corregir DP-002/003/004/005/006, añadir manifiesto de procedencia y revisar disparadores del preflight; reconstruir y volver a inspeccionar el tarball. Mantener PROD-SEC-001 como decisión separada y no publicar hasta que esté resuelto.
