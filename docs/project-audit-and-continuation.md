@@ -362,3 +362,13 @@ Además, se incorpora `scripts/check-package-version.js` como comprobación auto
 - No se ha creado tag, release, PR ni publicación npm. `main` permanece en `6aca81b59dbfcfc13034e7e1115c70f7691c5035`.
 
 **Estado AUD-010:** pasos 1–4 completados (auditoría/corrección segura, licencias, política IR/versión, workflow preflight). Pendiente paso 5: prueba integral final de distribución, avisos de terceros y evaluación/aceptación formal del riesgo moderado. Después, revisión final y solicitud expresa de autorización antes de cualquier publicación.
+
+
+## AUD-010 — auditoría integral del paquete — 2026-11-12
+
+- Informe: [distribution-package-audit-2026-11-12.md](distribution-package-audit-2026-11-12.md).
+- Tarball inspeccionado: artefacto Actions `13941362391`, run [43211658439](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43211658439), SHA-256 `b7abc4d2b1dc83af1130eb16b468bda532ee51e65b0c104f66b6fed69ec8137a`.
+- Inventario: 78 ficheros, 482,079 bytes descomprimidos; CLI, código compilado, tipos, schema, licencia, ejemplos y 21 documentos.
+- CI del HEAD actual `352652fd96442872169400f5464657f44ffe3a5f`: [43212070056](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43212070056), success Ubuntu/Windows, 129/129 pruebas por sistema.
+- Hallazgos DP-001–DP-006: candidato documentalmente desfasado; documentación operativa incluida sin allowlist; source maps sin fuentes TS; API de importación root no declarada; changelog con recuento 124 obsoleto; guía de usuario no explica instalación desde el tarball.
+- No se cambió el contenido del paquete ni se publicó nada. Próximo paso, tras autorización: revisar avisos/licencias de terceros. Las correcciones DP-001–DP-006 deberán resolverse antes de considerar final el candidato de distribución.

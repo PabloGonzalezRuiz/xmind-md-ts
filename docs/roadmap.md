@@ -112,3 +112,8 @@ Pendiente: ejecutar y verificar el workflow en Actions, inspeccionar el artefact
 Paso 4 completado en el alcance autorizado: workflow de preflight read-only implementado, acciones fijadas a SHA completos y dry-run verificado. Runs: preflight [43211658439](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43211658439), CI [43211658590](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43211658590), SDK probe [43211658454](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43211658454). CI: Ubuntu/Windows, 129/129 tests por sistema. Artefacto ID `13941362391`; tarball SHA-256 verificado: `b7abc4d2b1dc83af1130eb16b468bda532ee51e65b0c104f66b6fed69ec8137a`.
 
 Pendiente: prueba integral final del paquete y avisos de terceros/riesgo residual. No se han creado tags ni releases, no se ha publicado en npm y `main` permanece intacta. El modo de tag del preflight no se ha ejecutado por falta de tag/release autorizada.
+
+
+## AUD-010 — auditoría del paquete de distribución — 2026-11-12
+
+Actividad 1 ejecutada. Informe: [distribution-package-audit-2026-11-12.md](distribution-package-audit-2026-11-12.md). El tarball real y su checksum se inspeccionaron. La estructura CLI es válida, pero se detectaron seis puntos previos a distribución (artefacto desfasado en documentación, allowlist demasiado amplia, source maps sin fuentes, API root no declarada, notas de pruebas obsoletas y guía de instalación no adaptada a GitHub Releases). No se modificó el paquete; queda pendiente decidir y aplicar correcciones antes de reconstruir el candidato final.

@@ -112,3 +112,11 @@ El flujo tiene permisos `contents: read`, no conserva credenciales de checkout y
 - Las acciones externas del preflight están fijadas a SHA completos revisados.
 
 **Resultado del paso 4:** implementación y dry-run read-only verificados. Pendiente de ejecutar el modo de validación de tag cuando exista una release autorizada en `main`; no se crea ni publica ninguna release en esta fase. El paso 5 (prueba integral final y revisión de distribución/avisos) sigue pendiente.
+
+
+## Auditoría integral del paquete — 2026-11-12
+
+La inspección del tarball real se registra en [distribution-package-audit-2026-11-12.md](distribution-package-audit-2026-11-12.md). El checksum del artefacto existente es correcto y la CLI está presente, pero no debe usarse como candidato final: se construyó desde un SHA anterior al HEAD documental, incluye documentos operativos indiscriminadamente, contiene source maps sin fuentes TypeScript, no declara API de importación desde package root y conserva notas de versión con un recuento de pruebas obsoleto (124 frente a 129 actual).
+
+- [x] Inspección real del tarball, manifiesto, metadatos npm, inventario de ficheros, CLI, ejemplos y dependencias directas.
+- [ ] Resolver DP-001 a DP-006 y reconstruir el artefacto desde el SHA exacto de publicación.
