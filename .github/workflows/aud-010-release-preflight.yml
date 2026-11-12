@@ -1,0 +1,95 @@
+name: AUD-010 · GitHub Release preflight (no publish)
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Optional existing tag; must equal v<package version> and point to this exact commit. Leave empty for dry-run.'
+        required: false
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: aud-010-release-preflight-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  prepare:
+    name: Validate source and build release candidate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact workflow commit
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Validate source, version and optional tag
+        id: source
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ inputs.release_tag }}
+          WORKFLOW_REF: ${{ github.ref }}
+        run: |
+          set -euo pipefail
+          test -z "$(git status --porcelain)"
+          VERSION="$(node -p "require('./package.json').version")"
+          SHA="$(git rev-parse HEAD)"
+          npm run check:version
+          if [[ -n "$RELEASE_TAG" ]]; then
+            test "$RELEASE_TAG" = "v$VERSION"
+            test "$WORKFLOW_REF" = "refs/heads/main"
+            git fetch --force origin "refs/tags/$RELEASE_TAG:refs/tags/$RELEASE_TAG"
+            TAG_SHA="$(git rev-parse "$RELEASE_TAG^{commit}")"
+            test "$TAG_SHA" = "$SHA"
+            echo "mode=tag-validated" >> "$GITHUB_OUTPUT"
+          else
+            test "$WORKFLOW_REF" = "refs/heads/feature/aud-003-runtime-schema"
+            echo "mode=dry-run" >> "$GITHUB_OUTPUT"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+      - name: Install locked dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Run complete project verification
+        run: npm run verify
+      - name: Build and verify release tarball
+        id: package
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p release-candidate
+          PACK_JSON="$(npm pack --json --pack-destination release-candidate)"
+          FILENAME="$(node -e "const p=JSON.parse(process.argv[1]); process.stdout.write(p[0].filename)" "$PACK_JSON")"
+          TARBALL="$PWD/release-candidate/$FILENAME"
+          test -s "$TARBALL"
+          TMP="$(mktemp -d)"
+          trap 'rm -rf "$TMP"' EXIT
+          npm install --prefix "$TMP" --no-audit --no-fund "$TARBALL"
+          CLI="$TMP/node_modules/xmind-md-ts/bin/xmind-md.js"
+          node "$CLI" --help
+          INSTALLED_VERSION="$(node "$CLI" --version)"
+          EXPECTED_VERSION="$(node -p "require('./package.json').version")"
+          test "$INSTALLED_VERSION" = "$EXPECTED_VERSION"
+          node "$CLI" validate "$PWD/examples/quick-start.md"
+          cp CHANGELOG.md release-candidate/RELEASE-NOTES-DRAFT.md
+          sha256sum "$TARBALL" > release-candidate/SHA256SUMS.txt
+          node -e "const fs=require('node:fs'); const cp=require('node:child_process'); const p=require('./package.json'); const m={package:p.name,version:p.version,irContract:'1.0.0',sourceCommit:cp.execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),workflowRun:process.env.GITHUB_RUN_ID,artifactType:'temporary preflight artifact; not a published release'}; fs.writeFileSync('release-candidate/BUILD-MANIFEST.json',JSON.stringify(m,null,2)+'\\n')"
+          echo "filename=$FILENAME" >> "$GITHUB_OUTPUT"
+          echo "sha256=$(cut -d' ' -f1 release-candidate/SHA256SUMS.txt)" >> "$GITHUB_OUTPUT"
+      - name: Upload release candidate (temporary artifact only)
+        uses: actions/upload-artifact@v4
+        with:
+          name: xmind-md-ts-release-candidate-${{ steps.source.outputs.version }}
+          path: release-candidate/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Report preflight result
+        run: |
+          echo "Prepared ${{ steps.package.outputs.filename }}"
+          echo "SHA-256: ${{ steps.package.outputs.sha256 }}"
+          echo "Source: ${{ steps.source.outputs.sha }}"
+          echo "Mode: ${{ steps.source.outputs.mode }}"
+          echo "No GitHub Release, tag, npm publication, or repository write was performed."
