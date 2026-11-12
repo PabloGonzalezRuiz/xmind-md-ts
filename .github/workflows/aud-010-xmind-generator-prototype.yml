@@ -21,9 +21,9 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: '24'
-      - name: Install generator in isolated directory
+      - name: Install generator and explicit JSZip workaround in isolated directory
         shell: bash
-        run: npm install --prefix "$RUNNER_TEMP/xmind-generator-probe" --no-save --no-package-lock --no-audit --no-fund xmind-generator@1.0.1
+        run: npm install --prefix "$RUNNER_TEMP/xmind-generator-probe" --no-save --no-package-lock --no-audit --no-fund xmind-generator@1.0.1 jszip@3.10.1
       - name: Test archive and document model
         shell: bash
         env:
