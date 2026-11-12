@@ -73,7 +73,7 @@ Este registro contiene decisiones normativas del IR v1.0.0, decisiones de arquit
 | VER-003 | Campos del núcleo y valores discriminantes desconocidos se rechazan | Implementada en IR v1 | Evita pérdida o reinterpretación silenciosa |
 | VER-004 | Extensiones namespaced desconocidas se conservan como JSON opaco en round-trip | Contrato documentado | El consumidor no debe interpretarlas ni modificarlas |
 | VER-005 | Migraciones entre major son explícitas, opt-in y probadas | Política acordada; migradores pendientes | Evita cambios de significado silenciosos |
-| VER-006 | La versión del paquete es la fuente de la versión CLI | Pendiente de automatización | Evitar divergencia entre `package.json` y CLI |
+| VER-006 | La versión del paquete y la versión CLI deben coincidir | Implementada mediante `check:version` en CI | Detectar divergencias entre `package.json` y `src/index.ts` antes de distribuir |
 
 No se incrementa ninguna versión por el mero hecho de documentar esta política. Cada futura versión IR deberá actualizar coordinadamente esquema, tipos, validadores, fixtures, conformidad, documentación y pruebas.
 

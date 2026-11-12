@@ -96,3 +96,5 @@ Siguientes tareas de AUD-010:
 ## Actualización AUD-010 — 2026-11-12
 
 La política de versionado y compatibilidad IR se ha documentado en `docs/versioning-and-compatibility.md`, registrada en `docs/decisions.md` y vinculada desde la especificación. El contrato admitido sigue siendo exactamente IR `1.0.0`; paquete `0.1.0`. La matriz estructural se amplía con SC-111/SC-112 y la validación semántica prueba el rechazo de versiones patch/minor no implementadas. Pendiente: CI Ubuntu/Windows de este cambio y revisión de sincronización documental. Después de verificar, solicitar autorización para el workflow seguro de GitHub Releases.
+
+Se añade `check:version` a `npm run verify` y como paso explícito de CI para comprobar que `applicationVersion` en `src/index.ts` coincide con `package.json`. La nueva ejecución CI debe confirmar esta última parte.

@@ -90,3 +90,5 @@ Este proyecto se distribuye bajo la licencia [MIT](LICENSE), Copyright (c) 2026 
 ## Versionado y compatibilidad
 
 El paquete y el contrato IR tienen versiones independientes. El paquete está en `0.1.0` y el único contrato IR admitido actualmente es `1.0.0`; las versiones IR no registradas se rechazan. Consulta la [política de versionado y compatibilidad](docs/versioning-and-compatibility.md) para las reglas de evolución, extensiones y migraciones.
+
+La CI también comprueba que la versión de la CLI coincida con la versión del paquete, evitando divergencias antes de distribuir.

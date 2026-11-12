@@ -43,6 +43,9 @@ jobs:
       - name: Check generated IR types
         run: npm run check:generated-types
 
+      - name: Check package and CLI version
+        run: npm run check:version
+
       - name: Typecheck
         run: npm run typecheck
 

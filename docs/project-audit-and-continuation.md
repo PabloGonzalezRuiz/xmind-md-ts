@@ -332,3 +332,5 @@ Actualizado tras la autorización del usuario, 2026-11-12.
 - No se ha cambiado la versión del paquete ni el contrato IR; no se ha tocado `main`, no se ha creado PR ni release.
 
 **Siguiente paso dentro de AUD-010:** preparar y probar el workflow seguro de GitHub Releases, sin publicar una release. Requiere autorización expresa antes de comenzar.
+
+Además, se incorpora `scripts/check-package-version.js` como comprobación automática de sincronización entre `package.json` y `src/index.ts`. Se integra en `npm run verify` y en CI Ubuntu/Windows; la ejecución de CI correspondiente al commit que incorpora esta comprobación queda pendiente.

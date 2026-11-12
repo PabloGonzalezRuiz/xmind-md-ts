@@ -13,7 +13,7 @@ El número de versión del paquete identifica el compilador, la CLI y su distrib
 
 - Mientras el paquete esté en `0.y.z`, no se declara estabilidad pública del API. Se usa patch para correcciones compatibles y minor para nuevas capacidades o cambios incompatibles durante el desarrollo inicial.
 - Desde `1.0.0`, se aplica SemVer: patch para correcciones compatibles, minor para funcionalidad compatible y major para cambios incompatibles del API/CLI público.
-- Los tags de publicación deben coincidir exactamente con `package.json` (prefijo `v` en el tag, por ejemplo `v0.1.0`).
+- Los tags de publicación deben coincidir exactamente con `package.json` (prefijo `v` en el tag, por ejemplo `v0.1.0`). El script `scripts/check-package-version.js`, integrado en `npm run verify` y CI, comprueba que la versión expuesta por la CLI coincide con `package.json`.
 - No se cambia la versión por una actualización puramente documental que no altere el paquete distribuido.
 
 ### Contrato IR

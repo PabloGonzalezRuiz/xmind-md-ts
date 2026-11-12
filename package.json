@@ -18,11 +18,12 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "verify": "npm run format:check && npm run lint && npm run check:generated-types && npm run typecheck && npm test && npm run build && npm run verify:examples && npm run verify:package",
+    "verify": "npm run format:check && npm run check:version && npm run lint && npm run check:generated-types && npm run typecheck && npm test && npm run build && npm run verify:examples && npm run verify:package",
     "generate:types": "node scripts/generate-ir-types.js",
     "check:generated-types": "node scripts/generate-ir-types.js --check",
     "verify:examples": "node scripts/verify-examples.js",
-    "verify:package": "node scripts/verify-package.js"
+    "verify:package": "node scripts/verify-package.js",
+    "check:version": "node scripts/check-package-version.js"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

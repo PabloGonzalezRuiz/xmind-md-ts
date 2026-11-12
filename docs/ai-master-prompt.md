@@ -138,3 +138,5 @@ AUD-011 (visor web) sigue pendiente y no está autorizada. No modificar `main`, 
 - Propiedades desconocidas del núcleo y valores desconocidos de discriminantes/enumeraciones se rechazan. Las extensiones namespaced válidas se conservan como datos opacos.
 - Pruebas nuevas: SC-111/SC-112 y casos semánticos para `1.0.1` y `1.1.0`. CI pendiente de ejecutar y verificar para el commit de esta actualización.
 - Próximo paso autorizado pendiente de confirmación: workflow seguro de GitHub Releases en modo de preparación/prueba. No publicar.
+
+La sincronización de versión paquete/CLI se comprueba con `npm run check:version` (`scripts/check-package-version.js`), integrado en `npm run verify` y en CI. Verificar siempre que esta comprobación pase antes de empaquetar.
