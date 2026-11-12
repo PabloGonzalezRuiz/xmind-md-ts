@@ -86,3 +86,12 @@ La auditoría de seguridad/licencias se considera realizada, pero la release sig
 La política aprobada está en [docs/versioning-and-compatibility.md](versioning-and-compatibility.md). El paquete sigue en `0.1.0` y el IR admitido sigue siendo exactamente `1.0.0`; sus versiones son independientes. No se promete compatibilidad automática con versiones IR minor/patch futuras. La política de campos desconocidos, extensiones y migraciones está documentada y cubierta por la matriz de conformidad. La casilla de versionado solo se marcará como completada tras CI Ubuntu/Windows satisfactoria.
 
 La sincronización entre la versión declarada en `package.json` y la expuesta por la CLI se comprueba automáticamente mediante `npm run check:version`, incluido en `npm run verify` y en CI Ubuntu/Windows. Pendiente de verificar la ejecución asociada al commit que incorpora el control.
+
+
+## AUD-010 — workflow de preflight implementado (2026-11-12)
+
+Se ha añadido `.github/workflows/aud-010-release-preflight.yml` y su diseño de seguridad está descrito en [github-release-preflight.md](github-release-preflight.md). El workflow prepara un tarball, prueba la instalación aislada, genera SHA-256, manifiesto y borrador de notas; sube únicamente un artefacto temporal de Actions (30 días).
+
+El flujo tiene permisos `contents: read`, no conserva credenciales de checkout y no dispone de pasos de publicación. El modo automático de la rama de trabajo es dry-run. El modo con tag solo comprueba un tag ya existente, exige `v<package.json version>`, ejecución desde `main` y coincidencia exacta del SHA; no crea tags ni releases.
+
+**Estado:** workflow implementado; pendiente de ejecución real en GitHub Actions y revisión de logs/artefacto. No se ha creado ningún tag ni release. La política de publicación pública continúa bloqueada y requiere autorización expresa.

@@ -140,3 +140,8 @@ AUD-011 (visor web) sigue pendiente y no está autorizada. No modificar `main`, 
 - Próximo paso autorizado pendiente de confirmación: workflow seguro de GitHub Releases en modo de preparación/prueba. No publicar.
 
 La sincronización de versión paquete/CLI se comprueba con `npm run check:version` (`scripts/check-package-version.js`), integrado en `npm run verify` y en CI. Verificar siempre que esta comprobación pase antes de empaquetar.
+
+
+## Continuidad AUD-010 — GitHub Release preflight — 2026-11-12
+
+Se ha implementado `.github/workflows/aud-010-release-preflight.yml`. Consultar `docs/github-release-preflight.md` para su diseño y restricciones. Es un workflow de solo lectura: prepara tarball, verifica instalación/CLI, genera SHA-256/manifiesto/notas y sube artefacto temporal. No crea tags, GitHub Releases ni publica en npm. El dry-run se ejecuta en `feature/aud-003-runtime-schema`; el modo de tag solo valida un tag existente desde `main`, con versión y SHA coincidentes. Pendiente: ejecución y verificación real en GitHub Actions y revisión del artefacto. No iniciar publicación sin autorización expresa; no modificar `main` ni fusionar ramas.

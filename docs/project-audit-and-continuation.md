@@ -335,3 +335,14 @@ Actualizado tras la autorización del usuario, 2026-11-12.
 **Siguiente paso dentro de AUD-010:** preparar y probar el workflow seguro de GitHub Releases, sin publicar una release. Requiere autorización expresa antes de comenzar.
 
 Además, se incorpora `scripts/check-package-version.js` como comprobación automática de sincronización entre `package.json` y `src/index.ts`. Se integra en `npm run verify` y en CI Ubuntu/Windows; la ejecución de CI correspondiente al commit que incorpora esta comprobación queda pendiente.
+
+
+## Continuidad AUD-010 — workflow GitHub Releases preflight — 2026-11-12
+
+- HEAD de partida: `ac14012e668a62b2776ce4f103e1161a24ab0972`; rama activa `feature/aud-003-runtime-schema`.
+- Se ha implementado `.github/workflows/aud-010-release-preflight.yml`. Diseño y límites: `docs/github-release-preflight.md`.
+- El workflow concede solo `contents: read`, usa checkout sin persistencia de credenciales y no contiene acciones de publicación. El modo automático de la rama de trabajo es dry-run; el modo opcional de tag valida un tag ya existente desde `main`, su versión `vX.Y.Z` y la igualdad exacta entre tag SHA y checkout SHA.
+- La preparación ejecuta `npm run verify`, genera `npm pack`, instala el tarball en directorio temporal, prueba `--help`, `--version` y el ejemplo quick-start, calcula SHA-256 y crea manifiesto de build y borrador de changelog.
+- El artefacto previsto es temporal (30 días). No se crean tags, GitHub Releases ni publicaciones npm. No se modifica `main`.
+- Estado a la espera de CI: workflow implementado; falta ejecución en Actions, inspección de logs/artefacto y prueba integral final. No declarar AUD-010 cerrada hasta completar esos pasos.
+- Antes de cualquier publisher futuro, revisar y fijar acciones externas a SHA completo; el workflow de preflight conserva las referencias major usadas por la CI existente. La publicación debe ser un workflow/job separado con permiso write mínimo y aprobación de entorno.

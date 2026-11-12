@@ -37,7 +37,7 @@ AUD-013 está corregida y verificada: la CLI deriva correctamente los nombres de
 - [Guía de usuario](docs/user-guide.md): instalación desde el repositorio, validación y exportación.
 - [Ejemplo de inicio rápido](examples/quick-start.md).
 - [Ejemplo con notas y estilos](examples/with-notes-and-styles.md).
-- [Preparación de distribución y releases](docs/release-readiness.md): estado real y requisitos pendientes antes de publicar.
+- [Preparación de distribución y releases](docs/release-readiness.md): estado real y requisitos pendientes antes de publicar.\n- [Diseño del preflight GitHub Releases](docs/github-release-preflight.md): permisos, validaciones y límites del workflow sin publicación.
 
 ## Documentación y fuentes de verdad
 
@@ -92,3 +92,8 @@ Este proyecto se distribuye bajo la licencia [MIT](LICENSE), Copyright (c) 2026 
 El paquete y el contrato IR tienen versiones independientes. El paquete está en `0.1.0` y el único contrato IR admitido actualmente es `1.0.0`; las versiones IR no registradas se rechazan. Consulta la [política de versionado y compatibilidad](docs/versioning-and-compatibility.md) para las reglas de evolución, extensiones y migraciones.
 
 La CI [43195892325](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43195892325) verifica también la sincronización de versión entre paquete y CLI y pasa en Ubuntu y Windows (129/129 pruebas por sistema).
+
+
+## AUD-010 — preparación segura de releases (2026-11-12)
+
+Se ha incorporado un workflow de preflight de GitHub Releases, documentado en [docs/github-release-preflight.md](docs/github-release-preflight.md). Solo genera un artefacto temporal verificable; no crea tags/releases ni publica en npm. Requiere CI satisfactoria y autorización expresa antes de cualquier publicación. La versión del paquete sigue en `0.1.0` y el contrato IR admitido en `1.0.0`.

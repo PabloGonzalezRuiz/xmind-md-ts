@@ -98,3 +98,10 @@ Siguientes tareas de AUD-010:
 La política de versionado y compatibilidad IR se ha documentado en `docs/versioning-and-compatibility.md`, registrada en `docs/decisions.md` y vinculada desde la especificación. El contrato admitido sigue siendo exactamente IR `1.0.0`; paquete `0.1.0`. La matriz estructural se amplía con SC-111/SC-112 y la validación semántica prueba el rechazo de versiones patch/minor no implementadas. CI [43195892325](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43195892325) completada correctamente en Ubuntu y Windows (129/129 pruebas por sistema), incluida la comprobación de sincronización paquete/CLI. La política de versionado y compatibilidad queda completada. Siguiente tarea: workflow seguro de GitHub Releases, previa autorización expresa.
 
 Se añade `check:version` a `npm run verify` y como paso explícito de CI para comprobar que `applicationVersion` en `src/index.ts` coincide con `package.json`. La nueva ejecución CI debe confirmar esta última parte.
+
+
+## Actualización AUD-010 — 2026-11-12: preflight de GitHub Releases
+
+Implementado `.github/workflows/aud-010-release-preflight.yml`, con permisos read-only, ejecución automática de dry-run en la rama de trabajo y modo manual opcional para validar un tag existente desde `main`. Comprueba la sincronización paquete/CLI, ejecuta `npm run verify`, empaqueta e instala el tarball en un directorio temporal, prueba la CLI, genera SHA-256/manifiesto y sube un artefacto temporal. No crea tags, releases ni publica en npm. Diseño: [docs/github-release-preflight.md](github-release-preflight.md).
+
+Pendiente: ejecutar y verificar el workflow en Actions, inspeccionar el artefacto y sus checksums, y completar la prueba integral de distribución. No publicar.

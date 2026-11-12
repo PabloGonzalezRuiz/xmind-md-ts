@@ -1,5 +1,15 @@
 name: AUD-010 · GitHub Release preflight (no publish)
 on:
+  push:
+    branches: [feature/aud-003-runtime-schema]
+    paths:
+      - '.github/workflows/aud-010-release-preflight.yml'
+      - 'docs/github-release-preflight.md'
+      - 'docs/release-readiness.md'
+      - 'docs/roadmap.md'
+      - 'README.md'
+      - 'docs/project-audit-and-continuation.md'
+      - 'docs/ai-master-prompt.md'
   workflow_dispatch:
     inputs:
       release_tag:
