@@ -53,7 +53,9 @@ try {
     (file) => file.startsWith('docs/') && !allowedDocs.has(file),
   );
   if (unexpectedDocs.length > 0) {
-    throw new Error(`El paquete incluye documentación no autorizada: ${unexpectedDocs.join(', ')}`);
+    throw new Error(
+      `El paquete incluye documentación no autorizada: ${unexpectedDocs.join(', ')}`,
+    );
   }
   const sourceMaps = packagedFiles.filter((file) => file.endsWith('.map'));
   if (sourceMaps.length > 0) {
