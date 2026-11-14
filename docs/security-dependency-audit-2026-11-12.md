@@ -72,3 +72,34 @@ Los otros diez registros moderados corresponden a `eslint@10.14.0`, `@eslint/js@
 - **Descartado sin pruebas:** override de `uuid` a versión mayor; el import legado `uuid/v4` del SDK puede dejar de resolver. Tampoco se recomienda `npm audit fix --force`.
 
 **Decisión técnica:** no aplicar cambios automáticos de dependencias. Mantener **PROD-SEC-001 abierto** y publicación en **NO-GO** hasta decisión expresa del responsable sobre mitigación o aceptación del riesgo. El workflow publicador de GitHub Releases permanece fuera de alcance y sin autorización.
+
+
+## Estado verificado y punto de continuidad — 2026-11-14
+
+> **Esta sección prevalece sobre las instantáneas históricas anteriores para determinar el estado vigente.** Evidencia consultada en GitHub el 2026-11-14; HEAD antes de la actualización documental: `7a195177a62604caa07d7825100e6473ee8c34cd`; `main`: `6aca81b59dbfcfc13034e7e1115c70f7691c5035`.
+
+### Ejecuciones del HEAD comprobado
+
+| Workflow | Run | Resultado |
+|---|---|---|
+| CI Ubuntu/Windows | [43291494469](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43291494469) | **FAILURE** en ambos sistemas: ESLint rechaza 5 referencias globales no definidas en `scripts/probe-xmind-generator.js` (`process` dos veces al inicio y una al final, `Buffer`, `console`). El job de auditoría de dependencias de esta ejecución sí finalizó correctamente; no implica que PROD-SEC-001 esté cerrado. |
+| SDK XMind heredado | [43291494431](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43291494431) | **SUCCESS**; el adaptador de producción permanece en `xmind@2.2.33`. |
+| Prototipo aislado `xmind-generator` | [43291494503](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43291494503) | **SUCCESS** Ubuntu/Windows; solo prueba de ZIP y estructura, **no** equivalencia visual ni apertura/guardado en Desktop. |
+| Paquete de distribución | [43291494529](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43291494529) | **FAILURE** en verificación por ESLint; no hay tarball validado de este HEAD. |
+| Preflight de GitHub Release (solo lectura) | [43291494483](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43291494483) | **FAILURE** en verificación por ESLint; no hay candidato validado de este HEAD. |
+
+### Implementación y límites
+
+- El prototipo reside en `scripts/probe-xmind-generator.js` y `.github/workflows/aud-010-xmind-generator-prototype.yml`; instala aisladamente `xmind-generator@1.0.1` y `jszip@3.10.1`, sin alterar `package.json`, `package-lock.json` ni el exportador actual.
+- **Defecto upstream reproducido:** `xmind-generator@1.0.1` requiere `jszip` en ejecución pero no lo instala como dependencia de producción; sin instalación explícita falla `ERR_MODULE_NOT_FOUND` ([43291032629](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43291032629)). La instalación conjunta permitió pasar el prototipo ([43291239013](https://github.com/PabloGonzalezRuiz/xmind-md-ts/actions/runs/43291239013)).
+- El prototipo verifica jerarquía, etiquetas múltiples, nota, resumen, relación y entradas ZIP. **No** demuestra fidelidad de tabla de árbol, estilos, IDs, assets, compatibilidad XMind Desktop ni ausencia de avisos de seguridad en el paquete instalado.
+- Se mantiene el alcance **CLI-only**, paquete `0.1.0` no publicado, contrato IR `1.0.0`, correcciones DP-001–DP-006 incorporadas pero sin nueva verificación integral del HEAD vigente.
+- **PROD-SEC-001 abierto:** `uuid@3.4.0` transitiva de `xmind@2.2.33`; la ruta inspeccionada `uuid/v4()` sin búfer externo no satisface la precondición del aviso, pero el componente vulnerable sigue instalado. **DEV-SEC-001** (`minimatch`) continúa como riesgo documentado de tooling.
+- No existe workflow publicador de GitHub Releases; el preflight es read-only. **Publicación: NO-GO.** No se ha creado tag, release, PR, merge ni publicación npm; `main` no se ha modificado.
+
+### Punto de reanudación y permisos
+
+1. **Bloqueo inmediato:** corregir únicamente las referencias globales de ESLint en el script aislado y verificar CI, distribución y preflight para el nuevo HEAD; requiere autorización de cambio de código. No afirmar que el error ya está corregido.
+2. Auditar licencias/dependencias reales del generador con workaround y comparar fixtures `content.json`, tabla de árbol, estilos, notas, etiquetas, relaciones y resúmenes; obtener smoke Desktop antes de cualquier migración.
+3. Evaluar sustitución del SDK y mitigación de PROD-SEC-001 mediante decisión separada; después, y solo con permiso, diseñar el publicador de releases.
+4. **Siguiente interacción:** recibir y analizar la nueva propuesta del usuario antes de iniciar otras fases. Esta actualización es documental; no autoriza implementación de esa propuesta, migración, publicación ni cambios en `main`.
